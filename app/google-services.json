@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "25255760166",
+    "firebase_url": "https://egv-app-f851e.firebaseio.com",
+    "project_id": "egv-app-f851e",
+    "storage_bucket": "egv-app-f851e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:25255760166:android:ebca62b4df557938",
+        "android_client_info": {
+          "package_name": "com.balloondigital.egvapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "25255760166-9tnvfmsqlfnds3m0c8m0g1jad95etr8q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.balloondigital.egvapp",
+            "certificate_hash": "2119498e2b27fc7d239f02df43989359c2a9af4b"
+          }
+        },
+        {
+          "client_id": "25255760166-6mfa8570khsavlrlk7pr6jt1p6mota1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "25255760166-6mfa8570khsavlrlk7pr6jt1p6mota1c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
