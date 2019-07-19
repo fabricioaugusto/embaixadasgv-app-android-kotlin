@@ -3,9 +3,16 @@ package com.balloondigital.egvapp.activity
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.fragment.AgendaFragment
+import com.balloondigital.egvapp.fragment.FeedFragment
+import com.balloondigital.egvapp.fragment.HighlightsFragment
+import com.balloondigital.egvapp.fragment.UsersFragment
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -19,28 +26,43 @@ class MainActivity : AppCompatActivity() {
         PermissionConfig.validatePermission(permissions, this)
 
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+        setBottomNavigationView(navView)
+    }
+
+    private fun setBottomNavigationView(bnv: BottomNavigationView) {
+
+        bnv.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
+
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+
+        val fragmentManager: FragmentManager = supportFragmentManager
+        val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
+
         when (item.itemId) {
             R.id.navigation_home -> {
-                textMessage.setText("Início")
+                fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                textMessage.setText("Search")
+                fragmentTransition.replace(R.id.mainViewPager, UsersFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
-                textMessage.setText("Post")
+                fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {
-                textMessage.setText("Agenda")
+                fragmentTransition.replace(R.id.mainViewPager, AgendaFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                textMessage.setText("Destaques")
+                fragmentTransition.replace(R.id.mainViewPager, HighlightsFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
         }

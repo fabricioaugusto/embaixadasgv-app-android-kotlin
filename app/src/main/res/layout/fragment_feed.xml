@@ -1,14 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
+             xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".fragment.FeedFragment">
+             tools:context=".fragment.FeedFragment"
+                >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+        <!-- TODO: Update blank fragment layout -->
+        <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:theme="?attr/actionBarTheme"
+                android:minHeight="?attr/actionBarSize" android:id="@+id/feedToolbar">
+            <ImageButton
+                    app:srcCompat="@drawable/ic_menu_grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/imageButton"
+                    android:background="@android:color/transparent" android:layout_marginRight="24dp"/>
+            <ImageView
+                    android:src="@drawable/horizontal_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"/>
+
+        </androidx.appcompat.widget.Toolbar>
+        <TextView
+                android:text="@string/title_home"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView6"/>
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
 
 </FrameLayout>
