@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="BottomNaviGationTheme" parent="Widget.Design.BottomNavigationView">
+        <item name="colorPrimary">@color/colorRed</item>
+    </style>
+
 </resources>

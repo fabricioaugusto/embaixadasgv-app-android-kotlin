@@ -16,10 +16,6 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity
-                android:name=".activity.BottomNavActivity"
-                android:label="@string/title_activity_bottom_nav">
-        </activity>
         <activity android:name=".activity.ResetPasswordActivity">
         </activity>
         <activity android:name=".activity.MenuActivity">
