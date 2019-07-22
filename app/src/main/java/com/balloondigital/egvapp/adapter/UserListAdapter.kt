@@ -63,5 +63,4 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
             }
         }
     }
-
 }

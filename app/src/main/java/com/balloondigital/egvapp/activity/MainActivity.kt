@@ -3,13 +3,11 @@ package com.balloondigital.egvapp.activity
 import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.Animation
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.fragment.AgendaFragment
-import com.balloondigital.egvapp.fragment.FeedFragment
-import com.balloondigital.egvapp.fragment.HighlightsFragment
-import com.balloondigital.egvapp.fragment.UsersFragment
+import com.balloondigital.egvapp.fragment.*
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
@@ -54,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
-                fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
+                fragmentTransition.replace(R.id.mainViewPager, CreatePostFragment()).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {

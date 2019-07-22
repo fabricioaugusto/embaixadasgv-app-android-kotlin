@@ -8,11 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-<<<<<<< HEAD
-    <style name="BottomNaviGationTheme" parent="Widget.Design.BottomNavigationView">
-=======
     <style name="BottomNavigationTheme" parent="Widget.Design.BottomNavigationView">
->>>>>>> 111c24592910b96e77fd078c176185bb8b61dc0b
         <item name="colorPrimary">@color/colorRed</item>
     </style>
 
