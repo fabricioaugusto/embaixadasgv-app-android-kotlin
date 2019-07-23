@@ -1,31 +1,56 @@
 package com.balloondigital.egvapp.activity
 
 import android.Manifest
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.Animation
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.*
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mAuth: FirebaseAuth
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+
+    override fun onStart() {
+        super.onStart()
+
+        mAuth = MyFirebase.auth()
+
+        val currentUser = mAuth.currentUser
+        if (currentUser != null) {
+            val name: String? = currentUser.displayName
+            if(name == null) {
+                startChooseEmbassyActivity()
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        PermissionConfig.validatePermission(permissions, this)
+        //init vars
 
+        PermissionConfig.validatePermission(permissions, this)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         setBottomNavigationView(navView)
+    }
+
+    fun startChooseEmbassyActivity() {
+        val intent: Intent = Intent(this, ChooseEmbassyActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {

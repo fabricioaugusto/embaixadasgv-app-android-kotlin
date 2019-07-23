@@ -1,21 +1,20 @@
 package com.balloondigital.egvapp.api
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
-class Firebase private constructor(){
+class MyFirebase private constructor(){
 
     companion object {
 
-        fun database(): DatabaseReference {
+        fun database(): FirebaseFirestore {
 
             if (database == null) {
-                database = FirebaseDatabase.getInstance().getReference()
+                database = FirebaseFirestore.getInstance()
             }
-            return database as DatabaseReference
+            return database as FirebaseFirestore
         }
 
         fun auth(): FirebaseAuth {
@@ -33,7 +32,13 @@ class Firebase private constructor(){
         }
 
         private var auth: FirebaseAuth? = null
-        private var database: DatabaseReference? = null
+        private var database: FirebaseFirestore? = null
         private var storage: StorageReference? = null
+    }
+
+    object COLLECTIONS {
+        val USERS = "users"
+        val EMBASSY = "embassy"
+        val LOCATIONS = "locations"
     }
 }

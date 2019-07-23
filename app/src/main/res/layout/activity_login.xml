@@ -33,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/colorGrey"
                 android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey" android:drawablePadding="8dp"
-                android:paddingBottom="16dp" android:textColor="@color/colorGrey"/>
+                android:paddingBottom="16dp" android:textColor="@color/colorGrey" android:id="@+id/txtLoginEmail"
+                android:inputType="textEmailAddress"/>
     </com.google.android.material.textfield.TextInputLayout>
     <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -52,7 +53,7 @@
                 android:backgroundTint="@color/colorGrey"
                 android:textColor="@color/colorGrey"
                 android:hint="Senha" android:drawableLeft="@drawable/ic_lock_grey" android:drawablePadding="8dp"
-                android:paddingBottom="16dp"/>
+                android:paddingBottom="16dp" android:inputType="textPassword" android:id="@+id/txtLoginPass"/>
     </com.google.android.material.textfield.TextInputLayout>
     <Button
             android:text="ENTRAR"

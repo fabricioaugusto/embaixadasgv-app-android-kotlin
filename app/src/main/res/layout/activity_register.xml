@@ -46,7 +46,8 @@
             app:layout_constraintBottom_toTopOf="@+id/dividerRegister" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="48dp" android:layout_marginStart="48dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="48dp" android:layout_marginRight="48dp" android:id="@+id/linearLayout2"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_horizontal">
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -60,7 +61,7 @@
                     android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorGrey"
                     android:hint="Nome" android:drawableLeft="@drawable/ic_person_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp"/>
+                    android:paddingBottom="16dp" android:id="@+id/etRegisterName" android:inputType="textPersonName"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -73,7 +74,8 @@
                     android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorGrey"
                     android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp"/>
+                    android:paddingBottom="16dp" android:id="@+id/etRegisterEmail"
+                    android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -88,7 +90,7 @@
                     android:hint="Senha"
                     android:drawableLeft="@drawable/ic_lock_grey"
                     android:drawablePadding="8dp"
-                    android:paddingBottom="16dp"/>
+                    android:paddingBottom="16dp" android:id="@+id/etRegisterPass" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -103,15 +105,21 @@
                     android:hint="Confirmar Senha"
                     android:drawableLeft="@drawable/ic_lock_grey"
                     android:drawablePadding="8dp"
-                    android:paddingBottom="16dp"/>
+                    android:paddingBottom="16dp" android:id="@+id/etRegisterPassConfirm"
+                    android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
-        <Button
+        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                 android:text="REGISTRAR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/btRegister"
                 android:background="@color/colorRed"
-                android:textColor="@color/colorGrey" app:layout_constraintHorizontal_bias="0.5"
+                android:textColor="@color/colorGrey"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:finalCornerAngle="20dp"
+                app:initialCornerAngle="0dp"
+                app:spinning_bar_color="#FFF"
+                app:spinning_bar_padding="6dp"
                 app:layout_constraintBottom_toTopOf="@+id/tvForgotPassword" android:layout_marginTop="32dp"/>
         <TextView
                 android:text="Ao se cadastrar você está de acordo com as Políticas de Privacidade"
