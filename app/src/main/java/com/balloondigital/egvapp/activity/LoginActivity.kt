@@ -71,11 +71,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
+        btLogin.startAnimation()
+
         mAuth.signInWithEmailAndPassword(email, pass)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    makeToast("Login efetuado com sucesso!")
                     val user = mAuth.currentUser
                     startMainActivity()
                 } else {

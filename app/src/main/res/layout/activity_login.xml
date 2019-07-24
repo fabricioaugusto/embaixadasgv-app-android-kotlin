@@ -55,11 +55,15 @@
                 android:hint="Senha" android:drawableLeft="@drawable/ic_lock_grey" android:drawablePadding="8dp"
                 android:paddingBottom="16dp" android:inputType="textPassword" android:id="@+id/txtLoginPass"/>
     </com.google.android.material.textfield.TextInputLayout>
-    <Button
+    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
             android:text="ENTRAR"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/btLogin" android:layout_marginStart="48dp"
+            app:finalCornerAngle="20dp"
+            app:initialCornerAngle="0dp"
+            app:spinning_bar_color="#FFF"
+            app:spinning_bar_padding="6dp"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginLeft="48dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="48dp"
             android:layout_marginRight="48dp" android:layout_marginTop="32dp" android:background="@color/colorRed"
