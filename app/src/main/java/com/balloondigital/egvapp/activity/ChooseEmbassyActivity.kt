@@ -12,8 +12,6 @@ import androidx.core.view.isVisible
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -21,7 +19,6 @@ import kotlinx.android.synthetic.main.activity_choose_embassy.*
 
 class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mUser: User
     private lateinit var mBrazilCollection: CollectionReference
@@ -35,8 +32,6 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mEmbassyName: String
     private lateinit var mListOptions: MutableList<String>
     private lateinit var mListOptionsID: MutableList<String>
-    private lateinit var mListReferences: MutableList<DocumentReference>
-    private lateinit var mEmbassyReference: DocumentReference
     private lateinit var mAlertDialog: AlertDialog
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,31 +41,19 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         mListOptions = mutableListOf()
         mListOptionsID = mutableListOf()
         mDatabase = MyFirebase.database()
-        mAuth = MyFirebase.auth()
         mBrazilCollection = mDatabase.collection(MyFirebase.COLLECTIONS.LOCATIONS)
             .document("cBnu0Eb45uaMixV05Qnd")
             .collection("states")
 
-        val currentUser: FirebaseUser? = mAuth.currentUser
-
-        if(currentUser != null) {
-            getCurrentUser(currentUser.uid)
+        val bundle: Bundle? = intent.extras
+        if(bundle != null) {
+            mUser = bundle.getSerializable("user") as User
         }
 
         getStates()
         setListeners()
     }
 
-    fun getCurrentUser(uid: String) {
-        val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-        collection.document(uid)
-            .get().addOnSuccessListener {
-                documentSnapshot ->
-                mUser = documentSnapshot.toObject(User::class.java)!!
-                Log.d("FirebaseLog", mUser.toString())
-
-            }
-    }
 
     fun getStates() {
         mBrazilCollection.get().addOnSuccessListener { documents ->
@@ -212,6 +195,5 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
             .addOnSuccessListener {
                 Log.d("FirebaseLog", "Embaixada Adicionada com Sucesso!")
             }
-
     }
 }

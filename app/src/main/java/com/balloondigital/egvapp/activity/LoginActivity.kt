@@ -51,6 +51,12 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
+
+    fun startCheckAuthActivity() {
+        val intent: Intent = Intent(this, CheckAuthActivity::class.java)
+        startActivity(intent)
+    }
+
     fun startRegisterActivity() {
         val intent: Intent = Intent(this, RegisterActivity::class.java)
         startActivity(intent)
@@ -78,7 +84,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     val user = mAuth.currentUser
-                    startMainActivity()
+                    startCheckAuthActivity()
                 } else {
                     // If sign in fails, display a message to the user.
                     makeToast("Dados de login incorretos! Tente novamente!")

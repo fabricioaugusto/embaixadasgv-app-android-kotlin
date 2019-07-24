@@ -15,6 +15,7 @@ data class User(
     var description: String? = null,
     var password: String? = null,
     var city: String? = null,
+    var state: String? = null,
     var profile_img: String? = null,
     var facebook: String? = null,
     var twitter: String? = null,
@@ -23,6 +24,7 @@ data class User(
     var whatsapp: String? = null,
     var youtube: String? = null,
     var website: String? = null,
+    @Transient
     var embassy: DocumentReference? = null
 ) : Serializable {
     @Exclude
@@ -35,6 +37,7 @@ data class User(
             "gender" to gender,
             "description" to description,
             "city" to city,
+            "state" to state,
             "profile_img" to profile_img,
             "facebook" to facebook,
             "twitter" to twitter,
