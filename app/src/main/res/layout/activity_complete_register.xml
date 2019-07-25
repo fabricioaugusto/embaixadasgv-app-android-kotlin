@@ -110,11 +110,18 @@
                         android:hint="Uma breve biografia sobre você" android:inputType="textMultiLine"
                         android:paddingBottom="32dp" android:id="@+id/etCRBiography"/>
             </com.google.android.material.textfield.TextInputLayout>
-            <Button
+            <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Salvar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btCRSavaData" android:layout_marginTop="16dp"
-                    android:background="@color/colorRed" android:textColor="@color/colorGrey"/>
+                    android:layout_height="wrap_content"
+                    app:finalCornerAngle="50dp"
+                    app:initialCornerAngle="0dp"
+                    app:spinning_bar_color="#FFF"
+                    app:spinning_bar_padding="6dp"
+                    android:background="@drawable/bg_circular_progressbar"
+                    android:id="@+id/btCRSavaData"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/colorGrey"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

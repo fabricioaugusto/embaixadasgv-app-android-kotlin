@@ -7,15 +7,18 @@ import java.io.Serializable
 
 @IgnoreExtraProperties
 data class User(
-    var id: String? = null,
-    var name: String? = null,
-    var email: String? = null,
+    var id: String = "",
+    var name: String = "",
+    var email: String = "",
     var status: String? = null,
     var gender: String? = null,
     var description: String? = null,
+    var birthdate: String? = null,
+    var occupation: String? = null,
     var password: String? = null,
     var city: String? = null,
     var state: String? = null,
+    var state_short: String? = null,
     var profile_img: String? = null,
     var facebook: String? = null,
     var twitter: String? = null,
@@ -24,8 +27,7 @@ data class User(
     var whatsapp: String? = null,
     var youtube: String? = null,
     var website: String? = null,
-    @Transient
-    var embassy: DocumentReference? = null
+    var embassy: String? = null
 ) : Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -36,8 +38,11 @@ data class User(
             "status" to status,
             "gender" to gender,
             "description" to description,
+            "birthdate" to birthdate,
+            "occupation" to occupation,
             "city" to city,
             "state" to state,
+            "state_short" to state_short,
             "profile_img" to profile_img,
             "facebook" to facebook,
             "twitter" to twitter,

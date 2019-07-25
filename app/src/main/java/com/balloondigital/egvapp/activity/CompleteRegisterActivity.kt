@@ -16,22 +16,19 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import java.util.*
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import android.app.Activity
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.SearchView
 import android.widget.Toast
+import com.balloondigital.egvapp.api.MyFirebase
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import io.ghyeok.stickyswitch.widget.StickySwitch.OnSelectedChangeListener
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.google.android.gms.common.api.ApiException
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-
-
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
 
     private lateinit var mUser: User
+    private lateinit var mDatabase: FirebaseFirestore
+    private lateinit var mCollections: MyFirebase.COLLECTIONS
     private lateinit var mPlaceFields: List<Place.Field>
     private val AUTOCOMPLETE_REQUEST_CODE = 1
     private lateinit var mPlacesClient: PlacesClient
@@ -41,7 +38,7 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         setContentView(R.layout.activity_complete_register)
 
         val toolbar: androidx.appcompat.widget.Toolbar = toolbarCR
-        toolbar.setTitle("Complete o seu perfil")
+        toolbar.setTitle("Complete seu perfil")
         toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
         setSupportActionBar(toolbar)
 
@@ -51,6 +48,8 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
             Log.d("FirebaseLog", mUser.toString())
         }
 
+        mDatabase = MyFirebase.database()
+        mCollections = MyFirebase.COLLECTIONS
         mPlacesClient = Places.createClient(this)
         mPlaceFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
 
@@ -97,13 +96,20 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == this.AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
+
                 val place = Autocomplete.getPlaceFromIntent(data!!)
+                val addressComponents = place.addressComponents
+                val city = place.name
 
-                Log.d("GooglePlaceLog", place.types.toString())
-                Log.d("GooglePlaceLog", place.addressComponents!!.asList()[2].name)
-                Log.d("GooglePlaceLog", place.address.toString())
+                if(addressComponents != null) {
+                    val stateObj = addressComponents.asList()[2]
+                    mUser.state = stateObj.name
+                    mUser.state_short = stateObj.shortName
+                }
 
-                etCRSearchCity.setText(place.name)
+                etCRSearchCity.setText(city)
+                mUser.city = city
+
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
                 // TODO: Handle the error.
@@ -126,6 +132,14 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
+    fun startChoosePhotoActivity() {
+        val intent: Intent = Intent(this, ChoosePhotoActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+        btCRSavaData.revertAnimation()
+        finish()
+    }
+
     fun saveUserData() {
 
         val city = mUser.city
@@ -140,6 +154,25 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
             makeToast("Todos os campos devem ser preenchidos!")
             return
         }
+
+        if(birthdate.length < 10) {
+            makeToast("Preencha uma data de nascimento válida")
+            return
+        }
+
+        mUser.description = biography
+        mUser.birthdate = birthdate
+        mUser.occupation = occupation
+
+        btCRSavaData.startAnimation()
+
+        mDatabase.collection(mCollections.USERS)
+            .document(mUser.id)
+            .set(mUser.toMap())
+            .addOnSuccessListener {
+                makeToast("Dados salvos com sucesso!")
+                startChoosePhotoActivity()
+            }
 
     }
 

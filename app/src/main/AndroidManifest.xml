@@ -8,6 +8,7 @@
 
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
             android:allowBackup="true"
@@ -16,6 +17,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".activity.ChoosePhotoActivity">
+        </activity>
         <activity android:name=".activity.CompleteRegisterActivity">
         </activity>
         <activity android:name=".activity.CheckAuthActivity">
@@ -33,12 +36,14 @@
         </activity>
         <activity android:name=".activity.EventProfileActivity">
         </activity>
-        <activity android:name=".activity.UserProfileActivity">
+        <activity android:name=".activity.UserProfileActivity" android:theme="@style/AppThemeToolbar">
         </activity>
         <activity android:name=".activity.RegisterActivity">
         </activity>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+                  android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

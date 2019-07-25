@@ -8,5 +8,6 @@
     <color name="colorText">#4D4D4F</color>
     <color name="colorSubText">#9E9E9E</color>
     <color name="colorGrey">#D1D3D4</color>
+    <color name="colorGreen">#5FAD56</color>
     <color name="backgroundGrey">#FAFAFA</color>
 </resources>

@@ -50,14 +50,19 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
         fun bindData(user: User) {
 
             mTextViewName.text = user.name
-            mTextViewEmail.text = user.status
+
+            if (user.status.isNullOrEmpty()){
+                mTextViewEmail.text = "Eu sou GV!"
+            } else {
+                mTextViewEmail.text = user.status
+            }
 
             if(user.profile_img != null) {
                 Glide.with(context)
                     .load(user.profile_img)
                     .into(mUserProfileImage)
             } else {
-                if(user.gender == "F") {
+                if(user.gender == "Female") {
                     mUserProfileImage.setImageResource(R.drawable.avatar_woman)
                 }
             }

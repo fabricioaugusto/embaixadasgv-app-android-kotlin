@@ -15,10 +15,16 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import android.R.attr.fragment
+import androidx.fragment.app.Fragment
+import com.balloondigital.egvapp.model.User
+
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mUsersFragment: Fragment
+    private lateinit var mUser: User
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
     override fun onStart() {
@@ -26,13 +32,14 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = MyFirebase.auth()
 
-        val currentUser = mAuth.currentUser
-        if (currentUser != null) {
-            val name: String? = currentUser.displayName
-            if(name == null) {
-                startChooseEmbassyActivity()
-            }
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            mUser = bundle.getSerializable("user") as User
         }
+
+       mUsersFragment = UsersFragment()
+       mUsersFragment.arguments = bundle
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,7 +80,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                fragmentTransition.replace(R.id.mainViewPager, UsersFragment()).commit()
+                fragmentTransition.replace(R.id.mainViewPager, mUsersFragment).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {

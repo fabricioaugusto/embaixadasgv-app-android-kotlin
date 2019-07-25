@@ -1,11 +1,12 @@
 package com.balloondigital.egvapp.model
+import com.google.firebase.firestore.DocumentReference
 import java.io.Serializable
 
 data class Embassy (
-    val id: String,
-    val name: String,
-    val city: String,
-    val neighborhood: String?,
-    val state: String,
-    val leader: User
+    var id: String = "",
+    var name: String = "",
+    var city: String = "",
+    var neighborhood: String? = null,
+    var state: String = "",
+    var leader: DocumentReference? = null
 ) : Serializable

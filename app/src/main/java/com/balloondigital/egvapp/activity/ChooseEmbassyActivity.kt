@@ -1,6 +1,7 @@
 package com.balloondigital.egvapp.activity
 
 import android.content.DialogInterface
+import android.content.Intent
 import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -188,12 +189,21 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
     fun saveEmbassy() {
 
-        mUser.embassy = mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY).document(mEmbassyId)
+        mUser.embassy = mEmbassyId
+
+        btSaveEmbassy.startAnimation()
 
         val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
         collection.document(mUser.id!!).set(mUser.toMap())
             .addOnSuccessListener {
                 Log.d("FirebaseLog", "Embaixada Adicionada com Sucesso!")
+                startCheckAuthActivity()
+                finish()
             }
+    }
+
+    fun startCheckAuthActivity() {
+        val intent: Intent = Intent(this, CheckAuthActivity::class.java)
+        startActivity(intent)
     }
 }

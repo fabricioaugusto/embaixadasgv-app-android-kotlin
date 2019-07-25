@@ -67,7 +67,15 @@ class CheckAuthActivity : AppCompatActivity() {
             startCompleteRegisterActivity()
             finish()
             return
+        } else {
+            startMainActivity()
         }
+    }
+
+    fun startMainActivity() {
+        val intent: Intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
     }
 
     fun startChooseEmbassyActivity() {

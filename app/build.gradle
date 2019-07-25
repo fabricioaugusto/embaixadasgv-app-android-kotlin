@@ -44,6 +44,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     implementation 'com.github.irshulx:laser-native-editor:3.0.3'
     implementation 'com.github.santalu:mask-edittext:1.1.1'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
