@@ -16,6 +16,9 @@ import com.google.android.libraries.places.api.model.TypeFilter
 import java.util.*
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import android.app.Activity
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.SearchView
 import android.widget.Toast
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import io.ghyeok.stickyswitch.widget.StickySwitch.OnSelectedChangeListener
@@ -36,6 +39,11 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_complete_register)
+
+        val toolbar: androidx.appcompat.widget.Toolbar = toolbarCR
+        toolbar.setTitle("Complete o seu perfil")
+        toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
+        setSupportActionBar(toolbar)
 
         val bundle: Bundle? = intent.extras
         if(bundle != null) {

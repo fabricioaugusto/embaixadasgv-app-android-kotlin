@@ -86,6 +86,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     val user = mAuth.currentUser
                     startCheckAuthActivity()
                 } else {
+                    btLogin.revertAnimation()
                     // If sign in fails, display a message to the user.
                     makeToast("Dados de login incorretos! Tente novamente!")
 
