@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -12,25 +11,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.DragAndDropPermissions
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.PermissionConfig
+import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_choose_photo.*
-import kotlinx.android.synthetic.main.activity_complete_register.*
+import kotlinx.android.synthetic.main.activity_change_profile_photo.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 
-
-class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
+class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
@@ -45,12 +43,10 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_choose_photo)
+        setContentView(R.layout.activity_change_profile_photo)
 
-        val toolbar: androidx.appcompat.widget.Toolbar = toolbarCP
-        toolbar.setTitle("Complete seu perfil")
-        toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
-        setSupportActionBar(toolbar)
+        supportActionBar!!.title = "Alterar foto de perfil"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         PermissionConfig.validatePermission(permissions, this)
 
@@ -64,7 +60,30 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         mCollections = MyFirebase.COLLECTIONS
 
         setListeners()
+        getUserDetails()
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> true
+        }
+    }
+
+    fun getUserDetails() {
+
+        if(mUser.profile_img != null) {
+            Glide.with(this)
+                .load(mUser.profile_img)
+                .into(imgChangeProfilePhoto)
+        } else {
+            if(mUser.gender == "Female") {
+                imgChangeProfilePhoto.setImageResource(R.drawable.avatar_woman)
+            }
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -87,7 +106,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                     CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                         if (data != null) {
                             val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-                            imgCPUserProfile.setImageURI(result.uri)
+                            imgChangeProfilePhoto.setImageURI(result.uri)
                         }
                     }
                 }
@@ -101,11 +120,11 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View) {
         val id = view.id
 
-        if (id == R.id.btCPSavePhoto) {
+        if (id == R.id.btSaveChangeProfilePhoto) {
             saveUserData()
         }
 
-        if (id == R.id.btCPChoosePhoto || id == R.id.imgCPUserProfile) {
+        if (id == R.id.btChangeProfilePhoto || id == R.id.imgChangeProfilePhoto) {
             startGalleryActivity()
         }
     }
@@ -115,26 +134,20 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, GALLERY_CODE)
     }
 
-    private fun startMainActivity() {
-        val intent: Intent = Intent(this, MainActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
-    }
-
     private fun setListeners() {
-        btCPSavePhoto.setOnClickListener(this)
-        btCPChoosePhoto.setOnClickListener(this)
-        imgCPUserProfile.setOnClickListener(this)
+        btSaveChangeProfilePhoto.setOnClickListener(this)
+        btChangeProfilePhoto.setOnClickListener(this)
+        imgChangeProfilePhoto.setOnClickListener(this)
     }
 
     private fun saveUserData() {
 
-        btCPSavePhoto.startAnimation()
+        btSaveChangeProfilePhoto.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
         val storagePath: StorageReference = mStorage.child("images/user/profile/$imageName.jpg")
 
-        val bitmap = (imgCPUserProfile.drawable as BitmapDrawable).bitmap
+        val bitmap = (imgChangeProfilePhoto.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
         val data = baos.toByteArray()
@@ -157,11 +170,10 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                 .document(mUser.id)
                                 .set(mUser.toMap())
                                 .addOnSuccessListener {
-                                    btCPSavePhoto.doneLoadingAnimation(
+                                    btSaveChangeProfilePhoto.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
                                         drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                     )
-                                    startMainActivity()
                                 }
                         }
                     })
@@ -172,11 +184,11 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    fun makeToast(text: String) {
+    private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    fun drawableToBitmap(drawable: Drawable): Bitmap {
+    private fun drawableToBitmap(drawable: Drawable): Bitmap {
 
         var bitmap: Bitmap? = null
 
@@ -200,4 +212,5 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
         return bitmap
     }
+
 }

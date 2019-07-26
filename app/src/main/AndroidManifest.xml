@@ -17,6 +17,61 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
+        <activity android:name=".activity.ChangeProfilePhotoActivity"
+                  android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.AppRateActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.SuggestsActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.FavoriteEventsActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.EnrolledEventsActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.PrivacyActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.SetPrivacyActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.MyEmbassyActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.SendMessageActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.AboutAppActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.AboutEmbassiesActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.EditSocialActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.ChangePassActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.EditProfileActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
         <activity android:name=".activity.ChoosePhotoActivity">
         </activity>
         <activity android:name=".activity.CompleteRegisterActivity">
@@ -36,14 +91,17 @@
         </activity>
         <activity android:name=".activity.EventProfileActivity">
         </activity>
-        <activity android:name=".activity.UserProfileActivity" android:theme="@style/AppThemeToolbar">
+        <activity
+                android:name=".activity.UserProfileActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity android:name=".activity.RegisterActivity">
         </activity>
         <activity android:name=".activity.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-                  android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+                android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+                android:theme="@style/Base.Theme.AppCompat"/>
     </application>
 
 </manifest>

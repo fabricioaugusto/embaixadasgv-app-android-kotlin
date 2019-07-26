@@ -16,6 +16,7 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import android.R.attr.fragment
+import android.util.Log
 import androidx.fragment.app.Fragment
 import com.balloondigital.egvapp.model.User
 
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
+    private lateinit var mFeedFragment: Fragment
     private lateinit var mUser: User
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
@@ -32,21 +34,24 @@ class MainActivity : AppCompatActivity() {
 
         mAuth = MyFirebase.auth()
 
-        val bundle: Bundle? = intent.extras
-        if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
-        }
-
-       mUsersFragment = UsersFragment()
-       mUsersFragment.arguments = bundle
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mFeedFragment = FeedFragment()
+        mUsersFragment = UsersFragment()
+
         //init vars
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            mFeedFragment.arguments = bundle
+            mUser = bundle.getSerializable("user") as User
+            Log.d("FirebaseLogMain", mUser.toString())
+        }
+
+        mUsersFragment.arguments = bundle
 
         PermissionConfig.validatePermission(permissions, this)
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
@@ -66,7 +71,7 @@ class MainActivity : AppCompatActivity() {
 
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
+        fragmentTransition.replace(R.id.mainViewPager, mFeedFragment).commit()
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -76,7 +81,7 @@ class MainActivity : AppCompatActivity() {
 
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragmentTransition.replace(R.id.mainViewPager, FeedFragment()).commit()
+                fragmentTransition.replace(R.id.mainViewPager, mFeedFragment).commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {

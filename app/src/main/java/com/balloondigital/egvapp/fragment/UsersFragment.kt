@@ -88,5 +88,4 @@ class UsersFragment : Fragment() {
         startActivity(intent)
     }
 
-
 }

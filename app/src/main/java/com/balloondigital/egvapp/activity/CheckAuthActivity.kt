@@ -12,6 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import android.R.attr.apiKey
+import android.content.Context
+import android.content.SharedPreferences
 
 
 class CheckAuthActivity : AppCompatActivity() {
@@ -34,6 +36,10 @@ class CheckAuthActivity : AppCompatActivity() {
 
         val currentUser = mAuth.currentUser
         if (currentUser != null) {
+
+            val sharedPref: SharedPreferences = getSharedPreferences("oF0kMyuPKmAH", Context.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = sharedPref.edit()
+            editor.putString("fb_uid", currentUser.uid)
             getCurrentUser(currentUser.uid)
         } else {
             startLoginActivity()
@@ -69,6 +75,8 @@ class CheckAuthActivity : AppCompatActivity() {
             return
         } else {
             startMainActivity()
+            finish()
+            return
         }
     }
 

@@ -17,7 +17,7 @@
             <ImageButton
                     app:srcCompat="@drawable/ic_menu_grey"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/imageButton"
+                    android:layout_height="wrap_content" android:id="@+id/btFeedMenu"
                     android:background="@android:color/transparent" android:layout_marginRight="24dp"/>
             <ImageView
                     android:src="@drawable/horizontal_logo"
