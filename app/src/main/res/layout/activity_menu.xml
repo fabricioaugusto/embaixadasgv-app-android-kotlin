@@ -8,7 +8,7 @@
         tools:context=".activity.MenuActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="600dp">
+            android:layout_height="wrap_content">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -21,6 +21,7 @@
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintVertical_bias="1.0">
             <LinearLayout
+                    android:id="@+id/layoutMenuUser"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:gravity="center_vertical"
@@ -29,7 +30,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/imgSettingsUserProfile"
+                        android:id="@+id/imgMenuUserProfile"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/avatar"
@@ -42,10 +43,11 @@
                     <TextView
                             android:text="Nome"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtSettingsUserName"
+                            android:layout_height="wrap_content" android:id="@+id/txtMenuUserName"
                             android:textStyle="bold"
                             android:textColor="@color/colorText" android:textSize="16sp"/>
                     <TextView
+                            android:id="@+id/txtMenuViewProfile"
                             android:text="Visualizar perfil"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

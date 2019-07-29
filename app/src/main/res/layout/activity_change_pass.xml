@@ -24,7 +24,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Senha Atual" android:id="@+id/etChangePassCurrent"/>
+                    android:hint="Senha Atual" android:id="@+id/etChangePassCurrent" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilChangePassNew"
@@ -34,7 +34,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Nova Senha" android:id="@+id/etChangePassNew"/>
+                    android:hint="Nova Senha" android:id="@+id/etChangePassNew" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilChangePassConfirm"
@@ -44,7 +44,7 @@
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Confirmar Senha" android:id="@+id/etChangePassConfirm"/>
+                    android:hint="Confirmar Senha" android:id="@+id/etChangePassConfirm" android:inputType="textPassword"/>
         </com.google.android.material.textfield.TextInputLayout>
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                 android:text="Salvar"

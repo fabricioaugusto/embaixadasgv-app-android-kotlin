@@ -129,6 +129,13 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    override fun onBackPressed() {
+        val returnIntent = Intent()
+        returnIntent.putExtra("user", mUser)
+        setResult(Activity.RESULT_OK, returnIntent)
+        finish()
+    }
+
     private fun startGalleryActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, GALLERY_CODE)

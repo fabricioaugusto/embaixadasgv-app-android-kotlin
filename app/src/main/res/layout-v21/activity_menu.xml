@@ -8,7 +8,7 @@
         tools:context=".activity.MenuActivity">
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="600dp">
+            android:layout_height="wrap_content">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -18,8 +18,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintVertical_bias="1.0">
             <LinearLayout
+                    android:id="@+id/layoutMenuUser"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:gravity="center_vertical"
@@ -28,7 +30,7 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/imgSettingsUserProfile"
+                        android:id="@+id/imgMenuUserProfile"
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:src="@drawable/avatar"
@@ -41,10 +43,11 @@
                     <TextView
                             android:text="Nome"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtSettingsUserName"
+                            android:layout_height="wrap_content" android:id="@+id/txtMenuUserName"
                             android:textStyle="bold"
                             android:textColor="@color/colorText" android:textSize="16sp"/>
                     <TextView
+                            android:id="@+id/txtMenuViewProfile"
                             android:text="Visualizar perfil"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -69,31 +72,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuEditProfile"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText" android:elevation="0dp"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Alerar foto de perfil"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuChangePic"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Alterar Senha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuChangePass"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Minhas Redes Sociais"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuEditSocial"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Minha Embaixada"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuMyEmbassy"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <View
                     android:id="@+id/divider6"
                     android:layout_width="match_parent"
@@ -111,13 +119,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuManageEvents"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Políticas de privacidade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuMyEvents"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <View
                     android:id="@+id/divider7"
                     android:layout_width="match_parent"
@@ -135,13 +145,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuManagePrivacy"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Políticas de privacidade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuPrivacy"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <View
                     android:id="@+id/divider8"
                     android:layout_width="match_parent"
@@ -159,25 +171,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuAboutEmbassies"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Sobre o aplicativo "
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuAboutApp"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Sugira uma funcionalidade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuSuggests"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Avalie o aplicativo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuRate"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <View
                     android:id="@+id/divider9"
                     android:layout_width="match_parent"
@@ -189,13 +205,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuSendMenssages"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
             <Button
                     android:text="Sair"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/btMenuLogout"
                     android:background="@color/backgroundGrey" android:gravity="start|center_vertical"
-                    android:textAllCaps="false" android:textColor="@color/colorText"/>
+                    android:textAllCaps="false" android:textColor="@color/colorText"
+                    android:shadowColor="@color/backgroundGrey"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

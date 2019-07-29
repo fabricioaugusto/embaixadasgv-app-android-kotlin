@@ -17,16 +17,22 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import android.R.attr.fragment
 import android.util.Log
+import android.view.View
 import androidx.fragment.app.Fragment
+import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.model.User
+import com.orhanobut.dialogplus.DialogPlus
+import com.orhanobut.dialogplus.DialogPlusBuilder
+import com.orhanobut.dialogplus.OnClickListener
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mUser: User
+    private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
     override fun onStart() {
@@ -42,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
         mFeedFragment = FeedFragment()
         mUsersFragment = UsersFragment()
+        mAdapter = CreatePostDialogAdapter(this, false, 3)
 
         //init vars
         val bundle: Bundle? = intent.extras
@@ -59,10 +66,8 @@ class MainActivity : AppCompatActivity() {
         setBottomNavigationView(navView)
     }
 
-    fun startChooseEmbassyActivity() {
-        val intent: Intent = Intent(this, ChooseEmbassyActivity::class.java)
-        startActivity(intent)
-        finish()
+    override fun onClick(dialog: DialogPlus?, view: View) {
+
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
@@ -89,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
-                fragmentTransition.replace(R.id.mainViewPager, CreatePostFragment()).commit()
+                setCreatePostDialog()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {
@@ -102,5 +107,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
         false
+    }
+
+    fun setCreatePostDialog() {
+
+        val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(this)
+        if(dialogBuilder != null) {
+            dialogBuilder.adapter = mAdapter
+            dialogBuilder.onClickListener = this
+            dialogBuilder.setHeader(R.layout.header_dialog)
+            dialogBuilder.create().show()
+
+        }
     }
 }

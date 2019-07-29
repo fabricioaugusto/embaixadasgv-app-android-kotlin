@@ -23,6 +23,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import java.util.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import com.balloondigital.egvapp.utils.Converters
+import kotlinx.android.synthetic.main.activity_choose_photo.*
+
 
 class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
 
@@ -165,11 +172,11 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
-    fun startChoosePhotoActivity() {
-        val intent: Intent = Intent(this, ChoosePhotoActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
-        btEditProfleSavaData.revertAnimation()
+
+    override fun onBackPressed() {
+        val returnIntent = Intent()
+        returnIntent.putExtra("user", mUser)
+        setResult(Activity.RESULT_OK, returnIntent)
         finish()
     }
 
@@ -204,9 +211,11 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             .set(mUser.toMap())
             .addOnSuccessListener {
                 makeToast("Dados salvos com sucesso!")
-                startChoosePhotoActivity()
+                btEditProfleSavaData.doneLoadingAnimation(
+                    resources.getColor(com.balloondigital.egvapp.R.color.colorGreen),
+                    Converters.drawableToBitmap(resources.getDrawable(com.balloondigital.egvapp.R.drawable.ic_check_grey_light))
+                )
             }
-
     }
 
     fun makeToast(text: String) {

@@ -1,5 +1,6 @@
 package com.balloondigital.egvapp.activity
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,6 +9,9 @@ import android.view.View
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
+import com.bumptech.glide.Glide
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -19,6 +23,7 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var dbListener: ListenerRegistration
+    private val MENU_REQUEST_CODE: Int = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +37,38 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
             mUser = bundle.getSerializable("user") as User
         }
 
+        getUserDetails()
         setListeners()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (requestCode == MENU_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                if(data != null) {
+                    mUser = data.getSerializableExtra("user") as User
+                    getUserDetails()
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data!!)
+                Log.i("GooglePlaceLog", status.statusMessage)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
     }
 
     override fun onClick(view: View) {
         val id = view.id
+
+        if(id == R.id.imgMenuUserProfile
+            || id == R.id.txtMenuUserName
+            || id == R.id.txtMenuViewProfile) {
+            startUserProfileActivity()
+        }
 
         if(id == R.id.btMenuEditProfile) {
             startEditProfileActivity()
@@ -117,8 +149,11 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         btMenuRate.setOnClickListener(this)
         btMenuSendMenssages.setOnClickListener(this)
         btMenuLogout.setOnClickListener(this)
+        imgMenuUserProfile.setOnClickListener(this)
+        txtMenuUserName.setOnClickListener(this)
+        txtMenuViewProfile.setOnClickListener(this)
 
-        dbListener = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+        /*dbListener = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
             .document(mUser.id)
             .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
                 if(documentSnapshot != null) {
@@ -128,85 +163,100 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
                         Log.d("FirebaseLog", "ListenerOn")
                     }
                 }
-            }
+            }*/
     }
 
-    fun startCheckAuthActivity() {
+    private fun startCheckAuthActivity() {
         val intent: Intent = Intent(this, CheckAuthActivity::class.java)
         startActivity(intent)
     }
 
-    fun startEditProfileActivity() {
+    private fun startUserProfileActivity() {
+        val intent: Intent = Intent(this, UserProfileActivity::class.java)
+        intent.putExtra("user", mUser)
+        finish()
+    }
+
+    private fun startEditProfileActivity() {
         val intent: Intent = Intent(this, EditProfileActivity::class.java)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, MENU_REQUEST_CODE)
     }
 
-    fun startChangeProfilePhotoActivity() {
+    private fun startChangeProfilePhotoActivity() {
         val intent: Intent = Intent(this, ChangeProfilePhotoActivity::class.java)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, MENU_REQUEST_CODE)
     }
 
-    fun startChangePassActivity() {
+    private fun startChangePassActivity() {
         val intent: Intent = Intent(this, ChangePassActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
-    fun startEditSocialActivity() {
+    private fun startEditSocialActivity() {
         val intent: Intent = Intent(this, EditSocialActivity::class.java)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, MENU_REQUEST_CODE)
     }
 
-    fun startMyEmbassyActivity() {
+    private fun startMyEmbassyActivity() {
         val intent: Intent = Intent(this, MyEmbassyActivity::class.java)
         startActivity(intent)
     }
 
-    fun startSetPrivacyActivity() {
+    private fun startSetPrivacyActivity() {
         val intent: Intent = Intent(this, SetPrivacyActivity::class.java)
         startActivity(intent)
     }
 
-    fun startPrivacyActivity() {
+    private fun startPrivacyActivity() {
         val intent: Intent = Intent(this, PrivacyActivity::class.java)
         startActivity(intent)
     }
 
-    fun startEnrolledEventsActivity() {
+    private fun startEnrolledEventsActivity() {
         val intent: Intent = Intent(this, EnrolledEventsActivity::class.java)
         startActivity(intent)
     }
 
-    fun startFavoriteEventsActivity() {
+    private fun startFavoriteEventsActivity() {
         val intent: Intent = Intent(this, FavoriteEventsActivity::class.java)
         startActivity(intent)
     }
 
-    fun startAboutEmbassiesActivity() {
+    private fun startAboutEmbassiesActivity() {
         val intent: Intent = Intent(this, AboutEmbassiesActivity::class.java)
         startActivity(intent)
     }
 
-    fun startAboutAppActivity() {
+    private fun startAboutAppActivity() {
         val intent: Intent = Intent(this, AboutAppActivity::class.java)
         startActivity(intent)
     }
 
-    fun startSuggestsActivity() {
+    private fun startSuggestsActivity() {
         val intent: Intent = Intent(this, SuggestsActivity::class.java)
         startActivity(intent)
     }
 
-    fun startAppRateActivity() {
+    private fun startAppRateActivity() {
         val intent: Intent = Intent(this, AppRateActivity::class.java)
         startActivity(intent)
     }
 
-    fun startSendMessageActivity() {
+    private fun startSendMessageActivity() {
         val intent: Intent = Intent(this, SendMessageActivity::class.java)
         startActivity(intent)
+    }
+
+    private fun getUserDetails() {
+
+        Glide.with(this)
+            .load(mUser.profile_img)
+            .into(imgMenuUserProfile)
+
+        txtMenuUserName.text = mUser.name
     }
 }

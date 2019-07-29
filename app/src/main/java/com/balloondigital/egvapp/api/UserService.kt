@@ -3,6 +3,8 @@ package com.balloondigital.egvapp.api
 import android.content.Context
 import android.content.SharedPreferences
 import com.balloondigital.egvapp.model.User
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 
 class UserService private constructor(){
@@ -18,6 +20,11 @@ class UserService private constructor(){
                 .get().result
 
             return document?.toObject(User::class.java)
+        }
+
+        fun authCurrentUser(): FirebaseUser? {
+
+            return FirebaseAuth.getInstance().currentUser
         }
     }
 
