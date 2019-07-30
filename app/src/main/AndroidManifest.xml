@@ -17,8 +17,18 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.ChangeProfilePhotoActivity"
+        <activity android:name=".activity.CreatePostActivity"
                   android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity android:name=".activity.CreateArticleActivity"
+                  android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity android:name=".activity.CreateToughtActivity"
+                  android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.ChangeProfilePhotoActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
                 android:name=".activity.AppRateActivity"

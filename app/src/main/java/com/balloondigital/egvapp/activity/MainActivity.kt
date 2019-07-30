@@ -18,15 +18,17 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.R.attr.fragment
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.model.User
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnClickListener
+import com.orhanobut.dialogplus.OnItemClickListener
 
 
-class MainActivity : AppCompatActivity(), OnClickListener {
+class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
@@ -66,8 +68,13 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         setBottomNavigationView(navView)
     }
 
-    override fun onClick(dialog: DialogPlus?, view: View) {
+    override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
+        makeToast(position.toString())
 
+        if(position == 1) {
+            val intent: Intent = Intent(this, CreateArticleActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
@@ -114,10 +121,14 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(this)
         if(dialogBuilder != null) {
             dialogBuilder.adapter = mAdapter
-            dialogBuilder.onClickListener = this
+            dialogBuilder.onItemClickListener = this
             dialogBuilder.setHeader(R.layout.header_dialog)
             dialogBuilder.create().show()
 
         }
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }

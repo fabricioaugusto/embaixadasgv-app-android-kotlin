@@ -6,7 +6,8 @@
 
 
     <TextView
-            android:text="Escolha a opção abaixo:"
+            android:text="O que você gostaria de compartilhar?"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/txtHeaderDialog" android:padding="16dp"/>
+            android:layout_height="wrap_content" android:id="@+id/txtHeaderDialog" android:padding="16dp"
+            android:textSize="16sp" android:textStyle="bold"/>
 </LinearLayout>
