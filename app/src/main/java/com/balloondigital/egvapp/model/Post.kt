@@ -2,13 +2,15 @@ package com.balloondigital.egvapp.model
 import java.io.Serializable
 
 data class Post(
-    val id: String,
-    val date: String,
-    val schedule: String,
-    var thought: String?,
-    var img: String?,
-    var img_description: String?,
-    var article_title: String?,
-    var article_text: String?,
-    val user: User
+    var id: String = "",
+    var date: String = "",
+    var schedule: String = "",
+    var type: String = "",
+    var thought: String? = null,
+    var picture: String? = null,
+    var picture_description: String? = null,
+    var article_title: String? = null,
+    var article_text: String? = null,
+    var article_cover: String? = null,
+    var user: User? = null
     ): Serializable

@@ -8,4 +8,7 @@
     <dimen name="bullet_gap_width">8dp</dimen>
     <dimen name="quote_stripe_width">8dp</dimen>
     <dimen name="quote_gap_width">2dp</dimen>
+    <dimen name="standard_70">66dp</dimen>
+    <dimen name="standard_140">132dp</dimen>
+    <dimen name="standard_210">198dp</dimen>
 </resources>

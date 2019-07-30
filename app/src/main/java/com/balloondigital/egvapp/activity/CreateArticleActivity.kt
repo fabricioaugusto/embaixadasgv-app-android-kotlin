@@ -4,23 +4,18 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.balloondigital.egvapp.R
 import android.content.Intent
-import android.R.id.redo
-import android.R.id.undo
 import android.content.DialogInterface
 import android.net.Uri
-import android.system.Os.link
 import android.text.TextUtils
+import android.util.Log
 import android.widget.EditText
-import android.text.Selection.getSelectionEnd
-import android.text.Selection.getSelectionStart
-import android.widget.Toast
 import android.view.View.OnLongClickListener
-import android.text.method.TextKeyListener.clear
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isGone
+import com.balloondigital.egvapp.model.Post
 import io.github.mthli.knife.KnifeText
 import kotlinx.android.synthetic.main.activity_create_article.*
 
@@ -35,6 +30,10 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
     private val QUOTE = "<blockquote>Quote</blockquote>"
     private val LINK = "<a href=\"https://github.com/mthli/Knife\">Link</a><br><br>"
     private val EXAMPLE = BOLD + ITALIT + UNDERLINE + STRIKETHROUGH + BULLET + QUOTE + LINK
+    private var mFabIsHide = true
+    private var mSetTitleIsHide = true
+    private var mSetCoverIsHide = true
+    private lateinit var mPost: Post
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +41,9 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
 
         supportActionBar!!.title = "Nova Nota"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        mPost = Post()
+        mPost.type = "note"
 
         setListeners()
     }
@@ -63,6 +65,11 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         link.setOnLongClickListener(this)
         clear.setOnClickListener(this)
         clear.setOnLongClickListener(this)
+        fabCreateArticle.setOnClickListener(this)
+        fabArticleTitle.setOnClickListener(this)
+        fabArticlePicture.setOnClickListener(this)
+        fabArticlePublish.setOnClickListener(this)
+        layoutArticleModal.setOnClickListener(this)
     }
 
     override fun onLongClick(view: View): Boolean {
@@ -138,6 +145,40 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         if(id == R.id.clear) {
             knife.clearFormats()
         }
+
+        if(id == R.id.fabCreateArticle) {
+            if(mFabIsHide) {
+                showFabs()
+            } else {
+                hideFabs()
+            }
+        }
+
+        if(id == R.id.fabArticleTitle) {
+            showSetTitle()
+        }
+
+        if(id == R.id.fabArticlePicture) {
+            showSetCover()
+        }
+
+        if(id == R.id.fabArticlePublish) {
+            Log.d("KnifeLog", knife.toHtml().toString())
+        }
+
+        if(id == R.id.layoutArticleModal) {
+            if(!mSetTitleIsHide) {
+                hideSetTitle()
+            }
+
+            if(!mSetCoverIsHide) {
+                hideSetCover()
+            }
+        }
+
+        if(id == R.id.btArticleSaveTitle) {
+            mPost.article_title = etArticleTitle.text.toString()
+        }
     }
 
     private fun showLinkDialog() {
@@ -187,5 +228,52 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         }
 
         return true
+    }
+
+    private fun showSetTitle() {
+        mSetTitleIsHide = false
+        layoutArticleSetTitle.isGone = false
+        layoutArticleModal.isGone = false
+        layoutArticleModal.animate().alpha(1.0F)
+        layoutArticleSetTitle.animate().translationY(0F).duration = 500
+    }
+
+    private fun hideSetTitle() {
+        mSetTitleIsHide = true
+        layoutArticleSetTitle.animate().translationY(-680F).withEndAction {
+            layoutArticleModal.animate().alpha(0F)
+            layoutArticleSetTitle.isGone = true
+            layoutArticleModal.isGone = true
+        }.duration = 500
+    }
+
+    private fun showSetCover() {
+        mSetCoverIsHide = false
+        layoutArticleSetPic.isGone = false
+        layoutArticleModal.isGone = false
+        layoutArticleModal.animate().alpha(1.0F)
+        layoutArticleSetPic.animate().translationY(0F).duration = 500
+    }
+
+    private fun hideSetCover() {
+        mSetCoverIsHide = true
+        layoutArticleModal.animate().alpha(0F)
+        layoutArticleSetPic.animate().translationY(-600F).duration = 500
+        layoutArticleSetPic.isGone = true
+        layoutArticleModal.isGone = true
+    }
+
+    private fun showFabs() {
+        mFabIsHide = false
+        fabArticleTitle.animate().translationY(0F)
+        fabArticlePicture.animate().translationY(0F)
+        fabArticlePublish.animate().translationY(0F)
+    }
+
+    private fun hideFabs() {
+        mFabIsHide = true
+        fabArticleTitle.animate().translationY(resources.getDimension(R.dimen.standard_70))
+        fabArticlePicture.animate().translationY(resources.getDimension(R.dimen.standard_140))
+        fabArticlePublish.animate().translationY(resources.getDimension(R.dimen.standard_210))
     }
 }
