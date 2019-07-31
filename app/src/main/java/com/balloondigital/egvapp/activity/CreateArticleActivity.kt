@@ -1,11 +1,16 @@
 package com.balloondigital.egvapp.activity
 
+import android.Manifest
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.balloondigital.egvapp.R
 import android.content.Intent
 import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
 import android.widget.EditText
@@ -13,27 +18,46 @@ import android.view.View.OnLongClickListener
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
+import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.PermissionConfig
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.StorageReference
+import com.theartofdev.edmodo.cropper.CropImage
 import io.github.mthli.knife.KnifeText
 import kotlinx.android.synthetic.main.activity_create_article.*
+import java.io.ByteArrayOutputStream
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.time.Duration
+import java.util.*
 
 
 class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongClickListener {
 
-    private val BOLD = "<b>Bold</b><br><br>"
-    private val ITALIT = "<i>Italic</i><br><br>"
-    private val UNDERLINE = "<u>Underline</u><br><br>"
-    private val STRIKETHROUGH = "<s>Strikethrough</s><br><br>" // <s> or <strike> or <del>
-    private val BULLET = "<ul><li>asdfg</li></ul>"
-    private val QUOTE = "<blockquote>Quote</blockquote>"
-    private val LINK = "<a href=\"https://github.com/mthli/Knife\">Link</a><br><br>"
-    private val EXAMPLE = BOLD + ITALIT + UNDERLINE + STRIKETHROUGH + BULLET + QUOTE + LINK
+    private lateinit var mPost: Post
+    private lateinit var mUser: BasicUser
+    private lateinit var mDatabase: FirebaseFirestore
+    private lateinit var mStorage: StorageReference
+    private lateinit var mCollections: MyFirebase.COLLECTIONS
+    private var mCoverIsSet = false
     private var mFabIsHide = true
     private var mSetTitleIsHide = true
     private var mSetCoverIsHide = true
-    private lateinit var mPost: Post
+    private var mPublishPostIsHide = true
+    private val GALLERY_CODE: Int = 200
+    private val permissions: List<String> = listOf(
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+        Manifest.permission.CAMERA
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +66,20 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         supportActionBar!!.title = "Nova Nota"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        PermissionConfig.validatePermission(permissions, this)
+
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            mUser = bundle.getSerializable("user") as BasicUser
+        }
+
+        mDatabase = MyFirebase.database()
+        mStorage = MyFirebase.storage()
+        mCollections = MyFirebase.COLLECTIONS
+
         mPost = Post()
         mPost.type = "note"
+        mPost.user = mUser
 
         setListeners()
     }
@@ -70,6 +106,10 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         fabArticlePicture.setOnClickListener(this)
         fabArticlePublish.setOnClickListener(this)
         layoutArticleModal.setOnClickListener(this)
+        btArticleSaveTitle.setOnClickListener(this)
+        btArticleSaveCover.setOnClickListener(this)
+        imgArticleInsertCover.setOnClickListener(this)
+        btArticlePublish.setOnClickListener(this)
     }
 
     override fun onLongClick(view: View): Boolean {
@@ -163,7 +203,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         }
 
         if(id == R.id.fabArticlePublish) {
-            Log.d("KnifeLog", knife.toHtml().toString())
+            showPublishPost()
         }
 
         if(id == R.id.layoutArticleModal) {
@@ -174,11 +214,32 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
             if(!mSetCoverIsHide) {
                 hideSetCover()
             }
+
+            if(!mPublishPostIsHide) {
+                hidePublishPost()
+            }
         }
 
         if(id == R.id.btArticleSaveTitle) {
-            mPost.article_title = etArticleTitle.text.toString()
+            hideSetTitle()
         }
+
+        if(id == R.id.btArticleSaveCover) {
+            hideSetCover()
+        }
+
+        if(id == R.id.imgArticleInsertCover) {
+            startGalleryActivity()
+        }
+
+        if(id == R.id.btArticlePublish) {
+            saveUserData()
+        }
+    }
+
+    private fun startGalleryActivity() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, GALLERY_CODE)
     }
 
     private fun showLinkDialog() {
@@ -208,6 +269,38 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         })
 
         builder.create().show()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            try {
+                when (requestCode) {
+                    GALLERY_CODE -> {
+                        if (data != null) {
+                            val uri = data.data
+                            Log.d("GalleryActivity", "Chegou aqui")
+                            CropImage.activity(uri)
+                                .setAspectRatio(4, 3)
+                                .setFixAspectRatio(true)
+                                .start(this)
+                        }
+                    }
+                    CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                        if (data != null) {
+                            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
+                            imgArticleInsertCover.setImageURI(result.uri)
+                            mCoverIsSet = true
+                        }
+                    }
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -263,6 +356,20 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         layoutArticleModal.isGone = true
     }
 
+    private fun showPublishPost() {
+        mPublishPostIsHide = false
+        layoutArticlePublish.isGone = false
+        layoutArticleModal.isGone = false
+        layoutArticleModal.animate().alpha(1.0F)
+    }
+
+    private fun hidePublishPost() {
+        mSetCoverIsHide = true
+        layoutArticleModal.animate().alpha(0F)
+        layoutArticlePublish.isGone = true
+        layoutArticleModal.isGone = true
+    }
+
     private fun showFabs() {
         mFabIsHide = false
         fabArticleTitle.animate().translationY(0F)
@@ -275,5 +382,78 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         fabArticleTitle.animate().translationY(resources.getDimension(R.dimen.standard_70))
         fabArticlePicture.animate().translationY(resources.getDimension(R.dimen.standard_140))
         fabArticlePublish.animate().translationY(resources.getDimension(R.dimen.standard_210))
+    }
+
+    private fun saveUserData() {
+
+        val title = etArticleTitle.text.toString()
+        val text = knife.toHtml()
+
+        if(title.isEmpty() || text.isEmpty()) {
+            makeToast("Você deve preencher todos os campos")
+            return
+        }
+
+        if(!mCoverIsSet) {
+            makeToast("Você deve escolher uma imagem de capa")
+            return
+        }
+
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+
+        mPost.article_title = title
+        mPost.article_text = text
+        mPost.date = currentDate
+
+        btArticlePublish.startAnimation()
+
+        val imageName = UUID.randomUUID().toString()
+        val storagePath: StorageReference = mStorage.child("images/post/article/$imageName.jpg")
+
+        val bitmap = (imgArticleInsertCover.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
+        val data = baos.toByteArray()
+
+        val uploadTask = storagePath.putBytes(data)
+
+        uploadTask.addOnFailureListener {
+            Toast.makeText(this, "Erro ao carregar a imagem. Tente novamente!", Toast.LENGTH_LONG).show()
+        }.addOnSuccessListener { it ->
+
+            val metadata = it.metadata
+            if (metadata != null) {
+                val ref = metadata.reference
+                if (ref != null) {
+                    ref.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+                        val uri = task.result
+                        if (uri != null) {
+                            mPost.article_cover = uri.toString()
+                            mDatabase.collection(mCollections.POSTS)
+                                .add(mPost.toMapNote())
+                                .addOnSuccessListener { document ->
+
+                                    document.update("id", document.id).addOnSuccessListener {
+                                        btArticlePublish.doneLoadingAnimation(
+                                            resources.getColor(R.color.colorGreen),
+                                            Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                        ).apply {
+                                            finish()
+                                        }
+
+                                    }
+                                }
+                        }
+                    })
+                }
+            }
+
+            Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }
