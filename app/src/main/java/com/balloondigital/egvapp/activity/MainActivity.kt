@@ -75,15 +75,19 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         makeToast(position.toString())
 
         if(position == 0) {
-
             val intent: Intent = Intent(this, CreateToughtActivity::class.java)
             intent.putExtra("user", mBasicUser)
             startActivity(intent)
         }
 
         if(position == 1) {
-
             val intent: Intent = Intent(this, CreateArticleActivity::class.java)
+            intent.putExtra("user", mBasicUser)
+            startActivity(intent)
+        }
+
+        if(position == 2) {
+            val intent: Intent = Intent(this, CreatePostActivity::class.java)
             intent.putExtra("user", mBasicUser)
             startActivity(intent)
         }

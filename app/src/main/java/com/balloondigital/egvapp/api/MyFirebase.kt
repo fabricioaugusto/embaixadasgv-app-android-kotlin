@@ -41,5 +41,6 @@ class MyFirebase private constructor(){
         val EMBASSY = "embassy"
         val LOCATIONS = "locations"
         val POSTS = "posts"
+        val POST_LIKES = "post_likes"
     }
 }

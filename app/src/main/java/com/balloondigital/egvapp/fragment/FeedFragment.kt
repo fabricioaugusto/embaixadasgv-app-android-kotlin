@@ -10,11 +10,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.MenuActivity
 import com.balloondigital.egvapp.activity.UserProfileActivity
+import com.balloondigital.egvapp.adapter.PostListAdapter
+import com.balloondigital.egvapp.adapter.UserListAdapter
+import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_feed.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -28,9 +37,14 @@ private const val ARG_PARAM2 = "param2"
  */
 class FeedFragment : Fragment(), View.OnClickListener {
 
-    private lateinit var mBtFeedMenu: ImageButton
+    private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
+    private lateinit var mAdapter: PostListAdapter
+    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mPostList: MutableList<Post>
+    private lateinit var mBtFeedMenu: ImageButton
     private lateinit var mUser: User
+    private lateinit var mDbListener: ListenerRegistration
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,7 +61,12 @@ class FeedFragment : Fragment(), View.OnClickListener {
             mUser = bundle.getSerializable("user") as User
             Log.d("FirebaseLogFeed", mUser.toString())
         }
+        mDatabase = MyFirebase.database()
+        mPostList = mutableListOf()
+        mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
+        getListPosts()
+        setRecyclerView()
         setListeners()
 
         return view
@@ -61,8 +80,48 @@ class FeedFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         mBtFeedMenu.setOnClickListener(this)
+    }
+
+    private fun setRecyclerView() {
+
+        mAdapter = PostListAdapter(mPostList)
+        mAdapter.setHasStableIds(true)
+        mRecyclerView.adapter = mAdapter
+        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mRecyclerView.setItemViewCacheSize(20)
+        mAdapter.onItemClick = {
+            post ->
+        }
+
+    }
+
+    private fun getListPosts() {
+
+        mDbListener = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.ASCENDING)
+            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+
+                mPostList.clear()
+
+                if(documentSnapshot != null) {
+                    for(document in documentSnapshot) {
+                        val post: Post? = document.toObject(Post::class.java)
+                        if(post != null) {
+                            mPostList.add(post)
+                        }
+                    }
+                }
+                
+                mAdapter.notifyDataSetChanged()
+            }
+    }
+
+    private fun startUserProfileActivity(singleUser: User) {
+
+        val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
+        intent.putExtra("user", singleUser)
+        startActivity(intent)
     }
 
     fun startMenuActivity() {

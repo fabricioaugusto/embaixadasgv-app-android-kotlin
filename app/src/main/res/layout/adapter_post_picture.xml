@@ -3,11 +3,13 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
+              android:background="@color/backgroundGrey">
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" app:cardBackgroundColor="@color/backgroundGrey"
+            app:cardElevation="0dp" app:cardMaxElevation="0dp">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -48,21 +50,23 @@
             </LinearLayout>
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/article_picture"
-                    android:id="@+id/imgAdPostPicture" android:adjustViewBounds="true" android:layout_marginBottom="8dp"/>
+                    android:layout_height="300dp" app:srcCompat="@drawable/photo_demo_4_3"
+                    android:id="@+id/imgAdPostPicture"
+                    android:layout_marginBottom="8dp" android:scaleType="centerCrop"/>
             <TextView
                     android:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/txtAdPostText"
-                    android:textColor="@color/colorText"/>
+                    android:textColor="@color/colorText" android:textSize="15sp"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center_vertical">
+                    android:layout_height="match_parent" android:gravity="center_vertical"
+                    android:layout_marginTop="16dp">
                 <com.like.LikeButton
                         app:icon_type="heart"
                         app:icon_size="25dp"
-                        android:id="@+id/like_button"
+                        android:id="@+id/btLikeButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp" app:liked="false"/>
                 <TextView
@@ -75,7 +79,7 @@
                         app:srcCompat="@drawable/ic_comment_grey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/btAdPostComment"
-                        android:background="@android:color/white" android:padding="6dp"
+                        android:background="@color/backgroundGrey" android:padding="6dp"
                         android:layout_marginLeft="16dp"/>
                 <TextView
                         android:text="2"

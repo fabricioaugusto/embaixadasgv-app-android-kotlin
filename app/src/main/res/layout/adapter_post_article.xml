@@ -2,11 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
+              android:background="@color/backgroundGrey">
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" app:cardBackgroundColor="@color/backgroundGrey" app:cardElevation="0dp"
+            app:cardMaxElevation="0dp">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -18,7 +20,7 @@
                     android:layout_marginBottom="12sp">
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/imgAdArticleUser"
+                        android:id="@+id/imgAdPostUser"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/avatar"
@@ -31,12 +33,12 @@
                     <TextView
                             android:text="Fabrício Augusto"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdArticleUserName"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
                             android:textColor="@color/colorText"/>
                     <TextView
                             android:text="26 Oct 2018"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdArticleDate"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
                             android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
                 </LinearLayout>
                 <ImageButton
@@ -47,24 +49,25 @@
             </LinearLayout>
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/article_picture"
-                    android:id="@+id/imgAdArticleCover" android:adjustViewBounds="true" android:layout_marginBottom="16dp"/>
+                    android:layout_height="300dp" app:srcCompat="@drawable/photo_demo_4_3"
+                    android:id="@+id/imgAdPostPicture" android:adjustViewBounds="false"
+                    android:layout_marginBottom="16dp" android:scaleType="centerCrop"/>
             <TextView
                     android:text="The Different Methods Of Hair Removal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdArticleTitle" android:textSize="16sp"
+                    android:layout_height="wrap_content" android:id="@+id/txtAdPostTitle" android:textSize="16sp"
                     android:textStyle="bold" android:textColor="@color/colorText" android:layout_marginBottom="4dp"/>
             <TextView
                     android:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdArticleText"
-                    android:textColor="@color/colorText"/>
-            <Button
+                    android:layout_height="wrap_content" android:id="@+id/txtAdPostText"
+                    android:textColor="@color/colorText" android:textSize="15sp"/>
+            <TextView
                     android:text="Continue Lendo"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btAdArticleRead"
-                    android:gravity="left|center_vertical" android:background="@android:color/white"
-                    android:textColor="@color/colorLink" android:textStyle="bold"/>
+                    android:layout_height="wrap_content" android:id="@+id/txtAdArticleRead" android:paddingTop="16dp"
+                    android:paddingBottom="16dp" android:textAllCaps="true" android:textColor="@color/colorLink"
+                    android:textStyle="bold"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -77,20 +80,20 @@
                 <com.like.LikeButton
                         app:icon_type="heart"
                         app:icon_size="25dp"
-                        android:id="@+id/like_button"
+                        android:id="@+id/btLikeButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp" app:liked="false"/>
                 <TextView
                         android:text="19"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdArticleLikes"
+                        android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
                         android:gravity="center_vertical" android:layout_marginLeft="4dp"
                         android:textColor="@color/colorText" android:textStyle="bold"/>
                 <ImageButton
                         android:src="@drawable/ic_comment_grey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/btAdArticleComment"
-                        android:background="@android:color/white" android:padding="6dp"
+                        android:background="@color/backgroundGrey" android:padding="6dp"
                         android:layout_marginLeft="16dp"/>
                 <TextView
                         android:text="2"

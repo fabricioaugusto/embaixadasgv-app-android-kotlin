@@ -3,11 +3,13 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
+>
 
     <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content" app:cardBackgroundColor="@color/backgroundGrey"
+            app:cardElevation="0dp" app:cardMaxElevation="0dp">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -19,7 +21,7 @@
                     android:layout_marginBottom="12sp">
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/imgAdThoughtUser"
+                        android:id="@+id/imgAdPostUser"
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:src="@drawable/avatar"
@@ -32,12 +34,12 @@
                     <TextView
                             android:text="Fabrício Augusto"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdThoughtUserName"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
                             android:textColor="@color/colorText"/>
                     <TextView
                             android:text="26 Oct 2018"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdThoughtDate"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
                             android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
                 </LinearLayout>
                 <ImageButton
@@ -49,8 +51,8 @@
             <TextView
                     android:text="No início, eles duvidam e fazem chacota. Depois de seu sucesso, dão tapinhas nas costas e dizem que sempre acreditaram em você. "
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdThoughtText" android:textSize="24sp"
-                    android:textColor="@color/colorText" android:layout_marginBottom="4dp"/>
+                    android:layout_height="wrap_content" android:id="@+id/txtAdPostText" android:textSize="24sp"
+                    android:textColor="@color/colorText" android:layout_marginBottom="16dp"/>
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
@@ -58,20 +60,20 @@
                 <com.like.LikeButton
                         app:icon_type="heart"
                         app:icon_size="25dp"
-                        android:id="@+id/like_button"
+                        android:id="@+id/btLikeButton"
                         android:layout_width="30dp"
                         android:layout_height="30dp" app:liked="false"/>
                 <TextView
                         android:text="19"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdThoughtLikes"
+                        android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
                         android:gravity="center_vertical" android:layout_marginLeft="4dp"
                         android:textColor="@color/colorText" android:textStyle="bold"/>
                 <ImageButton
                         app:srcCompat="@drawable/ic_comment_grey"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/btAdThoughtComment"
-                        android:background="@android:color/white" android:padding="6dp"
+                        android:background="@color/backgroundGrey" android:padding="6dp"
                         android:layout_marginLeft="16dp"/>
                 <TextView
                         android:text="2"

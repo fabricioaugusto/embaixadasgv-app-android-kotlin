@@ -55,7 +55,7 @@ class UsersFragment : Fragment() {
         return view
     }
 
-    fun getListUsers() {
+    private fun getListUsers() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
             .get()
@@ -81,7 +81,7 @@ class UsersFragment : Fragment() {
         mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
     }
 
-    fun startUserProfileActivity(singleUser: User) {
+    private fun startUserProfileActivity(singleUser: User) {
 
         val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
         intent.putExtra("user", singleUser)
