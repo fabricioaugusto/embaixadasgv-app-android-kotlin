@@ -197,7 +197,8 @@
             <Button
                     android:text="Salvar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btArticleSaveCover" android:layout_marginTop="16dp"
+                    android:layout_height="wrap_content" android:id="@+id/btArticleSaveCover"
+                    android:layout_marginTop="16dp"
                     android:background="@color/colorRed" android:textColor="@color/backgroundGrey"/>
         </LinearLayout>
         <LinearLayout
@@ -225,8 +226,33 @@
             <Button
                     android:text="Salvar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btArticleSaveTitle" android:layout_marginTop="16dp"
+                    android:layout_height="wrap_content" android:id="@+id/btArticleSaveTitle"
+                    android:layout_marginTop="16dp"
                     android:background="@color/colorRed" android:textColor="@color/backgroundGrey"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:background="@color/backgroundGrey"
+                android:paddingLeft="24dp" android:paddingRight="24dp" android:paddingTop="32dp"
+                android:paddingBottom="32dp" android:id="@+id/layoutArticlePublish" android:clickable="true"
+                android:visibility="gone">
+            <TextView
+                    android:text="Tem certeza que deseja publicar a nota?"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/textView28"
+                    android:textColor="@color/colorText"/>
+            <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                    android:text="Publicar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/btArticlePublish"
+                    app:finalCornerAngle="50dp"
+                    app:initialCornerAngle="0dp"
+                    app:spinning_bar_color="#FFF"
+                    app:spinning_bar_padding="6dp"
+                    android:background="@drawable/bg_circular_progressbar"
+                    android:textColor="@color/backgroundGrey"
+                    android:layout_marginTop="16dp"/>
         </LinearLayout>
     </LinearLayout>
 

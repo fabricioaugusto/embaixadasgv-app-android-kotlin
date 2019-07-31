@@ -21,6 +21,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
+import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.User
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
@@ -34,6 +35,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mUser: User
+    private lateinit var mBasicUser: BasicUser
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
@@ -57,8 +59,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         if (bundle != null) {
             mFeedFragment.arguments = bundle
             mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLogMain", mUser.toString())
         }
+
+        mBasicUser = BasicUser(mUser.id, mUser.name, mUser.email, mUser.profile_img)
 
         mUsersFragment.arguments = bundle
 
@@ -71,8 +74,17 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
         makeToast(position.toString())
 
+        if(position == 0) {
+
+            val intent: Intent = Intent(this, CreateToughtActivity::class.java)
+            intent.putExtra("user", mBasicUser)
+            startActivity(intent)
+        }
+
         if(position == 1) {
+
             val intent: Intent = Intent(this, CreateArticleActivity::class.java)
+            intent.putExtra("user", mBasicUser)
             startActivity(intent)
         }
     }
