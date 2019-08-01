@@ -16,6 +16,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.mthli.knife.KnifeParser
 import android.os.AsyncTask
+import android.util.Log
+import androidx.core.net.toUri
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.PostLike
@@ -23,11 +25,13 @@ import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.like.LikeButton
+import com.like.OnLikeListener
 
 
 class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {
 
     private val mPostList: List<Post> = postList
+    private lateinit var mContext: Context
     var onItemClick: ((post: Post) -> Unit)? = null
     private val THOUGHT: Int = 0
     private val NOTE: Int = 1
@@ -42,8 +46,8 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
         mDatabase = MyFirebase.database()
         mPostCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
         mLikesCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
-        val context = parent.context
-        val inflater: LayoutInflater = LayoutInflater.from(context)
+        mContext = parent.context
+        val inflater: LayoutInflater = LayoutInflater.from(mContext)
         var view: View? = null
 
 
@@ -53,7 +57,7 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
             else -> inflater.inflate(R.layout.adapter_post_picture, parent, false)
         }
 
-        return PostViewHolder(view, context)
+        return PostViewHolder(view, mContext)
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -91,29 +95,56 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
         private val mTxtAdPostText: TextView = itemView.findViewById(R.id.txtAdPostText)
         private val mButtomLike: LikeButton = itemView.findViewById(R.id.btLikeButton)
         private val mTxtAdPostLikes: TextView = itemView.findViewById(R.id.txtAdPostLikes)
-        private lateinit var mImgAdPostPicture: ImageView
-        private lateinit var mTxtAdPostTitle: TextView
+        private var mImgAdPostPicture: ImageView = itemView.findViewById(R.id.imgAdPostPicture)
+        private var mTxtAdPostTitle: TextView = itemView.findViewById(R.id.txtAdPostTitle)
 
         init {
 
-            if(mType == "note") {
-                mTxtAdPostTitle = itemView.findViewById(R.id.txtAdPostTitle)
-                mImgAdPostPicture = itemView.findViewById(R.id.imgAdPostPicture)
-            } else if(mType == "post") {
-                mImgAdPostPicture = itemView.findViewById(R.id.imgAdPostPicture)
-            }
-
-            itemView.setOnClickListener {
-                onItemClick?.invoke(mPostList[adapterPosition])
-            }
         }
 
         fun bindData(post: Post) {
 
-            val postDocument: DocumentReference =  mPostCollection.document(post.id)
             val user: BasicUser = post.user
 
-            if(post.post_likes > 0) {
+            Log.d("AdapterPost", user.profile_img.toString())
+
+            Glide.with(context)
+                .load(user.profile_img!!.toUri())
+                .transition(withCrossFade())
+                .into(mImgAdPostUser)
+
+            mTxtAdPostUserName.text = user.name
+            mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
+
+            if(!post.title.isNullOrEmpty()) {
+                mTxtAdPostTitle.text = post.title
+            }
+
+            if(!post.picture.isNullOrEmpty()) {
+                Glide.with(context)
+                    .load(post.picture!!.toUri())
+                    .transition(withCrossFade())
+                    .into(mImgAdPostPicture)
+            }
+
+            val likeListener = object : OnLikeListener {
+                override fun liked(likeButton: LikeButton?) {
+
+                    val postLike: PostLike = PostLike(post_id = post.id, user_id = user.id, user = user)
+                    mLikesCollection.add(postLike).addOnSuccessListener {
+                        it.update("id", it.id)
+                    }
+                }
+
+                override fun unLiked(likeButton: LikeButton?) {
+
+                }
+
+            }
+
+            mButtomLike.setOnLikeListener(likeListener)
+
+            /*if(post.post_likes > 0) {
 
                 mTxtAdPostLikes.isGone = false
 
@@ -143,46 +174,8 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
                 }
             } else {
                 mTxtAdPostLikes.isGone = false
-            }
+            }*/
 
-            Glide.with(context)
-                .load(user.profile_img)
-                .placeholder(R.color.backgroundGrey)
-                .transition(withCrossFade())
-                .into(mImgAdPostUser)
-
-            mTxtAdPostUserName.text = user.name
-            mTxtAdPostDate.text = post.date.toString()
-
-            when (mType) {
-                "thought" -> {
-                    mTxtAdPostText.text = KnifeParser.fromHtml(post.thought)
-                }
-                "note" -> {
-
-                    Glide.with(context)
-                        .load(post.article_cover)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.color.backgroundGrey)
-                        .transition(withCrossFade())
-                        .into(mImgAdPostPicture)
-
-                    mTxtAdPostTitle.text = post.article_title
-                    mTxtAdPostText.text = KnifeParser.fromHtml(post.article_text)
-
-                }
-                "post" -> {
-                    Glide.with(context)
-                        .load(post.picture)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .placeholder(R.color.backgroundGrey)
-                        .transition(withCrossFade())
-                        .into(mImgAdPostPicture)
-                    mTxtAdPostText.text = post.picture_description
-                }
-            }
-
-            mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
         }
     }
 }

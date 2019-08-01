@@ -18,6 +18,7 @@ import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
@@ -26,6 +27,7 @@ import kotlinx.android.synthetic.main.activity_create_article.*
 import kotlinx.android.synthetic.main.activity_create_post.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -146,8 +148,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
         val currentDate = sdf.format(Date())
 
-        mPost.picture_description = description
-        mPost.date = currentDate
+        mPost.text = description
 
         btPostPublish.startAnimation()
 

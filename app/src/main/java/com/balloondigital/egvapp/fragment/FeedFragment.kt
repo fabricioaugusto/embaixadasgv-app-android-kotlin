@@ -17,14 +17,17 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.MenuActivity
 import com.balloondigital.egvapp.activity.UserProfileActivity
 import com.balloondigital.egvapp.adapter.PostListAdapter
-import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
+import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.fragment_feed.*
+import android.os.AsyncTask
+import com.balloondigital.egvapp.adapter.PostPictureListAdapter
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,7 +93,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
         mAdapter.setHasStableIds(true)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
-        mRecyclerView.setItemViewCacheSize(20)
+
         mAdapter.onItemClick = {
             post ->
         }

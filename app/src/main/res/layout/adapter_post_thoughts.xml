@@ -4,84 +4,82 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
->
+              android:paddingRight="16dp" android:paddingLeft="16dp">
 
-    <androidx.cardview.widget.CardView
+    <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" app:cardBackgroundColor="@color/backgroundGrey"
-            app:cardElevation="0dp" app:cardMaxElevation="0dp">
+            android:layout_height="match_parent" android:gravity="center_vertical"
+            android:layout_marginBottom="12sp">
+        <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/imgAdPostUser"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/avatar"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FFF" android:layout_marginRight="8dp"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-            <LinearLayout
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center_vertical"
-                    android:layout_marginBottom="12sp">
-                <de.hdodenhof.circleimageview.CircleImageView
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/imgAdPostUser"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/avatar"
-                        app:civ_border_width="2dp"
-                        app:civ_border_color="#FFF" android:layout_marginRight="8dp"/>
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:layout_weight="1">
-                    <TextView
-                            android:text="Fabrício Augusto"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
-                            android:textColor="@color/colorText"/>
-                    <TextView
-                            android:text="26 Oct 2018"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
-                            android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
-                </LinearLayout>
-                <ImageButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_more_vert_grey"
-                        android:id="@+id/imageButton2" android:background="@android:color/transparent"
-                        android:padding="8dp"/>
-            </LinearLayout>
+                android:layout_height="wrap_content" android:layout_weight="1">
             <TextView
-                    android:text="No início, eles duvidam e fazem chacota. Depois de seu sucesso, dão tapinhas nas costas e dizem que sempre acreditaram em você. "
+                    android:text="Fabrício Augusto"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdPostText" android:textSize="24sp"
-                    android:textColor="@color/colorText" android:layout_marginBottom="16dp"/>
-            <LinearLayout
-                    android:orientation="horizontal"
+                    android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
+                    android:textColor="@color/colorText"/>
+            <TextView
+                    android:text="26 Oct 2018"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center_vertical">
-                <com.like.LikeButton
-                        app:icon_type="heart"
-                        app:icon_size="25dp"
-                        android:id="@+id/btLikeButton"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp" app:liked="false"/>
-                <TextView
-                        android:text="19"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
-                        android:gravity="center_vertical" android:layout_marginLeft="4dp"
-                        android:textColor="@color/colorText" android:textStyle="bold"/>
-                <ImageButton
-                        app:srcCompat="@drawable/ic_comment_grey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/btAdThoughtComment"
-                        android:background="@color/backgroundGrey" android:padding="6dp"
-                        android:layout_marginLeft="16dp"/>
-                <TextView
-                        android:text="2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdThoughtComments"
-                        android:textColor="@color/colorText" android:textStyle="bold"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
+                    android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_more_vert_grey"
+                android:id="@+id/imageButton2" android:background="@android:color/transparent"
+                android:padding="8dp"/>
+    </LinearLayout>
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/imgAdPostPicture" android:scaleType="centerCrop" android:visibility="gone"/>
+    <TextView
+            android:text="No início, eles duvidam e fazem chacota. Depois de seu sucesso, dão tapinhas nas costas e dizem que sempre acreditaram em você. "
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/txtAdPostText" android:textSize="24sp"
+            android:textColor="@color/colorText" android:layout_marginBottom="16dp"/>
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="center_vertical">
+        <com.like.LikeButton
+                app:icon_type="heart"
+                app:icon_size="25dp"
+                android:id="@+id/btLikeButton"
+                android:layout_width="30dp"
+                android:layout_height="30dp" app:liked="false"/>
+        <TextView
+                android:text="19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
+                android:gravity="center_vertical" android:layout_marginLeft="4dp"
+                android:textColor="@color/colorText" android:textStyle="bold"/>
+        <ImageButton
+                app:srcCompat="@drawable/ic_comment_grey"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btAdThoughtComment"
+                android:background="@color/backgroundGrey" android:padding="6dp"
+                android:layout_marginLeft="16dp"/>
+        <TextView
+                android:text="2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/txtAdThoughtComments"
+                android:textColor="@color/colorText" android:textStyle="bold"/>
+    </LinearLayout>
+    <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/txtAdPostTitle" android:visibility="gone"/>
 
 </LinearLayout>

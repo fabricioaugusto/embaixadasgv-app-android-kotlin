@@ -28,6 +28,7 @@ import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
@@ -35,6 +36,7 @@ import io.github.mthli.knife.KnifeText
 import kotlinx.android.synthetic.main.activity_create_article.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.Duration
 import java.util.*
@@ -402,9 +404,8 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
         val currentDate = sdf.format(Date())
 
-        mPost.article_title = title
-        mPost.article_text = text
-        mPost.date = currentDate
+        mPost.title = title
+        mPost.text = text
 
         btArticlePublish.startAnimation()
 
@@ -429,7 +430,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
                     ref.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
                         val uri = task.result
                         if (uri != null) {
-                            mPost.article_cover = uri.toString()
+                            mPost.picture = uri.toString()
                             mDatabase.collection(mCollections.POSTS)
                                 .add(mPost.toMapNote())
                                 .addOnSuccessListener { document ->

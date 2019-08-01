@@ -14,6 +14,7 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.utils.Converters
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import io.github.mthli.knife.KnifeText
@@ -160,8 +161,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
         val currentDate = sdf.format(Date())
 
-        mPost.thought = text
-        mPost.date = Timestamp(System.currentTimeMillis())
+        mPost.text = text
 
         btToughtPublish.startAnimation()
 
