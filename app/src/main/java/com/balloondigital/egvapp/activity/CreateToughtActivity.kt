@@ -24,9 +24,9 @@ import kotlinx.android.synthetic.main.activity_create_tought.clear
 import kotlinx.android.synthetic.main.activity_create_tought.italic
 import kotlinx.android.synthetic.main.activity_create_tought.knife
 import kotlinx.android.synthetic.main.activity_create_tought.link
+import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.text.clear
 
 class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -161,7 +161,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         val currentDate = sdf.format(Date())
 
         mPost.thought = text
-        mPost.date = currentDate
+        mPost.date = Timestamp(System.currentTimeMillis())
 
         btToughtPublish.startAnimation()
 
@@ -176,7 +176,6 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
                     ).apply {
                         finish()
                     }
-
                 }
             }
     }
