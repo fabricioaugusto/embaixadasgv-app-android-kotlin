@@ -17,97 +17,106 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.CreatePostActivity"
-                  android:theme="@style/AppThemeToolbar">
+        <activity android:name=".activity.Single.SingleArticleActivity">
         </activity>
-        <activity android:name=".activity.CreateArticleActivity"
-                  android:theme="@style/AppThemeToolbar">
+        <activity android:name=".activity.Single.SingleThoughtActivity">
         </activity>
-        <activity android:name=".activity.CreateToughtActivity"
-                  android:theme="@style/AppThemeToolbar">
+        <activity android:name=".activity.Single.SinglePostActivity">
         </activity>
         <activity
-                android:name=".activity.ChangeProfilePhotoActivity"
+                android:name=".activity.Create.CreatePostActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.AppRateActivity"
+                android:name=".activity.Create.CreateArticleActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.SuggestsActivity"
+                android:name=".activity.Create.CreateToughtActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.FavoriteEventsActivity"
+                android:name=".activity.Edit.ChangeProfilePhotoActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.EnrolledEventsActivity"
+                android:name=".activity.Menu.AppRateActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.PrivacyActivity"
+                android:name=".activity.Menu.SuggestsActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.SetPrivacyActivity"
+                android:name=".activity.Menu.FavoriteEventsActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.MyEmbassyActivity"
+                android:name=".activity.Menu.EnrolledEventsActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.SendMessageActivity"
+                android:name=".activity.Menu.PrivacyActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.AboutAppActivity"
+                android:name=".activity.Menu.SetPrivacyActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.AboutEmbassiesActivity"
+                android:name=".activity.Menu.MyEmbassyActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.EditSocialActivity"
+                android:name=".activity.Menu.SendMessageActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.ChangePassActivity"
+                android:name=".activity.Menu.AboutAppActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.EditProfileActivity"
+                android:name=".activity.Menu.AboutEmbassiesActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.ChoosePhotoActivity">
+        <activity
+                android:name=".activity.Edit.EditSocialActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.CompleteRegisterActivity">
+        <activity
+                android:name=".activity.Edit.ChangePassActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.CheckAuthActivity">
+        <activity
+                android:name=".activity.Edit.EditProfileActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity android:name=".activity.Edit.ChoosePhotoActivity">
+        </activity>
+        <activity android:name=".activity.Edit.CompleteRegisterActivity">
+        </activity>
+        <activity android:name=".activity.Auth.CheckAuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ChooseEmbassyActivity">
+        <activity android:name=".activity.Edit.ChooseEmbassyActivity">
         </activity>
-        <activity android:name=".activity.ResetPasswordActivity">
+        <activity android:name=".activity.Auth.ResetPasswordActivity">
         </activity>
-        <activity android:name=".activity.MenuActivity">
+        <activity android:name=".activity.Menu.MenuActivity">
         </activity>
-        <activity android:name=".activity.EventProfileActivity">
+        <activity android:name=".activity.Single.EventProfileActivity">
         </activity>
         <activity
-                android:name=".activity.UserProfileActivity"
+                android:name=".activity.Single.UserProfileActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.RegisterActivity">
+        <activity android:name=".activity.Auth.RegisterActivity">
         </activity>
-        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.Auth.LoginActivity"/>
         <activity android:name=".activity.MainActivity"/>
         <activity
                 android:name="com.theartofdev.edmodo.cropper.CropImageActivity"

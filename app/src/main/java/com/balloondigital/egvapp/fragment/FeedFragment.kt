@@ -14,20 +14,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.MenuActivity
-import com.balloondigital.egvapp.activity.UserProfileActivity
+import com.balloondigital.egvapp.activity.Menu.MenuActivity
+import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
+import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
-import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
-import android.os.AsyncTask
-import com.balloondigital.egvapp.adapter.PostPictureListAdapter
 import com.balloondigital.egvapp.model.PostLike
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -98,13 +95,21 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
         mAdapter.onItemClick = {
             post ->
+            if(post.type == "note") {
+                startPostArticleActivity(post)
+            }
         }
+    }
 
+    private fun startPostArticleActivity(post: Post) {
+        val intent: Intent = Intent(mContext, SingleArticleActivity::class.java)
+        intent.putExtra("post_id", post.id)
+        startActivity(intent)
     }
 
     private fun getListPosts() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.ASCENDING)
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.DESCENDING)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mPostList.clear()

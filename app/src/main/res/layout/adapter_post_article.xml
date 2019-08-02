@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
                 android:gravity="center_vertical" android:layout_marginLeft="4dp"
-                android:textColor="@color/colorText" android:textStyle="bold"/>
+                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"/>
         <ImageButton
                 android:src="@drawable/ic_comment_grey"
                 android:layout_width="wrap_content"
@@ -84,6 +84,6 @@
                 android:text="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdArticleComments"
-                android:textColor="@color/colorText" android:textStyle="bold"/>
+                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"/>
     </LinearLayout>
 </LinearLayout>

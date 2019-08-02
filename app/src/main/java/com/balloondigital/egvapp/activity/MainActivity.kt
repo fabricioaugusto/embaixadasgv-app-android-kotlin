@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.animation.Animation
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
@@ -15,17 +14,17 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-import android.R.attr.fragment
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
+import com.balloondigital.egvapp.activity.Create.CreatePostActivity
+import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.User
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
-import com.orhanobut.dialogplus.OnClickListener
 import com.orhanobut.dialogplus.OnItemClickListener
 
 

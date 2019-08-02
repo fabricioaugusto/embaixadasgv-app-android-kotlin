@@ -1,8 +1,10 @@
 package com.balloondigital.egvapp.model
 
 import com.google.firebase.firestore.Exclude
+import com.google.firebase.firestore.IgnoreExtraProperties
 import java.io.Serializable
 
+@IgnoreExtraProperties
 data class PostLike(
     var id: String = "",
     var post_id: String = "",

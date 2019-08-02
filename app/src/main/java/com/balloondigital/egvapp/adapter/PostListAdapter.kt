@@ -22,6 +22,7 @@ import androidx.core.view.isGone
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.PostLike
+import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -103,7 +104,9 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
         private var mTxtAdPostTitle: TextView = itemView.findViewById(R.id.txtAdPostTitle)
 
         init {
-
+            itemView.setOnClickListener {
+                onItemClick?.invoke(mPostList[adapterPosition])
+            }
         }
 
         fun bindData(post: Post) {
@@ -185,40 +188,6 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
                     .transition(withCrossFade())
                     .into(mImgAdPostPicture)
             }
-
-
-
-            /*if(post.post_likes > 0) {
-
-                mTxtAdPostLikes.isGone = false
-
-                mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
-                    .whereEqualTo("post_id", post.id)
-                    .whereEqualTo("user_id", user.id)
-                    .get()
-                    .addOnSuccessListener { document ->
-                        if(document != null) {
-                            mButtomLike.isLiked
-                        }
-                    }
-
-
-                if(mButtomLike.isLiked) {
-                    mButtomLike.setOnClickListener(View.OnClickListener {
-                        postDocument.update("post_likes", post.post_likes-1)
-
-                        val postLike: PostLike = PostLike(post_id = post.id, user_id = user.id, user = user)
-                        mLikesCollection.add(postLike.toMap())
-
-                    })
-                } else {
-                    mButtomLike.setOnClickListener(View.OnClickListener {
-                        postDocument.update("post_likes", post.post_likes+1)
-                    })
-                }
-            } else {
-                mTxtAdPostLikes.isGone = false
-            }*/
 
         }
     }
