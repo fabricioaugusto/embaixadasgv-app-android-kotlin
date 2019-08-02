@@ -48,7 +48,7 @@
             android:text="No início, eles duvidam e fazem chacota. Depois de seu sucesso, dão tapinhas nas costas e dizem que sempre acreditaram em você. "
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostText" android:textSize="24sp"
-            android:textColor="@color/colorText" android:layout_marginBottom="16dp"/>
+            android:textColor="@color/colorText" android:layout_marginBottom="16dp" android:clickable="true"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
