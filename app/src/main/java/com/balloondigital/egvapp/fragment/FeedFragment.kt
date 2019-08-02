@@ -26,6 +26,7 @@ import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import android.os.AsyncTask
 import com.balloondigital.egvapp.adapter.PostPictureListAdapter
+import com.balloondigital.egvapp.model.PostLike
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 
@@ -45,6 +46,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mPostList: MutableList<Post>
+    private lateinit var mLikeList: MutableList<PostLike>
     private lateinit var mBtFeedMenu: ImageButton
     private lateinit var mUser: User
     private lateinit var mDbListener: ListenerRegistration
@@ -102,8 +104,8 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
     private fun getListPosts() {
 
-        mDbListener = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.ASCENDING)
-            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.ASCENDING)
+            .get().addOnSuccessListener { documentSnapshot ->
 
                 mPostList.clear()
 

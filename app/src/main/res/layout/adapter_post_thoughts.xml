@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
               android:paddingRight="16dp" android:paddingLeft="16dp">
@@ -60,11 +60,10 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp" app:liked="false"/>
         <TextView
-                android:text="19"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
                 android:gravity="center_vertical" android:layout_marginLeft="4dp"
-                android:textColor="@color/colorText" android:textStyle="bold"/>
+                android:textColor="@color/colorText" android:textStyle="bold" tools:visibility="visible"/>
         <ImageButton
                 app:srcCompat="@drawable/ic_comment_grey"
                 android:layout_width="wrap_content"

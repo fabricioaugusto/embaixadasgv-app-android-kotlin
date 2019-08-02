@@ -16,6 +16,9 @@ data class Post(
     var picture: String? = null,
     var title: String? = null,
     var post_likes: Int = 0,
+    var like_verified: Boolean = false,
+    var liked: Boolean = false,
+    var list_likes: MutableList<PostLike>? = null,
     var user: BasicUser = BasicUser()
     ): Serializable {
     @Exclude

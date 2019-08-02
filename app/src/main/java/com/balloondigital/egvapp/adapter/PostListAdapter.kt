@@ -20,6 +20,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.PostLike
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -37,6 +38,8 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
     private val NOTE: Int = 1
     private val PICTURE: Int = 2
     private lateinit var mType: String
+    private lateinit var mUserID: String
+    private var mLikeID: String? = null
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mPostCollection: CollectionReference
     private lateinit var mLikesCollection: CollectionReference
@@ -47,6 +50,7 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
         mPostCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
         mLikesCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
         mContext = parent.context
+        mUserID = UserService.authCurrentUser()!!.uid
         val inflater: LayoutInflater = LayoutInflater.from(mContext)
         var view: View? = null
 
@@ -105,8 +109,62 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
         fun bindData(post: Post) {
 
             val user: BasicUser = post.user
+            mButtomLike.isLiked = post.liked
 
-            Log.d("AdapterPost", user.profile_img.toString())
+
+            if(!post.like_verified) {
+                mLikesCollection.whereEqualTo("post_id", post.id)
+                    .whereEqualTo("user_id", mUserID)
+                    .get().addOnSuccessListener {
+                            data ->
+                        if(data.documents.size > 0) {
+                            Log.d("PostAdapterLog", "Achou")
+                            mLikeID = data.documents[0].id
+                            mButtomLike.isLiked = true
+                            post.liked = true
+                        }
+                        post.like_verified = true
+                    }
+            }
+
+            if(post.post_likes > 0) {
+                mTxtAdPostLikes.text = post.post_likes.toString()
+            }
+
+            val likeListener = object : OnLikeListener {
+                override fun liked(likeButton: LikeButton?) {
+                    post.liked = true
+                    mTxtAdPostLikes.text = (post.post_likes+1).toString()
+
+                    val postLike: PostLike = PostLike(post_id = post.id, user_id = mUserID, user = user)
+                    post.post_likes = post.post_likes+1
+                    mLikesCollection.add(postLike).addOnSuccessListener {
+                        it.update("id", it.id)
+                        mPostCollection.document(post.id).update("post_likes", post.post_likes)
+                    }
+                }
+
+                override fun unLiked(likeButton: LikeButton?) {
+                    post.liked = false
+
+                    val numLikes = post.post_likes-1
+
+                    if(numLikes > 0) {
+                        mTxtAdPostLikes.text = (post.post_likes-1).toString()
+                    } else {
+                        mTxtAdPostLikes.text = ""
+                    }
+
+                    post.post_likes = numLikes
+                    mPostCollection.document(post.id).update("post_likes", numLikes)
+
+                    if(mLikeID != null) {
+                        mLikesCollection.document(mLikeID!!).delete()
+                    }
+                }
+            }
+
+            mButtomLike.setOnLikeListener(likeListener)
 
             Glide.with(context)
                 .load(user.profile_img!!.toUri())
@@ -115,6 +173,7 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
 
             mTxtAdPostUserName.text = user.name
             mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
+
 
             if(!post.title.isNullOrEmpty()) {
                 mTxtAdPostTitle.text = post.title
@@ -127,22 +186,7 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
                     .into(mImgAdPostPicture)
             }
 
-            val likeListener = object : OnLikeListener {
-                override fun liked(likeButton: LikeButton?) {
 
-                    val postLike: PostLike = PostLike(post_id = post.id, user_id = user.id, user = user)
-                    mLikesCollection.add(postLike).addOnSuccessListener {
-                        it.update("id", it.id)
-                    }
-                }
-
-                override fun unLiked(likeButton: LikeButton?) {
-
-                }
-
-            }
-
-            mButtomLike.setOnLikeListener(likeListener)
 
             /*if(post.post_likes > 0) {
 
