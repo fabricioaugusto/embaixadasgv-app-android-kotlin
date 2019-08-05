@@ -141,7 +141,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                             val uri = data.data
                             Log.d("GalleryActivity", "Chegou aqui")
                             CropImage.activity(uri)
-                                .setAspectRatio(4, 3)
+                                .setAspectRatio(1, 1)
                                 .setFixAspectRatio(true)
                                 .start(this)
                         }
