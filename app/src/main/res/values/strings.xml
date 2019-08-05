@@ -31,4 +31,15 @@
     <string name="toast_quote">Quote</string>
     <string name="toast_insert_link">Insert link</string>
     <string name="toast_format_clear">Format clear</string>
+
+    <string-array name="posts_alert">
+        <item>Denunciar Publicação</item>
+    </string-array>
+
+    <string-array name="posts_author_alert">
+        <item>Remover Publicação</item>
+    </string-array>
+
 </resources>
+
+

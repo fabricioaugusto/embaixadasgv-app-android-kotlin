@@ -1,11 +1,15 @@
 package com.balloondigital.egvapp.activity.Single
 
+import android.app.Activity
+import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,10 +22,12 @@ import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.activity_single_post.*
+
 
 class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -73,10 +79,15 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
         if(id == R.id.btPostSendComment) {
             saveData()
         }
+
+        if(id == R.id.btPostOptions) {
+            removePost()
+        }
     }
 
     private fun setListeners() {
         btPostSendComment.setOnClickListener(this)
+        btPostOptions.setOnClickListener(this)
     }
 
     private fun getPost() {
@@ -111,6 +122,26 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 mAdapter.notifyDataSetChanged()
             }
+    }
+
+    private fun removePost() {
+
+        val alertbox = AlertDialog.Builder(this)
+
+        if(mPost.user.id == mCurrentUser!!.uid)   {
+            alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
+                if(pos == 0) {
+                    val deletePost = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).document(mPost.id).delete()
+                    confirmDialog("Deletar Publicação",
+                        "Tem certeza que deseja remover esta publicação?", deletePost)
+                }
+            })
+        } else {
+            alertbox.setItems(R.array.posts_alert, DialogInterface.OnClickListener { dialog, pos ->
+                //pos will give the selected item position
+            })
+        }
+        alertbox.show()
     }
 
     private fun setRecyclerView() {
@@ -167,6 +198,23 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
                 document.update("id", document.id)
                 makeToast("Comentário adicionado com sucesso!")
             }
+    }
+
+    private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>) {
+        AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(dialogTitle)
+            .setMessage(dialogMessage)
+            .setPositiveButton("Sim") { dialog, which ->
+                task.addOnCompleteListener {
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("removed", true)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
     }
 
     fun makeToast(text: String) {

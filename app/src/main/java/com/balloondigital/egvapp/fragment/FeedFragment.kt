@@ -1,6 +1,7 @@
 package com.balloondigital.egvapp.fragment
 
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -27,6 +28,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.balloondigital.egvapp.model.PostLike
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -47,6 +50,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
     private lateinit var mPostList: MutableList<Post>
     private lateinit var mLikeList: MutableList<PostLike>
     private lateinit var mBtFeedMenu: ImageButton
+    private var mAdapterPosition: Int = 0
     private lateinit var mUser: User
     private lateinit var mDbListener: ListenerRegistration
 
@@ -84,6 +88,30 @@ class FeedFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                if(data != null) {
+                    val removed: Boolean = data.getBooleanExtra("removed", false)
+                    if(removed) {
+                        mPostList.removeAt(mAdapterPosition)
+                        mAdapter.notifyItemRemoved(mAdapterPosition)
+                        mAdapter.notifyItemRangeChanged(mAdapterPosition, mPostList.size)
+                        mAdapter.notifyDataSetChanged()
+                    }
+                }
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data!!)
+                Log.i("GooglePlaceLog", status.statusMessage)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
     private fun setListeners() {
         mBtFeedMenu.setOnClickListener(this)
     }
@@ -96,7 +124,10 @@ class FeedFragment : Fragment(), View.OnClickListener {
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
         mAdapter.onItemClick = {
-            post ->
+            post, pos ->
+
+            mAdapterPosition = pos
+
             if(post.type == "note") {
                 startPostArticleActivity(post)
             }
@@ -113,21 +144,21 @@ class FeedFragment : Fragment(), View.OnClickListener {
         val intent: Intent = Intent(mContext, SingleArticleActivity::class.java)
         intent.putExtra("post_id", post.id)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, 100)
     }
 
     private fun startPostPictureActivity(post: Post) {
         val intent: Intent = Intent(mContext, SinglePostActivity::class.java)
         intent.putExtra("post_id", post.id)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, 100)
     }
 
     private fun startPostToughtActivity(post: Post) {
         val intent: Intent = Intent(mContext, SingleThoughtActivity::class.java)
         intent.putExtra("post_id", post.id)
         intent.putExtra("user", mUser)
-        startActivity(intent)
+        startActivityForResult(intent, 100)
     }
 
     private fun getListPosts() {

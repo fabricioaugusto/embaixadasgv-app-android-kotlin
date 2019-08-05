@@ -46,6 +46,7 @@ dependencies {
     implementation 'com.github.santalu:mask-edittext:1.1.1'
     implementation "com.github.bumptech.glide:recyclerview-integration:4.9.0"
     implementation "io.github.yavski:fab-speed-dial:1.0.6"
+    implementation 'com.algolia:algoliasearch-android:3.27.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.github.leinardi:FloatingActionButtonSpeedDial:master-SNAPSHOT'
