@@ -15,6 +15,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withC
 import de.hdodenhof.circleimageview.CircleImageView
 import io.github.mthli.knife.KnifeParser
 import android.os.AsyncTask
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.core.view.isGone
@@ -175,6 +176,10 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
 
             mTxtAdPostUserName.text = user.name
             mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
+
+            if(post.type == "thought") {
+                mTxtAdPostText.movementMethod = LinkMovementMethod.getInstance()
+            }
 
 
             if(!post.title.isNullOrEmpty()) {

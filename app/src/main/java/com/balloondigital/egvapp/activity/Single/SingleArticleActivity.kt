@@ -2,6 +2,7 @@ package com.balloondigital.egvapp.activity.Single
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -142,6 +143,7 @@ class SingleArticleActivity : AppCompatActivity(), View.OnClickListener {
 
         txtPostUserName.text = user.name
         txtPostText.text = KnifeParser.fromHtml(mPost.text)
+        txtPostText.movementMethod = LinkMovementMethod.getInstance()
 
 
         if(!mPost.title.isNullOrEmpty()) {
