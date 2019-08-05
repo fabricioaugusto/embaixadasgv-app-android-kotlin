@@ -21,7 +21,6 @@ import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreatePostActivity
 import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.User
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mUser: User
-    private lateinit var mBasicUser: BasicUser
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
@@ -60,8 +58,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             mUser = bundle.getSerializable("user") as User
         }
 
-        mBasicUser = BasicUser(mUser.id, mUser.name, mUser.email, mUser.profile_img)
-
         mUsersFragment.arguments = bundle
 
         PermissionConfig.validatePermission(permissions, this)
@@ -75,19 +71,19 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         if(position == 0) {
             val intent: Intent = Intent(this, CreateToughtActivity::class.java)
-            intent.putExtra("user", mBasicUser)
+            intent.putExtra("user", mUser)
             startActivity(intent)
         }
 
         if(position == 1) {
             val intent: Intent = Intent(this, CreateArticleActivity::class.java)
-            intent.putExtra("user", mBasicUser)
+            intent.putExtra("user", mUser)
             startActivity(intent)
         }
 
         if(position == 2) {
             val intent: Intent = Intent(this, CreatePostActivity::class.java)
-            intent.putExtra("user", mBasicUser)
+            intent.putExtra("user", mUser)
             startActivity(intent)
         }
     }
@@ -138,8 +134,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             dialogBuilder.adapter = mAdapter
             dialogBuilder.onItemClickListener = this
             dialogBuilder.setHeader(R.layout.header_dialog)
+            dialogBuilder.setPadding(16, 16, 16, 48)
             dialogBuilder.create().show()
-
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.Toast
@@ -11,15 +12,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import io.github.mthli.knife.KnifeText
+import io.github.yavski.fabspeeddial.FabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_tought.*
 import kotlinx.android.synthetic.main.activity_create_tought.bold
 import kotlinx.android.synthetic.main.activity_create_tought.clear
+import kotlinx.android.synthetic.main.activity_create_tought.fabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_tought.italic
 import kotlinx.android.synthetic.main.activity_create_tought.knife
 import kotlinx.android.synthetic.main.activity_create_tought.link
@@ -29,7 +33,7 @@ import java.util.*
 class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mPost: Post
-    private lateinit var mUser: BasicUser
+    private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
@@ -39,12 +43,12 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_tought)
 
-        supportActionBar!!.title = "Nova Nota"
+        supportActionBar!!.title = "Nova Publicação"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as BasicUser
+            mUser = bundle.getSerializable("user") as User
         }
 
         mDatabase = MyFirebase.database()
@@ -53,9 +57,20 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
 
         mPost = Post()
         mPost.type = "thought"
+        mPost.user_id = mUser.id
         mPost.user = mUser
 
         setListeners()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> true
+        }
     }
 
     override fun onClick(view: View) {
@@ -78,10 +93,6 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
             knife.clearFormats()
         }
 
-        if(id == R.id.fabCreateTought) {
-            showPublishTought()
-        }
-
         if(id == R.id.layoutToughtModal) {
             if(!mPublishToughtIsHide) {
                 hidePublishTought()
@@ -98,9 +109,31 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         italic.setOnClickListener(this)
         link.setOnClickListener(this)
         clear.setOnClickListener(this)
-        fabCreateTought.setOnClickListener(this)
         layoutToughtModal.setOnClickListener(this)
         btToughtPublish.setOnClickListener(this)
+
+        val fabListener = object : FabSpeedDial.MenuListener {
+            override fun onPrepareMenu(p0: NavigationMenu?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.fabArticlePublish -> {
+                        showPublishTought()
+                        return true
+                    }
+                }
+
+                return false
+            }
+
+            override fun onMenuClosed() {
+            }
+
+        }
+
+        fabSpeedDial.setMenuListener(fabListener)
 
     }
 

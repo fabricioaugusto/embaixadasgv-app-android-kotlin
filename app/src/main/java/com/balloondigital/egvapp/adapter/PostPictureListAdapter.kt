@@ -8,9 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -74,7 +73,7 @@ class PostPictureListAdapter(postList: List<Post>): RecyclerView.Adapter<PostPic
 
         fun bindData(post: Post) {
 
-            val user: BasicUser = post.user
+            val user: User = post.user
 
             Glide.with(context)
                 .load(user.profile_img)

@@ -13,9 +13,4 @@
           app:showAsAction="ifRoom">
     </item>
 
-    <item android:id="@+id/github"
-          android:title="@string/menu_github"
-          app:showAsAction="collapseActionView">
-    </item>
-
 </menu>

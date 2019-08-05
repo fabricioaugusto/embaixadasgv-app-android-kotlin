@@ -53,15 +53,15 @@ class CreatePostDialogAdapter(
         when (position) {
             0 -> {
                 viewHolder.textView.text = "Pensamento"
-                viewHolder.imageView.setImageResource(R.drawable.ic_create_tought)
+                viewHolder.imageView.setImageResource(R.drawable.ic_post_thought)
             }
             1 -> {
-                viewHolder.textView.text = "Artigo"
-                viewHolder.imageView.setImageResource(R.drawable.ic_create_article)
+                viewHolder.textView.text = "Nota"
+                viewHolder.imageView.setImageResource(R.drawable.ic_post_note)
             }
             else -> {
                 viewHolder.textView.text = "Foto com descrição"
-                viewHolder.imageView.setImageResource(R.drawable.ic_create_picture)
+                viewHolder.imageView.setImageResource(R.drawable.ic_post_picture)
             }
         }
 

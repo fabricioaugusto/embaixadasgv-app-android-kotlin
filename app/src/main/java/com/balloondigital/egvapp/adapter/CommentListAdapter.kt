@@ -8,8 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.PostComment
+import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -49,7 +49,7 @@ class CommentListAdapter(commentList: List<PostComment>): RecyclerView.Adapter<C
 
         fun bindData(comment: PostComment) {
 
-            val user: BasicUser = comment.user
+            val user: User = comment.user
             mTxtAdCommentUserName.text = user.name
             mTxtAdComment.text = comment.text
 

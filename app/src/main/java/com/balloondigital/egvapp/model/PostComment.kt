@@ -14,8 +14,7 @@ class PostComment(
     var user_id: String = "",
     var text: String = "",
     var date: Timestamp? = null,
-    var user_ref: DocumentReference? = null,
-    var user: BasicUser = BasicUser()
+    var user: User = User()
 ): Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -25,8 +24,7 @@ class PostComment(
             "user_id" to user_id,
             "text" to text,
             "date" to FieldValue.serverTimestamp(),
-            "user_ref" to user_ref,
-            "user" to user
+            "user" to user.toBasicMap()
         )
     }
 }

@@ -50,7 +50,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         mDatabase = MyFirebase.database()
         mCollections = MyFirebase.COLLECTIONS
         mPlacesClient = Places.createClient(this)
-        mPlaceFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
+        mPlaceFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
 
         setListeners()
         getUserDetails()
@@ -66,8 +66,12 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         }
     }
 
-    
-    fun getUserDetails() {
+
+    private fun getUserDetails() {
+
+
+        etEditProfleName.setText(mUser.name)
+        etEditProfleEmail.setText(mUser.email)
 
         if(mUser.birthdate != null) {
             etEditProfleBirthdate.setText(mUser.birthdate)
@@ -102,13 +106,13 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         }
     }
 
-    fun setListeners() {
+    private fun setListeners() {
         btEditProfleSavaData.setOnClickListener(this)
         etEditProfleSearchCity.onFocusChangeListener = this
         swEditProfleGender.onSelectedChangeListener = switchGenderListener()
     }
 
-    fun switchGenderListener(): StickySwitch.OnSelectedChangeListener {
+    private fun switchGenderListener(): StickySwitch.OnSelectedChangeListener {
 
         if(mUser.gender == "male") {
             swEditProfleGender.setDirection(StickySwitch.Direction.LEFT)
@@ -155,7 +159,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         }
     }
 
-    fun startPlacesActivity() {
+    private fun startPlacesActivity() {
 
         // Start the autocomplete intent.
         val intent = Autocomplete.IntentBuilder(
@@ -174,18 +178,31 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         finish()
     }
 
-    fun saveUserData() {
+    private fun saveUserData() {
 
+        val name = etEditProfleName.text.toString()
+        val email = etEditProfleEmail.text.toString()
         val city = mUser.city
         val gender = mUser.gender
         val birthdate = etEditProfleBirthdate.text.toString()
         val occupation = etEditProfleOccupation.text.toString()
         val biography = etEditProfleBiography.text.toString()
 
-        if(birthdate.isEmpty() || occupation.isEmpty() || biography.isEmpty()
+        if(name.isEmpty() || email.isEmpty() ||
+            birthdate.isEmpty() || occupation.isEmpty() || biography.isEmpty()
             || city.isNullOrEmpty() || gender.isNullOrEmpty() ) {
 
             makeToast("Todos os campos devem ser preenchidos!")
+            return
+        }
+
+        if(name.contains("@")) {
+            makeToast("Por favor preencha um nome válido!")
+            return
+        }
+
+        if(!email.contains("@")) {
+            makeToast("Por favor preencha um e-mail válido!")
             return
         }
 
@@ -194,6 +211,8 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             return
         }
 
+        mUser.name = name
+        mUser.email = email
         mUser.description = biography
         mUser.birthdate = birthdate
         mUser.occupation = occupation
@@ -209,6 +228,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                     resources.getColor(com.balloondigital.egvapp.R.color.colorGreen),
                     Converters.drawableToBitmap(resources.getDrawable(com.balloondigital.egvapp.R.drawable.ic_check_grey_light))
                 )
+
             }
     }
 

@@ -106,7 +106,7 @@
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent" android:layout_marginBottom="20dp">
                 <TextView
                         android:text="Empresa:"
                         android:layout_width="wrap_content"
@@ -124,32 +124,62 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:gravity="center_horizontal"
-                    android:layout_marginTop="20dp" android:layout_marginBottom="24dp">
+                    android:layout_marginBottom="24dp"
+                    android:id="@+id/layoutSocialBts" android:visibility="gone">
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_mail"
+                        android:id="@+id/btUserProfileMail"
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/ic_whatsapp"
                         android:id="@+id/btUserProfileWa"
-                        android:background="@android:color/transparent" android:padding="4dp"/>
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/ic_facebook"
                         android:id="@+id/btUserProfileFb"
-                        android:background="@android:color/transparent" android:padding="4dp"/>
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/ic_instagram"
                         android:id="@+id/btUserProfileInsta"
-                        android:background="@android:color/transparent" android:padding="4dp"/>
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/ic_linkedin"
                         android:id="@+id/btUserProfileIn"
-                        android:background="@android:color/transparent" android:padding="4dp"/>
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
                 <ImageButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" app:srcCompat="@drawable/ic_youtube"
                         android:id="@+id/btUserProfileYt"
-                        android:background="@android:color/transparent" android:padding="4dp"/>
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_twitter"
+                        android:id="@+id/btUserProfileTt"
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_behance"
+                        android:id="@+id/btUserProfileBh"
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_github"
+                        android:id="@+id/btUserProfileGit"
+                        android:background="@android:color/transparent" android:padding="4dp"
+                        android:visibility="gone"/>
             </LinearLayout>
             <LinearLayout
                     android:orientation="vertical"

@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Menu.MenuActivity
 import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
+import com.balloondigital.egvapp.activity.Single.SinglePostActivity
+import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
@@ -98,12 +100,33 @@ class FeedFragment : Fragment(), View.OnClickListener {
             if(post.type == "note") {
                 startPostArticleActivity(post)
             }
+            if(post.type == "post") {
+                startPostPictureActivity(post)
+            }
+            if(post.type == "thought") {
+                startPostToughtActivity(post)
+            }
         }
     }
 
     private fun startPostArticleActivity(post: Post) {
         val intent: Intent = Intent(mContext, SingleArticleActivity::class.java)
         intent.putExtra("post_id", post.id)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startPostPictureActivity(post: Post) {
+        val intent: Intent = Intent(mContext, SinglePostActivity::class.java)
+        intent.putExtra("post_id", post.id)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startPostToughtActivity(post: Post) {
+        val intent: Intent = Intent(mContext, SingleThoughtActivity::class.java)
+        intent.putExtra("post_id", post.id)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 

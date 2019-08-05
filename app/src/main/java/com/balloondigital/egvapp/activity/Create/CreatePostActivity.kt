@@ -9,19 +9,25 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
+import io.github.yavski.fabspeeddial.FabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_post.*
+import kotlinx.android.synthetic.main.activity_create_post.layoutToughtModal
+import kotlinx.android.synthetic.main.activity_create_post.layoutToughtPublish
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -30,12 +36,13 @@ import java.util.*
 class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mPost: Post
-    private lateinit var mUser: BasicUser
+    private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
     private val GALLERY_CODE: Int = 200
     private var mImgPostIsSet = false
+    private var mPublishPostIsHide = true
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -46,14 +53,14 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_post)
 
-        supportActionBar!!.title = "Nova Nota"
+        supportActionBar!!.title = "Nova Publicação"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         PermissionConfig.validatePermission(permissions, this)
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as BasicUser
+            mUser = bundle.getSerializable("user") as User
         }
 
         mDatabase = MyFirebase.database()
@@ -62,6 +69,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
         mPost = Post()
         mPost.type = "post"
+        mPost.user_id = mUser.id
         mPost.user = mUser
 
         setListeners()
@@ -71,6 +79,22 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         imgPostInsertPic.setOnClickListener(this)
         btPostInsertPic.setOnClickListener(this)
         btPostPublish.setOnClickListener(this)
+
+        val fabListener = object : FabSpeedDial.MenuListener {
+            override fun onPrepareMenu(p0: NavigationMenu?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.fabArticlePublish -> showPublishPost()
+                }
+                return true
+            }
+            override fun onMenuClosed() {}
+        }
+
+        fabSpeedDial.setMenuListener(fabListener)
     }
 
     override fun onClick(view: View) {
@@ -88,6 +112,16 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         if(id == R.id.btPostPublish) {
             saveUserData()
         } 
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                return true
+            }
+            else -> true
+        }
     }
 
     private fun startGalleryActivity() {
@@ -125,6 +159,20 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun showPublishPost() {
+        mPublishPostIsHide = false
+        layoutToughtPublish.isGone = false
+        layoutToughtModal.isGone = false
+        layoutToughtModal.animate().alpha(1.0F)
+    }
+
+    private fun hidePublishPost() {
+        mPublishPostIsHide = true
+        layoutToughtModal.animate().alpha(0F)
+        layoutToughtPublish.isGone = true
+        layoutToughtModal.isGone = true
     }
 
     private fun saveUserData() {

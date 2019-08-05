@@ -9,14 +9,14 @@ data class PostLike(
     var id: String = "",
     var post_id: String = "",
     var user_id: String = "",
-    var user: BasicUser? = null
+    var user: User = User()
 ): Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "id" to id,
             "post_id" to post_id,
-            "user" to user
+            "user" to user.toBasicMap()
         )
     }
 }

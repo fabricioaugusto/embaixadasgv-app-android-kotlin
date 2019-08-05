@@ -19,7 +19,8 @@ data class Post(
     var like_verified: Boolean = false,
     var liked: Boolean = false,
     var list_likes: MutableList<PostLike>? = null,
-    var user: BasicUser = BasicUser()
+    var user_id: String = "",
+    var user: User = User()
     ): Serializable {
     @Exclude
     fun toMapNote(): Map<String, Any?> {
@@ -32,7 +33,7 @@ data class Post(
             "text" to text,
             "picture" to picture,
             "post_likes" to post_likes,
-            "user" to user
+            "user" to user.toBasicMap()
         )
     }
 
@@ -45,7 +46,7 @@ data class Post(
             "type" to type,
             "text" to text,
             "post_likes" to post_likes,
-            "user" to user
+            "user" to user.toBasicMap()
         )
     }
 
@@ -59,7 +60,7 @@ data class Post(
             "text" to text,
             "picture" to picture,
             "post_likes" to post_likes,
-            "user" to user
+            "user" to user.toBasicMap()
         )
     }
 }

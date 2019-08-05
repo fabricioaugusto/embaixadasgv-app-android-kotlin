@@ -26,6 +26,8 @@ data class User(
     var linkedin: String? = null,
     var whatsapp: String? = null,
     var youtube: String? = null,
+    var behance: String? = null,
+    var github: String? = null,
     var website: String? = null,
     var embassy: String? = null
 ) : Serializable {
@@ -50,8 +52,18 @@ data class User(
             "linkedin" to linkedin,
             "whatsapp" to whatsapp,
             "youtube" to youtube,
+            "behance" to behance,
+            "github" to github,
             "website" to website,
             "embassy" to embassy
+        )
+    }
+    @Exclude
+    fun toBasicMap(): Map<String, Any?> {
+        return mapOf(
+            "id" to id,
+            "name" to name,
+            "profile_img" to profile_img
         )
     }
 }

@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -111,7 +110,7 @@ class PostListAdapter(postList: List<Post>): RecyclerView.Adapter<PostListAdapte
 
         fun bindData(post: Post) {
 
-            val user: BasicUser = post.user
+            val user: User = post.user
             mButtomLike.isLiked = post.liked
 
 

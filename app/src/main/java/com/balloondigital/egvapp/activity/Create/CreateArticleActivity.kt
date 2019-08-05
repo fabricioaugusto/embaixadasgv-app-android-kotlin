@@ -13,24 +13,29 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import android.view.ContextMenu
 import android.widget.EditText
 import android.view.View.OnLongClickListener
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.LinearInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.BasicUser
 import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
 import io.github.mthli.knife.KnifeText
+import io.github.yavski.fabspeeddial.FabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_article.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
@@ -41,7 +46,7 @@ import java.util.*
 class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongClickListener {
 
     private lateinit var mPost: Post
-    private lateinit var mUser: BasicUser
+    private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
@@ -51,6 +56,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
     private var mSetCoverIsHide = true
     private var mPublishPostIsHide = true
     private val GALLERY_CODE: Int = 200
+    private val ANIMATE_DURATION: Long = 300
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -61,14 +67,14 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_article)
 
-        supportActionBar!!.title = "Nova Nota"
+        supportActionBar!!.title = "Nova Publicação"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         PermissionConfig.validatePermission(permissions, this)
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as BasicUser
+            mUser = bundle.getSerializable("user") as User
         }
 
         mDatabase = MyFirebase.database()
@@ -77,6 +83,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
 
         mPost = Post()
         mPost.type = "note"
+        mPost.user_id = mUser.id
         mPost.user = mUser
 
         setListeners()
@@ -99,15 +106,45 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         link.setOnLongClickListener(this)
         clear.setOnClickListener(this)
         clear.setOnLongClickListener(this)
-        fabCreateArticle.setOnClickListener(this)
-        fabArticleTitle.setOnClickListener(this)
-        fabArticlePicture.setOnClickListener(this)
-        fabArticlePublish.setOnClickListener(this)
         layoutArticleModal.setOnClickListener(this)
         btArticleSaveTitle.setOnClickListener(this)
         btArticleSaveCover.setOnClickListener(this)
         imgArticleInsertCover.setOnClickListener(this)
         btArticlePublish.setOnClickListener(this)
+
+        val fabListener = object : FabSpeedDial.MenuListener {
+            override fun onPrepareMenu(p0: NavigationMenu?): Boolean {
+                return true
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                when (menuItem.itemId) {
+                    R.id.fabArticleTitle -> {
+                        showSetTitle()
+                        return false
+                    }
+
+                    R.id.fabArticlePicture -> {
+                        showSetCover()
+                        return true
+                    }
+
+                    R.id.fabArticlePublish -> {
+                        showPublishPost()
+                        return false
+                    }
+                }
+
+                return false
+            }
+
+            override fun onMenuClosed() {
+            }
+
+        }
+
+        fabSpeedDial.setMenuListener(fabListener)
+
     }
 
     override fun onLongClick(view: View): Boolean {
@@ -182,26 +219,6 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
 
         if(id == R.id.clear) {
             knife.clearFormats()
-        }
-
-        if(id == R.id.fabCreateArticle) {
-            if(mFabIsHide) {
-                showFabs()
-            } else {
-                hideFabs()
-            }
-        }
-
-        if(id == R.id.fabArticleTitle) {
-            showSetTitle()
-        }
-
-        if(id == R.id.fabArticlePicture) {
-            showSetCover()
-        }
-
-        if(id == R.id.fabArticlePublish) {
-            showPublishPost()
         }
 
         if(id == R.id.layoutArticleModal) {
@@ -281,7 +298,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
                             val uri = data.data
                             Log.d("GalleryActivity", "Chegou aqui")
                             CropImage.activity(uri)
-                                .setAspectRatio(4, 3)
+                                .setAspectRatio(3, 2)
                                 .setFixAspectRatio(true)
                                 .start(this)
                         }
@@ -310,11 +327,11 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         when (item.itemId) {
             R.id.undo -> knife.undo()
             R.id.redo -> knife.redo()
-            R.id.github -> {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(resources.getString(R.string.app_repo)))
-                startActivity(intent)
+            android.R.id.home -> {
+                onBackPressed()
             }
             else -> {
+
             }
         }
 
@@ -323,42 +340,57 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
 
     private fun showSetTitle() {
         mSetTitleIsHide = false
-        layoutArticleSetTitle.isGone = false
-        layoutArticleModal.isGone = false
-        layoutArticleModal.animate().alpha(1.0F)
-        layoutArticleSetTitle.animate().translationY(0F).duration = 500
+
+        layoutArticleModal.alpha = 0F
+        layoutArticleModal.isVisible = true
+        layoutArticleSetTitle.isVisible = true
+        layoutArticleModal.animate().apply {
+            duration = ANIMATE_DURATION
+            alpha(1f)
+            setListener(null)
+            start()
+        }
     }
 
     private fun hideSetTitle() {
         mSetTitleIsHide = true
-        layoutArticleSetTitle.animate().translationY(-680F).withEndAction {
-            layoutArticleModal.animate().alpha(0F)
+        layoutArticleModal.animate().alpha(0F).withEndAction {
             layoutArticleSetTitle.isGone = true
             layoutArticleModal.isGone = true
-        }.duration = 500
+        }.duration = ANIMATE_DURATION
     }
 
     private fun showSetCover() {
         mSetCoverIsHide = false
         layoutArticleSetPic.isGone = false
         layoutArticleModal.isGone = false
-        layoutArticleModal.animate().alpha(1.0F)
-        layoutArticleSetPic.animate().translationY(0F).duration = 500
+        layoutArticleModal.alpha = 0F
+        layoutArticleModal.animate().apply {
+            duration = ANIMATE_DURATION
+            alpha(1f)
+            setListener(null)
+            start()
+        }
     }
 
     private fun hideSetCover() {
         mSetCoverIsHide = true
-        layoutArticleModal.animate().alpha(0F)
-        layoutArticleSetPic.animate().translationY(-600F).duration = 500
-        layoutArticleSetPic.isGone = true
-        layoutArticleModal.isGone = true
+        layoutArticleModal.animate().alpha(0F).withEndAction {
+            layoutArticleSetPic.isGone = true
+            layoutArticleModal.isGone = true
+        }.duration = ANIMATE_DURATION
     }
 
     private fun showPublishPost() {
         mPublishPostIsHide = false
         layoutArticlePublish.isGone = false
         layoutArticleModal.isGone = false
-        layoutArticleModal.animate().alpha(1.0F)
+        layoutArticleModal.animate().apply {
+            duration = ANIMATE_DURATION
+            alpha(1f)
+            setListener(null)
+            start()
+        }
     }
 
     private fun hidePublishPost() {
@@ -366,20 +398,6 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         layoutArticleModal.animate().alpha(0F)
         layoutArticlePublish.isGone = true
         layoutArticleModal.isGone = true
-    }
-
-    private fun showFabs() {
-        mFabIsHide = false
-        fabArticleTitle.animate().translationY(0F)
-        fabArticlePicture.animate().translationY(0F)
-        fabArticlePublish.animate().translationY(0F)
-    }
-
-    private fun hideFabs() {
-        mFabIsHide = true
-        fabArticleTitle.animate().translationY(resources.getDimension(R.dimen.standard_70))
-        fabArticlePicture.animate().translationY(resources.getDimension(R.dimen.standard_140))
-        fabArticlePublish.animate().translationY(resources.getDimension(R.dimen.standard_210))
     }
 
     private fun saveUserData() {

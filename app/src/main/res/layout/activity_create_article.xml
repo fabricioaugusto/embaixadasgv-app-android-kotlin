@@ -5,7 +5,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.Create.CreateArticleActivity">
+        tools:context=".activity.Create.CreateArticleActivity"
+        android:focusableInTouchMode="true">
 
     <HorizontalScrollView android:id="@+id/tools"
                           android:layout_width="match_parent"
@@ -122,54 +123,23 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/layoutFab"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginRight="32dp" android:layout_marginEnd="32dp"
-            android:layout_alignParentEnd="true" android:layout_marginBottom="80dp" android:gravity="center_horizontal">
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_alignParentBottom="true" android:layout_alignParentRight="true"
+            android:layout_marginBottom="60dp">
+        <io.github.yavski.fabspeeddial.FabSpeedDial
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_fab_publish"
-                android:id="@+id/fabArticlePublish"
-                app:backgroundTint="@color/colorAccent"
-                android:layout_marginBottom="10dp" app:elevation="0dp"
-                android:translationY="198dp" android:visibility="visible"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_fab_picture"
-                android:id="@+id/fabArticlePicture"
-                app:backgroundTint="@color/colorAccent"
-                android:layout_marginBottom="10dp"
-                app:elevation="0dp"
-                android:translationY="132dp" android:visibility="visible"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_fab_title"
-                android:id="@+id/fabArticleTitle"
-                app:backgroundTint="@color/colorAccent"
-                android:layout_marginBottom="10dp"
-                app:elevation="0dp"
-                android:translationY="66dp"/>
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                app:srcCompat="@drawable/ic_edit"
-                android:id="@+id/fabCreateArticle"
-                android:layout_marginBottom="10dp"
-                app:maxImageSize="32dp"
-                app:backgroundTint="@color/colorRed"/>
+                android:layout_gravity="bottom|end"
+                app:fabGravity="bottom_end"
+                app:fabMenu="@menu/fab_create_note_menu"
+                app:miniFabBackgroundTint="@android:color/white"
+                app:miniFabDrawableTint="@color/colorLink"
+                app:miniFabTitleTextColor="@color/colorText" android:id="@+id/fabSpeedDial">
+        </io.github.yavski.fabspeeddial.FabSpeedDial>
     </LinearLayout>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:layout_alignTop="@+id/knife"
+            android:layout_height="match_parent" android:layout_alignTop="@+id/knife"
             android:layout_alignParentStart="true" android:layout_marginLeft="0dp" android:layout_marginStart="0dp"
             android:layout_alignParentLeft="true" android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" android:layout_marginRight="0dp" android:layout_marginEnd="0dp"
@@ -177,18 +147,19 @@
             android:paddingRight="24dp" android:paddingLeft="24dp"
             android:layout_alignParentBottom="true" android:background="@color/backgroundModal"
             android:gravity="center" android:clickable="true" android:visibility="gone"
-            android:id="@+id/layoutArticleModal" android:alpha="0">
+            android:id="@+id/layoutArticleModal" android:focusable="true">
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:background="@color/backgroundGrey"
-                android:paddingTop="16dp" android:paddingBottom="16dp" android:paddingRight="24dp"
-                android:paddingLeft="24dp" android:visibility="gone" android:translationY="-600dp"
-                android:id="@+id/layoutArticleSetPic" android:clickable="true">
+                android:visibility="gone"
+                android:id="@+id/layoutArticleSetPic" android:clickable="true" android:focusable="true"
+                android:padding="24dp">
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" app:srcCompat="@drawable/article_picture"
-                    android:id="@+id/imgArticleInsertCover" android:adjustViewBounds="true"/>
+                    android:layout_height="210dp" app:srcCompat="@drawable/bg_upload_image"
+                    android:id="@+id/imgArticleInsertCover" android:adjustViewBounds="false"
+                    android:scaleType="centerCrop"/>
             <TextView
                     android:text="Clique na imagem para inserir a foto de capa"
                     android:layout_width="match_parent"
@@ -205,10 +176,9 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/backgroundGrey" android:paddingRight="24dp"
-                android:paddingLeft="24dp" android:paddingTop="16dp" android:paddingBottom="16dp"
-                android:visibility="gone" android:translationY="-680dp" android:id="@+id/layoutArticleSetTitle"
-                android:clickable="true">
+                android:background="@color/backgroundGrey"
+                android:visibility="gone" android:id="@+id/layoutArticleSetTitle"
+                android:clickable="true" android:focusable="true" android:padding="24dp">
             <TextView
                     android:text="Insira um título para a nota"
                     android:layout_width="match_parent"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/fabArticlePublish"
+            android:icon="@drawable/ic_fab_publish"
+            android:title="Publicar" />
+    <item
+            android:id="@+id/fabArticlePicture"
+            android:icon="@drawable/ic_fab_picture"
+            android:title="Inserir capa"/>
+    <item
+            android:id="@+id/fabArticleTitle"
+            android:icon="@drawable/ic_fab_title"
+            android:title="Inserir Título" />
+</menu>

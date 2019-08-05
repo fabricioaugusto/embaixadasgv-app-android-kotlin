@@ -38,7 +38,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center_horizontal" android:paddingLeft="32dp" android:paddingRight="32dp"
-                android:paddingTop="32dp" android:paddingBottom="64dp" android:id="@+id/linearLayout5">
+                android:paddingTop="32dp" android:paddingBottom="64dp" android:id="@+id/linearLayout5"
+                android:focusableInTouchMode="true">
 
             <TextView
                     android:text="Para melhorar a sua experiência com o aplicativo, você precisa completar as informações abaixo:"

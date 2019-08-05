@@ -17,7 +17,8 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:gravity="center_horizontal" android:paddingLeft="32dp" android:paddingRight="32dp"
-                android:paddingTop="32dp" android:paddingBottom="64dp" android:id="@+id/linearLayout5">
+                android:paddingTop="32dp" android:paddingBottom="64dp" android:id="@+id/linearLayout5"
+                android:focusableInTouchMode="true">
 
 
             <com.google.android.material.textfield.TextInputLayout
@@ -30,16 +31,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:paddingTop="16dp">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.santalu.maskedittext.MaskEditText
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            app:met_mask="(##) #####-####"
                             android:hint="Whatsapp" android:id="@+id/etEditSocialws"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Facebook" android:id="@+id/etEditSocialfb"/>
+                        android:hint="Facebook (Nome de usuário)" android:id="@+id/etEditSocialfb"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -50,7 +52,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Instagram" android:id="@+id/etEditSocialinsta"/>
+                        android:hint="Instagram (Nome de usuário)" android:id="@+id/etEditSocialinsta"/>
 
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -61,7 +63,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Linkedin" android:id="@+id/etEditSocialin"/>
+                        android:hint="Linkedin (Nome de usuário)" android:id="@+id/etEditSocialin"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEditSocialtt"
@@ -71,7 +73,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Twitter" android:id="@+id/etEditSocialtt"/>
+                        android:hint="Twitter (Nome de usuário)" android:id="@+id/etEditSocialtt"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEditSocialbe"
@@ -81,7 +83,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Behance" android:id="@+id/etEditSocialbe"/>
+                        android:hint="Behance (Nome de usuário)" android:id="@+id/etEditSocialbe"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEditSocialgit"
@@ -91,7 +93,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="GitHub" android:id="@+id/etEditSocialgit"/>
+                        android:hint="GitHub (Nome de usuário)" android:id="@+id/etEditSocialgit"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilEditSocialyt"

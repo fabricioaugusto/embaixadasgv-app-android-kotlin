@@ -17,9 +17,9 @@ class UserService private constructor(){
         fun authUserDetails(database: FirebaseFirestore, context: Context): User? {
 
             val document = database.collection(MyFirebase.COLLECTIONS.USERS).document(authUserID(context))
-                .get().result
+                .get().result ?: return null
 
-            return document?.toObject(User::class.java)
+            return document.toObject(User::class.java)
         }
 
         fun authCurrentUser(): FirebaseUser? {
