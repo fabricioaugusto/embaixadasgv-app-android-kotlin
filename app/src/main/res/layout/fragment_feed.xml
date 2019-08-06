@@ -26,11 +26,16 @@
                     android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"/>
 
         </androidx.appcompat.widget.Toolbar>
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/postsRecyclerView"
-        >
-        </androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="match_parent"
+                android:id="@+id/swipeLayoutFeed">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/postsRecyclerView"
+            >
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 </FrameLayout>

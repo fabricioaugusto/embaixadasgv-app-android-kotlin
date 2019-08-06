@@ -5,48 +5,16 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.Auth.ResetPasswordActivity"
-        android:background="@color/colorPrimary">
-
-    <View
-            android:id="@+id/resetPasswordRegister"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:background="#33D1D3D4"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="48dp" android:layout_marginStart="48dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="48dp" android:layout_marginRight="48dp" android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toTopOf="@+id/backToLoginLayout2"/>
-
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:id="@+id/backToLoginLayout2">
-        <TextView
-                android:text="Lembrou da senha?"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textView3" android:textSize="16sp"
-                android:textColor="@color/colorGrey" android:layout_marginRight="4dp"/>
-        <TextView
-                android:text="FAÇA O LOGIN"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/tvToLogin2" android:textSize="16sp"
-                android:textColor="@color/colorAccent" android:textStyle="bold"/>
-    </LinearLayout>
+        tools:context=".activity.Menu.InvitesActivity">
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/resetPasswordRegister" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="48dp" android:layout_marginStart="48dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="48dp" android:layout_marginRight="48dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
+            android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp">
         <TextView
                 android:text="Redefinir Senha"
                 android:layout_width="match_parent"

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Menu.MenuActivity
@@ -47,6 +48,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mPostList: MutableList<Post>
     private lateinit var mLikeList: MutableList<PostLike>
     private lateinit var mBtFeedMenu: ImageButton
@@ -63,6 +65,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
         mContext = view.context
         mBtFeedMenu = view.findViewById(R.id.btFeedMenu)
+        mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
@@ -114,6 +117,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
     private fun setListeners() {
         mBtFeedMenu.setOnClickListener(this)
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
     }
 
     private fun setRecyclerView() {
@@ -176,8 +180,9 @@ class FeedFragment : Fragment(), View.OnClickListener {
                         }
                     }
                 }
-                
+
                 mAdapter.notifyDataSetChanged()
+                mSwipeLayoutFeed.isRefreshing = false
             }
     }
 
