@@ -20,6 +20,9 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_users.*
+import org.json.JSONObject
+import com.algolia.search.saas.*
+import org.json.JSONArray
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,6 +38,8 @@ class UsersFragment : Fragment() {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: UserListAdapter
+    private lateinit var mClient: Client
+    private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSearchView: SearchView
     private lateinit var mListUsers: MutableList<User>
@@ -51,6 +56,8 @@ class UsersFragment : Fragment() {
         mContext = view.context
         mRecyclerView = view.findViewById(R.id.usersRecyclerView)
         mSearchView = view.findViewById(R.id.svUserList)
+        mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
+        mIndex = mClient.getIndex("users")
 
         getListUsers()
         setRecyclerView()
@@ -78,26 +85,35 @@ class UsersFragment : Fragment() {
         }
 
         mSearchView.setOnQueryTextListener(searchListener)
+
     }
 
     private fun searchUser(query: String) {
 
         mListUsers.clear()
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-            .whereArrayContains("name", query)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-                val documents = querySnapshot.documents
-                for (document in documents) {
-                    val user: User? = document.toObject(User::class.java)
-                    if(user != null) {
+        val query = Query(query)
+            .setAttributesToRetrieve("name", "profile_img")
+            .setHitsPerPage(50)
+        mIndex.searchAsync(query, object : CompletionHandler {
+            override fun requestCompleted(obj: JSONObject?, p1: AlgoliaException?) {
+
+                if(obj != null) {
+                    val listObj = obj.get("hits") as JSONArray
+
+                    for (i in 0 until listObj.length()) {
+                        val user = User()
+                        val userObj = listObj.getJSONObject(i)
+                        user.name = userObj.getString("name")
+                        user.profile_img = userObj.getString("profile_img")
                         mListUsers.add(user)
                     }
                 }
 
                 mAdapter.notifyDataSetChanged()
             }
+
+        })
     }
 
     private fun getListUsers() {

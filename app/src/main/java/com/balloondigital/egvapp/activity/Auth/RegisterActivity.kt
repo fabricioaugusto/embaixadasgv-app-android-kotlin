@@ -47,8 +47,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         tvToLogin.setOnClickListener(this)
     }
 
-    fun startMainActivity() {
-        val intent: Intent = Intent(this, MainActivity::class.java)
+    fun startCheckAuthActivity() {
+        val intent: Intent = Intent(this, CheckAuthActivity::class.java)
         startActivity(intent)
         finish()
     }
@@ -99,7 +99,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         collection.document(id).set(user)
             .addOnSuccessListener {
                 if(mAuth.currentUser != null) {
-                    startMainActivity()
+                    startCheckAuthActivity()
                 }
 
         }
