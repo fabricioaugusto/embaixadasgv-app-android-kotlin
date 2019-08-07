@@ -60,41 +60,40 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
         var holder: ViewHolder? = null
         val rowType = getItemViewType(position)
 
-        var view: View? = null
+        var view: View? = convertView
 
-        if (convertView == null) {
+        if (view == null) {
             holder = ViewHolder()
             when (rowType) {
                 TYPE_ITEM -> {
                     view = mInflater!!.inflate(R.layout.adapter_menu_section, null)
                     holder.textView = view.findViewById(R.id.text) as TextView
-                    holder.textView!!.text = mData[position]
+
                 }
                 TYPE_SEPARATOR -> {
                     view = mInflater!!.inflate(R.layout.adapter_menu_item, null)
                     holder.textView = view.findViewById(R.id.textSeparator) as TextView
-                    holder.textView!!.text = mData[position]
                 }
                 TYPE_PROFILE -> {
-                    view = mInflater!!.inflate(R.layout.adapter_list_user, null)
-                    holder.mProfilePhoto = view.findViewById(R.id.imageUserRowProfile)
-                    holder.mProfileName = view.findViewById(R.id.textUserRowName)
-                    holder.mProfileStatus = view.findViewById(R.id.textUserRowEmail)
-
+                    view = mInflater!!.inflate(R.layout.adapter_menu_profile, null)
+                    holder.mProfilePhoto = view.findViewById(R.id.imgAdMenuProfile)
+                    holder.mProfileName = view.findViewById(R.id.txtAdMenuProfile)
+                    holder.textView = view.findViewById(R.id.text) as TextView
                     Glide.with(view.context)
                         .load(mUser.profile_img)
                         .into(holder.mProfilePhoto!!)
 
                         holder.mProfileName!!.text = mUser.name
-                        holder.mProfileStatus!!.text = "Visualizar perfil"
                 }
             }
+
             view!!.tag = holder
         } else {
             view = convertView
-            holder = convertView.tag as ViewHolder
+            holder = view!!.tag as ViewHolder
         }
 
+        holder.textView!!.text = mData[position]
         return view
     }
 
@@ -114,6 +113,5 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
         var textView: TextView? = null
         var mProfilePhoto: CircleImageView? = null
         var mProfileName: TextView? = null
-        var mProfileStatus: TextView? = null
     }
 }

@@ -18,7 +18,11 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.Menu.InvitesActivity">
+        <activity android:name=".activity.Auth.SubmitInviteCodeActivity">
+        </activity>
+        <activity
+                android:name=".activity.Menu.InvitesActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
                 android:name=".activity.Single.SingleArticleActivity"
@@ -115,7 +119,9 @@
         </activity>
         <activity android:name=".activity.Auth.ResetPasswordActivity">
         </activity>
-        <activity android:name=".activity.Menu.MenuActivity" android:theme="@style/AppThemeToolbar">
+        <activity
+                android:name=".activity.Menu.MenuActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity android:name=".activity.Single.EventProfileActivity">
         </activity>

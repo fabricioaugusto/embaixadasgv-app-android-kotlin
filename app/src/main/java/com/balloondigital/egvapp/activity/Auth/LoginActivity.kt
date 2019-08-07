@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if(id == R.id.tvToRegister) {
-            startRegisterActivity()
+            startSubmitCodeActivity()
         }
 
         if(id == R.id.tvForgotPassword) {
@@ -47,28 +47,24 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
         tvForgotPassword.setOnClickListener(this)
     }
 
-    fun startMainActivity() {
-        val intent: Intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
 
-
-    fun startCheckAuthActivity() {
+    private fun startCheckAuthActivity() {
         val intent: Intent = Intent(this, CheckAuthActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
-    fun startRegisterActivity() {
-        val intent: Intent = Intent(this, RegisterActivity::class.java)
+    private fun startSubmitCodeActivity() {
+        val intent: Intent = Intent(this, SubmitInviteCodeActivity::class.java)
         startActivity(intent)
     }
 
-    fun startResetPasswordActivity() {
+    private fun startResetPasswordActivity() {
         val intent: Intent = Intent(this, ResetPasswordActivity::class.java)
         startActivity(intent)
     }
 
-    fun loginUser() {
+    private fun loginUser() {
 
         val email = txtLoginEmail.text.toString()
         val pass = txtLoginPass.text.toString()
@@ -92,8 +88,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
                     makeToast("Dados de login incorretos! Tente novamente!")
 
                 }
-
-                // ...
             }
     }
 

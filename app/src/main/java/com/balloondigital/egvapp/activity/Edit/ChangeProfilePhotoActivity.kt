@@ -17,6 +17,7 @@ import android.widget.Toast
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
@@ -179,7 +180,7 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                 .addOnSuccessListener {
                                     btSaveChangeProfilePhoto.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
-                                        drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                        Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                     )
                                 }
                         }
@@ -193,31 +194,6 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-    }
-
-    private fun drawableToBitmap(drawable: Drawable): Bitmap {
-
-        var bitmap: Bitmap? = null
-
-        if (drawable is BitmapDrawable) {
-            val bitmapDrawable: BitmapDrawable = drawable as BitmapDrawable
-            if (bitmapDrawable.bitmap != null) {
-                return bitmapDrawable.bitmap;
-            }
-        }
-
-        if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
-            bitmap =
-                Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888) // Single color bitmap will be created of 1x1 pixel
-        } else {
-            bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888);
-        }
-
-        val canvas: Canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-
-        return bitmap
     }
 
 }

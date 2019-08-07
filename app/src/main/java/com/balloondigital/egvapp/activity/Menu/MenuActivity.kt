@@ -17,6 +17,7 @@ import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.MenuItens
 import com.bumptech.glide.Glide
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
@@ -25,9 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.activity_menu.*
 
-
-
-class MenuActivity : AppCompatActivity(), View.OnClickListener {
+class MenuActivity : AppCompatActivity() {
 
     private lateinit var mUser: User
     private lateinit var mAuth: FirebaseAuth
@@ -35,7 +34,6 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mAdapter: MenuListAdapter
     private lateinit var mMenuItensList: List<String>
     private lateinit var mMenuSectionList: List<String>
-    private lateinit var dbListener: ListenerRegistration
     private val MENU_REQUEST_CODE: Int = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,8 +51,6 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         mAdapter = MenuListAdapter(this, mUser)
 
         setListView()
-        getUserDetails()
-        setListeners()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -64,7 +60,8 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
 
                 if(data != null) {
                     mUser = data.getSerializableExtra("user") as User
-                    getUserDetails()
+                    mAdapter = MenuListAdapter(this, mUser)
+                    setListView()
                 }
 
             } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -77,51 +74,11 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    override fun onClick(view: View) {
-        val id = view.id
-    }
-
-    fun setListeners() {
-
-
-        /*dbListener = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-            .document(mUser.id)
-            .addSnapshotListener { documentSnapshot, firebaseFirestoreException ->
-                if(documentSnapshot != null) {
-                    val user: User? = documentSnapshot.toObject(User::class.java)
-                    if(user != null) {
-                        mUser = user
-                        Log.d("FirebaseLog", "ListenerOn")
-                    }
-                }
-            }*/
-    }
 
     private fun setListView() {
 
-        mMenuItensList = listOf(
-            "profile",
-            "section",
-            "Editar Perfil",
-            "Alerar foto de perfil",
-            "Alterar Senha",
-            "Minhas Redes Sociais",
-            "Minha Embaixada",
-            "section",
-            "Meus eventos confirmados",
-            "Meus eventos favoritos",
-            "section",
-            "Configurações de privacidade",
-            "Políticas de privacidade",
-            "section",
-            "Sobre as embaixadas",
-            "Sobre o aplicativo",
-            "Sugira uma funcionalidade",
-            "Avalie o aplicativo",
-            "Envie-nos uma mensagem",
-            "Sair")
-
-        mMenuSectionList = listOf("Configurações de Perfil", "Eventos", "Privacidade", "Sobre")
+        mMenuItensList = MenuItens.menuList
+        mMenuSectionList = MenuItens.menuSectionList
 
         var sectionIndex = 0
 
@@ -136,13 +93,30 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
 
         listViewMenu.adapter = mAdapter
 
-        val listViewListener = object : AdapterView.OnItemClickListener {
-            override fun onItemClick(adapter: AdapterView<*>?, view: View?, pos: Int, posLong: Long) {
-                if(pos == 1) {
-                    startEditProfileActivity()
-                }
-            }
+        val listViewListener = AdapterView.OnItemClickListener { adapter, view, pos, posLong ->
 
+            when(mMenuItensList[pos]) {
+                MenuItens.profile -> startUserProfileActivity()
+                MenuItens.editProfile -> startEditProfileActivity()
+                MenuItens.changeProfilePhoto -> startChangeProfilePhotoActivity()
+                MenuItens.changePassword -> startChangePassActivity()
+                MenuItens.editSocialNetwork -> startEditSocialActivity()
+                MenuItens.myEmbassy -> startMyEmbassyActivity()
+                MenuItens.myEnrolledEvents -> startEnrolledEventsActivity()
+                MenuItens.myFavoriteEvents -> startFavoriteEventsActivity()
+                MenuItens.newEvent -> startUserProfileActivity()
+                MenuItens.sendInvites -> startInvitesActivity()
+                MenuItens.sentEmbassyPhotos -> startUserProfileActivity()
+                MenuItens.setPrivacy -> startSetPrivacyActivity()
+                MenuItens.policyPrivacy -> startPrivacyActivity()
+                MenuItens.embassyList -> startUserProfileActivity()
+                MenuItens.aboutEmbassy -> startAboutEmbassiesActivity()
+                MenuItens.abaoutApp -> startAboutAppActivity()
+                MenuItens.suggestFeatures -> startSuggestsActivity()
+                MenuItens.rateApp -> startAppRateActivity()
+                MenuItens.sendUsMessage -> startSendMessageActivity()
+                MenuItens.logout -> logout()
+            }
         }
 
         listViewMenu.onItemClickListener = listViewListener
@@ -208,6 +182,12 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
+    private fun startInvitesActivity() {
+        val intent: Intent = Intent(this, InvitesActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
     private fun startAboutEmbassiesActivity() {
         val intent: Intent = Intent(this, AboutEmbassiesActivity::class.java)
         startActivity(intent)
@@ -233,14 +213,11 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         startActivity(intent)
     }
 
-    private fun getUserDetails() {
-
-
-    }
-
     private fun logout() {
         mAuth.signOut()
         startCheckAuthActivity()
         finish()
     }
+
+
 }

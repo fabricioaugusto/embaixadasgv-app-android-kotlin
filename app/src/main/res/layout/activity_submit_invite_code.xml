@@ -5,9 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.Auth.ResetPasswordActivity"
-        android:background="@color/colorPrimary">
-
+        tools:context=".activity.Auth.SubmitInviteCodeActivity" android:background="@color/colorPrimary">
     <View
             android:id="@+id/resetPasswordRegister"
             android:layout_width="0dp"
@@ -29,12 +27,12 @@
             android:layout_marginStart="8dp"
             android:id="@+id/backToLoginLayout2">
         <TextView
-                android:text="Lembrou da senha?"
+                android:text="Não tem um código?"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textView3" android:textSize="16sp"
                 android:textColor="@color/colorGrey" android:layout_marginRight="4dp"/>
         <TextView
-                android:text="FAÇA O LOGIN"
+                android:text="VOLTAR"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/tvToLogin2" android:textSize="16sp"
                 android:textColor="@color/colorAccent" android:textStyle="bold"/>
@@ -48,12 +46,13 @@
             android:layout_marginLeft="48dp" android:layout_marginStart="48dp" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="48dp" android:layout_marginRight="48dp">
         <TextView
-                android:text="Redefinir Senha"
+                android:text="Código de Acesso"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2" android:gravity="center"
-                android:textColor="@color/colorGrey" android:textAllCaps="true" android:textStyle="bold"/>
+                android:textColor="@color/colorGrey" android:textAllCaps="true" android:textStyle="bold"
+                android:textSize="18sp"/>
         <TextView
-                android:text="Digite o e-mail associado a sua conta e e enviarmos um link para redefinir sua senha"
+                android:text="Para se cadastrar no aplicativo você precisa receber um convite do líder da embaixada em que você pertence. Caso tenha recebido, insira abaixo o código de acesso, localizado no corpo do convite:"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView4" android:gravity="center"
                 android:textColor="@color/colorGrey" android:layout_marginTop="24dp"/>
@@ -67,14 +66,15 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/colorGrey"
                     android:textColor="@color/colorGrey"
-                    android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp" android:id="@+id/etSendEmailInvite"/>
+                    android:hint="Código" android:drawableLeft="@drawable/ic_arrow_right_grey"
+                    android:drawablePadding="8dp"
+                    android:paddingBottom="16dp" android:id="@+id/etInviteCode" android:textSize="24sp"/>
         </com.google.android.material.textfield.TextInputLayout>
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                 android:text="ENVIAR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/btSendEmailResetPass"
+                android:id="@+id/btSendInviteCode"
                 app:finalCornerAngle="50dp"
                 app:initialCornerAngle="0dp"
                 app:spinning_bar_color="#FFF"
