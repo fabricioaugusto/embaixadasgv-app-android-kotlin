@@ -168,7 +168,7 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
 
             mButtomLike.setOnLikeListener(likeListener)
 
-            Glide.with(context)
+            Glide.with(itemView.context)
                 .load(user.profile_img!!.toUri())
                 .transition(withCrossFade())
                 .into(mImgAdPostUser)
@@ -186,7 +186,7 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
             }
 
             if(!post.picture.isNullOrEmpty()) {
-                Glide.with(context)
+                Glide.with(itemView.context)
                     .load(post.picture!!.toUri())
                     .transition(withCrossFade())
                     .into(mImgAdPostPicture)
