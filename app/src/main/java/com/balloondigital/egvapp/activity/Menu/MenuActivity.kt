@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
 import com.balloondigital.egvapp.activity.Edit.ChangePassActivity
@@ -13,6 +14,7 @@ import com.balloondigital.egvapp.activity.Edit.ChangeProfilePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.EditProfileActivity
 import com.balloondigital.egvapp.activity.Edit.EditSocialActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
+import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
@@ -23,11 +25,16 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import kotlinx.android.synthetic.main.activity_menu.*
 
+
+
 class MenuActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mUser: User
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
+    private lateinit var mAdapter: MenuListAdapter
+    private lateinit var mMenuItensList: List<String>
+    private lateinit var mMenuSectionList: List<String>
     private lateinit var dbListener: ListenerRegistration
     private val MENU_REQUEST_CODE: Int = 100
 
@@ -38,11 +45,14 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         mAuth = MyFirebase.auth()
         mDatabase = MyFirebase.database()
 
+
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
         }
+        mAdapter = MenuListAdapter(this, mUser)
 
+        setListView()
         getUserDetails()
         setListeners()
     }
@@ -69,95 +79,10 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(view: View) {
         val id = view.id
-
-        if(id == R.id.imgMenuUserProfile
-            || id == R.id.txtMenuUserName
-            || id == R.id.txtMenuViewProfile) {
-            startUserProfileActivity()
-        }
-
-        if(id == R.id.btMenuEditProfile) {
-            startEditProfileActivity()
-        }
-
-        if(id == R.id.btMenuChangePic) {
-            startChangeProfilePhotoActivity()
-        }
-
-        if(id == R.id.btMenuChangePass) {
-            startChangePassActivity()
-        }
-
-        if(id == R.id.btMenuEditSocial) {
-            startEditSocialActivity()
-        }
-
-        if(id == R.id.btMenuMyEmbassy) {
-            startMyEmbassyActivity()
-        }
-
-        if(id == R.id.btMenuManageEvents) {
-            startEnrolledEventsActivity()
-        }
-
-        if(id == R.id.btMenuMyEvents) {
-            startFavoriteEventsActivity()
-        }
-
-        if(id == R.id.btMenuManagePrivacy) {
-            startSetPrivacyActivity()
-        }
-
-        if(id == R.id.btMenuPrivacy) {
-            startPrivacyActivity()
-        }
-
-        if(id == R.id.btMenuAboutEmbassies) {
-            startAboutEmbassiesActivity()
-        }
-
-        if(id == R.id.btMenuAboutApp) {
-            startAboutAppActivity()
-        }
-
-        if(id == R.id.btMenuSuggests) {
-            startSuggestsActivity()
-        }
-
-        if(id == R.id.btMenuRate) {
-            startAppRateActivity()
-        }
-
-        if(id == R.id.btMenuSendMenssages) {
-            startSendMessageActivity()
-        }
-
-        if(id == R.id.btMenuLogout) {
-            mAuth.signOut()
-            startCheckAuthActivity()
-            finish()
-        }
     }
 
     fun setListeners() {
-        btMenuEditProfile.setOnClickListener(this)
-        btMenuChangePic.setOnClickListener(this)
-        btMenuChangePass.setOnClickListener(this)
-        btMenuEditSocial.setOnClickListener(this)
-        btMenuMyEmbassy.setOnClickListener(this)
-        btMenuManageEvents.setOnClickListener(this)
-        btMenuMyEvents.setOnClickListener(this)
-        btMenuManagePrivacy.setOnClickListener(this)
-        btMenuPrivacy.setOnClickListener(this)
-        btMenuAboutEmbassies.setOnClickListener(this)
-        btMenuAboutApp.setOnClickListener(this)
-        btMenuSuggests.setOnClickListener(this)
-        btMenuRate.setOnClickListener(this)
-        btMenuSendMenssages.setOnClickListener(this)
-        btMenuLogout.setOnClickListener(this)
-        imgMenuUserProfile.setOnClickListener(this)
-        txtMenuUserName.setOnClickListener(this)
-        txtMenuViewProfile.setOnClickListener(this)
+
 
         /*dbListener = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
             .document(mUser.id)
@@ -170,6 +95,57 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
                     }
                 }
             }*/
+    }
+
+    private fun setListView() {
+
+        mMenuItensList = listOf(
+            "profile",
+            "section",
+            "Editar Perfil",
+            "Alerar foto de perfil",
+            "Alterar Senha",
+            "Minhas Redes Sociais",
+            "Minha Embaixada",
+            "section",
+            "Meus eventos confirmados",
+            "Meus eventos favoritos",
+            "section",
+            "Configurações de privacidade",
+            "Políticas de privacidade",
+            "section",
+            "Sobre as embaixadas",
+            "Sobre o aplicativo",
+            "Sugira uma funcionalidade",
+            "Avalie o aplicativo",
+            "Envie-nos uma mensagem",
+            "Sair")
+
+        mMenuSectionList = listOf("Configurações de Perfil", "Eventos", "Privacidade", "Sobre")
+
+        var sectionIndex = 0
+
+        for(item in mMenuItensList) {
+            if(item == "section") {
+                mAdapter.addSectionHeaderItem(mMenuSectionList[sectionIndex])
+                sectionIndex += 1
+            } else {
+                mAdapter.addItem(item)
+            }
+        }
+
+        listViewMenu.adapter = mAdapter
+
+        val listViewListener = object : AdapterView.OnItemClickListener {
+            override fun onItemClick(adapter: AdapterView<*>?, view: View?, pos: Int, posLong: Long) {
+                if(pos == 1) {
+                    startEditProfileActivity()
+                }
+            }
+
+        }
+
+        listViewMenu.onItemClickListener = listViewListener
     }
 
     private fun startCheckAuthActivity() {
@@ -259,10 +235,12 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun getUserDetails() {
 
-        Glide.with(this)
-            .load(mUser.profile_img)
-            .into(imgMenuUserProfile)
 
-        txtMenuUserName.text = mUser.name
+    }
+
+    private fun logout() {
+        mAuth.signOut()
+        startCheckAuthActivity()
+        finish()
     }
 }
