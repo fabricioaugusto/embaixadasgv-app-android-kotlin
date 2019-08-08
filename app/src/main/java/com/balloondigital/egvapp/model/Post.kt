@@ -16,10 +16,12 @@ data class Post(
     var picture: String? = null,
     var title: String? = null,
     var post_likes: Int = 0,
+    var post_comments: Int = 0,
     var like_verified: Boolean = false,
     var liked: Boolean = false,
     var list_likes: MutableList<PostLike>? = null,
     var user_id: String = "",
+    var user_verified: Boolean = false,
     var user: User = User()
     ): Serializable {
     @Exclude
@@ -33,6 +35,9 @@ data class Post(
             "text" to text,
             "picture" to picture,
             "post_likes" to post_likes,
+            "post_comments" to post_comments,
+            "user_id" to user.id,
+            "user_verified" to user.verified,
             "user" to user.toBasicMap()
         )
     }
@@ -46,6 +51,9 @@ data class Post(
             "type" to type,
             "text" to text,
             "post_likes" to post_likes,
+            "post_comments" to post_comments,
+            "user_id" to user.id,
+            "user_verified" to user.verified,
             "user" to user.toBasicMap()
         )
     }
@@ -60,6 +68,9 @@ data class Post(
             "text" to text,
             "picture" to picture,
             "post_likes" to post_likes,
+            "post_comments" to post_comments,
+            "user_id" to user.id,
+            "user_verified" to user.verified,
             "user" to user.toBasicMap()
         )
     }

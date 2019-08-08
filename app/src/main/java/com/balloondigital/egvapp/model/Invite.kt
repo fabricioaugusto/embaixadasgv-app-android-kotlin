@@ -6,7 +6,6 @@ import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.IgnoreExtraProperties
 import java.io.Serializable
 
-
 @IgnoreExtraProperties
 data class Invite(
     var id: String = "",
@@ -14,8 +13,7 @@ data class Invite(
     var email_sender: String = "",
     var name_receiver: String = "",
     var email_receiver: String = "",
-    var invite_code: Int = 0,
-    var date: Timestamp? = null
+    var invite_code: Int = 0
 ): Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {

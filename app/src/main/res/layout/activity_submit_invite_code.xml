@@ -59,7 +59,7 @@
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColorHint="@color/colorGrey">
+                android:textColorHint="@color/colorGrey" android:layout_marginTop="16dp">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -68,7 +68,8 @@
                     android:textColor="@color/colorGrey"
                     android:hint="Código" android:drawableLeft="@drawable/ic_arrow_right_grey"
                     android:drawablePadding="8dp"
-                    android:paddingBottom="16dp" android:id="@+id/etInviteCode" android:textSize="24sp"/>
+                    android:paddingBottom="16dp" android:id="@+id/etInviteCode" android:textSize="24sp"
+                    android:layout_marginTop="16dp" android:inputType="numberSigned"/>
         </com.google.android.material.textfield.TextInputLayout>
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                 android:text="ENVIAR"

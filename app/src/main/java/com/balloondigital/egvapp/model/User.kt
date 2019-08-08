@@ -21,6 +21,7 @@ data class User(
     var state: String? = null,
     var state_short: String? = null,
     var profile_img: String? = null,
+    var verified: Boolean = false,
     var facebook: String? = null,
     var twitter: String? = null,
     var instagram: String? = null,
@@ -48,6 +49,7 @@ data class User(
             "state" to state,
             "state_short" to state_short,
             "profile_img" to profile_img,
+            "verified" to verified,
             "facebook" to facebook,
             "twitter" to twitter,
             "instagram" to instagram,
@@ -65,7 +67,8 @@ data class User(
         return mapOf(
             "id" to id,
             "name" to name,
-            "profile_img" to profile_img
+            "profile_img" to profile_img,
+            "verified" to verified
         )
     }
 }

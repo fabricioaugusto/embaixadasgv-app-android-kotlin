@@ -37,7 +37,11 @@
     </string-array>
 
     <string-array name="posts_author_alert">
-        <item>Remover Publicação</item>
+        <item>Excluir Publicação</item>
+    </string-array>
+
+    <string-array name="comments_author_alert">
+        <item>Excluir Comentário</item>
     </string-array>
 
 </resources>

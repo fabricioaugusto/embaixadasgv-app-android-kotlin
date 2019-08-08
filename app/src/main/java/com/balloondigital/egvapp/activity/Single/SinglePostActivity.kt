@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.net.toUri
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
@@ -25,6 +26,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.activity_single_post.*
 
@@ -59,7 +61,6 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         setListeners()
-        setRecyclerView()
         getPost()
     }
 
@@ -99,6 +100,7 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
                 val post: Post? = documentSnapshot.toObject(Post::class.java)
                 if(post != null) {
                     mPost = post
+                    setRecyclerView()
                     bindData()
                     getComments()
                 }
@@ -107,20 +109,24 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun getComments() {
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
-            .whereEqualTo("post_id", mPost.id).orderBy("date")
-            .addSnapshotListener { listSnapshot, e ->
-                if (e != null) {
-                    Log.w("", "Listen failed.", e)
-                }
-
+            .whereEqualTo("post_id", mPost.id)
+            .orderBy("date", Query.Direction.ASCENDING)
+            .get().addOnSuccessListener { listSnapshot ->
                 if(listSnapshot != null) {
-                    mPostCommentList.clear()
-                    for(item in listSnapshot) {
-                        val comment = item.toObject(PostComment::class.java)
-                        mPostCommentList.add(comment)
+                    if(listSnapshot.size() > 0) {
+                        mPostCommentList.clear()
+                        for(item in listSnapshot) {
+                            val comment = item.toObject(PostComment::class.java)
+                            mPostCommentList.add(comment)
+                        }
+                    } else {
+                        txtPostEmptyComments.isGone = false
                     }
                 }
                 mAdapter.notifyDataSetChanged()
+            }
+            .addOnFailureListener {
+                Log.d("EGVTAG", it.message.toString())
             }
     }
 
@@ -144,9 +150,31 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
         alertbox.show()
     }
 
+
+    private fun removeComment(comment: PostComment) {
+
+        val alertbox = AlertDialog.Builder(this)
+
+        if(comment.user_id == mCurrentUser!!.uid)   {
+            alertbox.setItems(R.array.comments_author_alert, DialogInterface.OnClickListener { dialog, pos ->
+                if(pos == 0) {
+                    val deleteComment = mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
+                        .document(comment.id).delete()
+                    confirmRemoveCommentDialog("Deletar Comentário",
+                        "Tem certeza que deseja remover esta publicação?", comment, deleteComment)
+                }
+            })
+        } else {
+            alertbox.setItems(R.array.posts_alert, DialogInterface.OnClickListener { dialog, pos ->
+                //pos will give the selected item position
+            })
+        }
+        alertbox.show()
+    }
+
     private fun setRecyclerView() {
 
-        mAdapter = CommentListAdapter(mPostCommentList)
+        mAdapter = CommentListAdapter(mPostCommentList, mPost)
         mAdapter.setHasStableIds(true)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)
@@ -180,11 +208,12 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveData() {
 
         val comment = etCommentMessage.text.toString()
-        etCommentMessage.setText("")
 
         if(comment.isNullOrEmpty()){
             return
         }
+
+        etCommentMessage.setText("")
 
         val postComment: PostComment = PostComment(
             post_id = mPostID,
@@ -195,8 +224,17 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS).add(postComment.toMap())
             .addOnSuccessListener {
                     document ->
+
                 document.update("id", document.id)
-                makeToast("Comentário adicionado com sucesso!")
+                postComment.id = document.id
+                mPost.post_comments += 1
+                mPostCommentList.add(postComment)
+
+                mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+                    .document(mPostID).update("post_comments", mPost.post_comments)
+
+
+                mAdapter.notifyDataSetChanged()
             }
     }
 
@@ -211,6 +249,21 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
                     returnIntent.putExtra("removed", true)
                     setResult(Activity.RESULT_OK, returnIntent)
                     finish()
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
+    }
+
+    private fun confirmRemoveCommentDialog(dialogTitle: String, dialogMessage: String, comment: PostComment, task: Task<Void>) {
+        AlertDialog.Builder(this)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(dialogTitle)
+            .setMessage(dialogMessage)
+            .setPositiveButton("Sim") { dialog, which ->
+                task.addOnCompleteListener {
+                    mPostCommentList.remove(comment)
+                    mAdapter.notifyDataSetChanged()
                 }
             }
             .setNegativeButton("Não", null)

@@ -152,7 +152,7 @@ class SingleArticleActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun setRecyclerView() {
 
-        mAdapter = CommentListAdapter(mPostCommentList)
+        mAdapter = CommentListAdapter(mPostCommentList, mPost)
         mAdapter.setHasStableIds(true)
         mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(this)

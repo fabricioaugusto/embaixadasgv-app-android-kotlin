@@ -71,6 +71,13 @@
                     android:layout_height="1dp"
                     android:background="?android:attr/listDivider"
                     android:layout_marginTop="16dp" android:layout_marginBottom="16dp"/>
+            <TextView
+                    android:text="Nenhum comentário nesta publicação. Seja o primeiro!"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtPostEmptyComments"
+                    android:gravity="center_horizontal" android:textSize="16sp"
+                    android:textColor="@color/colorSubText" android:layout_marginBottom="48dp"
+                    android:layout_marginTop="16dp" android:visibility="gone"/>
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/recyclerViewComments"

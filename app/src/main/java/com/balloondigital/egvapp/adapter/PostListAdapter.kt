@@ -27,6 +27,7 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import android.content.DialogInterface
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.isGone
 import com.google.android.gms.tasks.Task
 
 
@@ -101,6 +102,8 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
         private var mImgAdPostPicture: ImageView = itemView.findViewById(R.id.imgAdPostPicture)
         private var mTxtAdPostTitle: TextView = itemView.findViewById(R.id.txtAdPostTitle)
         private var mBtAdPostOptions: ImageButton = itemView.findViewById(R.id.btAdPostOptions)
+        private var mTxtAdPostComments: TextView = itemView.findViewById(R.id.txtAdPostComments)
+        private var mImgProfileVerified: ImageView = itemView.findViewById(R.id.imgProfileVerified)
 
         init {
             itemView.setOnClickListener {
@@ -129,8 +132,14 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
                     }
             }
 
+            mImgProfileVerified.isGone = !post.user_verified
+
             if(post.post_likes > 0) {
                 mTxtAdPostLikes.text = post.post_likes.toString()
+            }
+
+            if(post.post_comments > 0) {
+                mTxtAdPostComments.text = post.post_comments.toString()
             }
 
             val likeListener = object : OnLikeListener {

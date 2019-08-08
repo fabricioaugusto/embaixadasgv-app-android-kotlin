@@ -22,11 +22,20 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_weight="1">
-            <TextView
-                    android:text="Fabrício Augusto"
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
-                    android:textColor="@color/colorText"/>
+                    android:layout_height="match_parent" android:gravity="center_vertical">
+                <TextView
+                        android:text="Fabrício Augusto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
+                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"/>
+                <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp" app:srcCompat="@drawable/ic_profile_verified"
+                        android:id="@+id/imgProfileVerified" android:layout_marginTop="1dp" android:visibility="gone"/>
+            </LinearLayout>
             <TextView
                     android:text="26 Oct 2018"
                     android:layout_width="match_parent"
@@ -73,12 +82,11 @@
                 app:srcCompat="@drawable/ic_comment_grey"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/btAdPostComment"
-                android:background="@color/backgroundGrey" android:padding="6dp"
+                android:background="@color/backgroundGrey"
                 android:layout_marginLeft="16dp"/>
         <TextView
-                android:text="2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostComments"
-                android:textColor="@color/colorText" android:textStyle="bold"/>
+                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
     </LinearLayout>
 </LinearLayout>
