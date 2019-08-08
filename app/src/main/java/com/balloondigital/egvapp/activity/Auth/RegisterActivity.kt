@@ -11,11 +11,14 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
 import android.util.Log
 import com.balloondigital.egvapp.activity.MainActivity
+import com.balloondigital.egvapp.model.Invite
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_invites.*
 
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
+    private lateinit var mInvite: Invite
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
 
@@ -26,6 +29,12 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         //Init vars
         mAuth = MyFirebase.auth()
         mDatabase = MyFirebase.database()
+
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            mInvite = bundle.getSerializable("invite") as Invite
+        }
+
         //set
         setListeners()
     }
@@ -62,28 +71,52 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         if(validateRegister(name, email, pass, passConfirm)) {
             btRegister.startAnimation()
-            mAuth.createUserWithEmailAndPassword(email, pass)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        val user = mAuth.currentUser
 
-                        if(user != null) {
-                            saveUser(user.uid, name, email)
+
+            mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
+                .whereEqualTo("email_receiver", mInvite.email_receiver).get()
+                .addOnSuccessListener { querySnapshot ->
+                    if(querySnapshot.documents.size > 0) {
+                        val documents = querySnapshot.documents
+                        val invite = documents[0].toObject(Invite::class.java)
+                        if(invite != null) {
+                            if(invite.invite_code == mInvite.invite_code) {
+
+                                mAuth.createUserWithEmailAndPassword(email, pass)
+                                    .addOnCompleteListener(this) { task ->
+                                        if (task.isSuccessful) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            val user = mAuth.currentUser
+
+                                            if(user != null) {
+                                                saveUser(user.uid, name, email)
+                                            }
+
+                                            btRegister.revertAnimation()
+                                        } else {
+                                            // If sign in fails, display a message to the user.
+                                            btRegister.revertAnimation()
+                                            Log.d("createUserWithEmail", task.exception.toString())
+                                            Toast.makeText(
+                                                this, "Authentication failed.",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
+                                    }
+
+                            } else {
+                                makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
+                                btSendInvite.revertAnimation()
+                            }
                         }
-
-                        btRegister.revertAnimation()
                     } else {
-                        // If sign in fails, display a message to the user.
-                        btRegister.revertAnimation()
-                        Log.d("createUserWithEmail", task.exception.toString())
-                        Toast.makeText(
-                            this, "Authentication failed.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
+                        makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
+                        btSendInvite.revertAnimation()
                     }
                 }
+
+
         }
     }
 
@@ -109,7 +142,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     }
 
-    fun validateRegister (name: String, email: String, pass: String, passConfirm: String): Boolean {
+    private fun validateRegister (name: String, email: String, pass: String, passConfirm: String): Boolean {
 
         if (name.isEmpty() || email.isEmpty() || pass.isEmpty() || passConfirm.isEmpty()) {
             makeToast("Preencha todos os campos!")

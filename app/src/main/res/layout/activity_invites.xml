@@ -10,39 +10,52 @@
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
             android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp">
+            android:layout_marginRight="32dp" android:layout_marginTop="64dp" android:gravity="center_horizontal">
         <TextView
-                android:text="Redefinir Senha"
+                android:text="Enviar convite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2" android:gravity="center"
-                android:textColor="@color/colorGrey" android:textAllCaps="true" android:textStyle="bold"/>
+                android:textColor="@color/colorText" android:textAllCaps="true" android:textStyle="bold"
+                android:textSize="18sp"/>
         <TextView
-                android:text="Digite o e-mail associado a sua conta e e enviarmos um link para redefinir sua senha"
+                android:text="Preencha com o e-mail e o nome da pessoa que deseja convidar para utilizar o aplicativo das embaixadas Geração de Valor!"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView4" android:gravity="center"
-                android:textColor="@color/colorGrey" android:layout_marginTop="24dp"/>
+                android:textColor="@color/colorText" android:layout_marginTop="24dp"/>
+
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textColorHint="@color/colorGrey">
+                android:layout_height="match_parent">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/colorGrey"
-                    android:textColor="@color/colorGrey"
+                    android:textColor="@color/colorText"
+                    android:hint="Nome" android:drawableLeft="@drawable/ic_person_grey" android:drawablePadding="8dp"
+                    android:paddingBottom="16dp" android:id="@+id/etSendNameInvite" android:inputType="textPersonName"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorText"
                     android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp" android:id="@+id/etSendEmailPassword"/>
+                    android:paddingBottom="16dp" android:id="@+id/etSendEmailInvite"
+                    android:inputType="textEmailAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
         <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                 android:text="ENVIAR"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/btResetPassword"
+                android:id="@+id/btSendInvite"
                 app:finalCornerAngle="50dp"
                 app:initialCornerAngle="0dp"
                 app:spinning_bar_color="#FFF"

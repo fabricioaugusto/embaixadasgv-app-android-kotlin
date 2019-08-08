@@ -33,13 +33,13 @@ class ResetPasswordActivity : AppCompatActivity(), View.OnClickListener {
             startLoginActivity()
         }
 
-        if(id == R.id.btResetPassword) {
+        if(id == R.id.btSendInvite) {
             sendResetEmail()
         }
     }
 
     fun setListeners() {
-        btResetPassword.setOnClickListener(this)
+        btSendEmailResetPass.setOnClickListener(this)
         tvToLogin2.setOnClickListener(this)
     }
 
@@ -50,20 +50,20 @@ class ResetPasswordActivity : AppCompatActivity(), View.OnClickListener {
 
     fun sendResetEmail() {
 
-        val email = etSendEmailPassword.text.toString()
+        val email = etSendEmailInvite.text.toString()
 
-        btResetPassword.startAnimation()
+        btSendEmailResetPass.startAnimation()
 
         if(email.isNotEmpty()) {
             mAuth.sendPasswordResetEmail(email).addOnSuccessListener {
                 makeToast("Email enviado com sucesso!")
-                btResetPassword.doneLoadingAnimation(
+                btSendEmailResetPass.doneLoadingAnimation(
                     resources.getColor(R.color.colorGreen),
                     drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                 )
             }.addOnFailureListener {
                 makeToast("Este e-mail não está cadastrado!")
-                btResetPassword.revertAnimation()
+                btSendEmailResetPass.revertAnimation()
             }
         }
 
