@@ -32,9 +32,15 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
+    private lateinit var mAgendaFragment: Fragment
+    private lateinit var mHighlightsFragment: Fragment
     private lateinit var mUser: User
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    private var mFeedFragmentAdded = false
+    private var mUsersFragmentAdded = false
+    private var mAgendaFragmentAdded = false
+    private var mHighlightsFragmentAdded = false
 
     override fun onStart() {
         super.onStart()
@@ -49,6 +55,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         mFeedFragment = FeedFragment()
         mUsersFragment = UsersFragment()
+        mAgendaFragment = AgendaFragment()
+        mHighlightsFragment = HighlightsFragment()
+
         mAdapter = CreatePostDialogAdapter(this, false, 3)
 
         //init vars
@@ -94,7 +103,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransition.replace(R.id.mainViewPager, mFeedFragment).commit()
+        fragmentTransition.add(R.id.mainViewPager, mFeedFragment).commit()
+        mFeedFragmentAdded = true
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -104,11 +114,22 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         when (item.itemId) {
             R.id.navigation_home -> {
-                fragmentTransition.replace(R.id.mainViewPager, mFeedFragment).commit()
+                if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
+                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
+                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
+                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                fragmentTransition.replace(R.id.mainViewPager, mUsersFragment).commit()
+                if(mUsersFragmentAdded) fragmentTransition.show(mUsersFragment)
+                else fragmentTransition.add(R.id.mainViewPager, mUsersFragment)
+                mUsersFragmentAdded = true
+
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
+                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
@@ -116,11 +137,25 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {
-                fragmentTransition.replace(R.id.mainViewPager, AgendaFragment()).commit()
+                if(mAgendaFragmentAdded) fragmentTransition.show(mAgendaFragment)
+                else fragmentTransition.add(R.id.mainViewPager, mAgendaFragment)
+                mAgendaFragmentAdded = true
+
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
+                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                fragmentTransition.replace(R.id.mainViewPager, HighlightsFragment()).commit()
+                if(mHighlightsFragmentAdded) fragmentTransition.show(mHighlightsFragment)
+                else fragmentTransition.add(R.id.mainViewPager, mHighlightsFragment)
+                mHighlightsFragmentAdded = true
+
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
+                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
+                fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
         }
