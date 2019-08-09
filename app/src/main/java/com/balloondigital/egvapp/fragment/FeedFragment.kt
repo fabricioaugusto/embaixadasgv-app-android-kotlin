@@ -29,6 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.balloondigital.egvapp.model.PostLike
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
+import com.ethanhua.skeleton.SkeletonScreen
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 
@@ -49,6 +52,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
+    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
     private lateinit var mLikeList: MutableList<PostLike>
     private lateinit var mBtFeedMenu: ImageButton
@@ -95,7 +99,6 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
         if (requestCode == 100) {
             if (resultCode == Activity.RESULT_OK) {
-
                 if(data != null) {
                     val removed: Boolean = data.getBooleanExtra("removed", false)
                     if(removed) {
@@ -115,6 +118,12 @@ class FeedFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        getListPosts()
+    }
+
+
     private fun setListeners() {
         mBtFeedMenu.setOnClickListener(this)
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
@@ -124,8 +133,12 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
         mAdapter = PostListAdapter(mPostList)
         mAdapter.setHasStableIds(true)
-        mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_post)
+            .shimmer(true).show()
 
         mAdapter.onItemClick = {
             post, pos ->
@@ -184,12 +197,12 @@ class FeedFragment : Fragment(), View.OnClickListener {
                 }
 
                 mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
                 mSwipeLayoutFeed.isRefreshing = false
             }
     }
 
     private fun startUserProfileActivity(singleUser: User) {
-
         val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
         intent.putExtra("user", singleUser)
         startActivity(intent)

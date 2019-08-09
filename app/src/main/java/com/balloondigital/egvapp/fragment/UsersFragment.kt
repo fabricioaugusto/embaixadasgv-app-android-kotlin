@@ -22,6 +22,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_users.*
 import org.json.JSONObject
 import com.algolia.search.saas.*
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import org.json.JSONArray
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,6 +40,7 @@ class UsersFragment : Fragment() {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: UserListAdapter
+    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mClient: Client
     private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
@@ -130,6 +133,7 @@ class UsersFragment : Fragment() {
                 }
 
                 mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
             }
 
     }
@@ -137,8 +141,14 @@ class UsersFragment : Fragment() {
     private fun setRecyclerView() {
 
         mAdapter = UserListAdapter(mListUsers)
-        mRecyclerView.adapter = mAdapter
+        mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_user)
+            .shimmer(true).show()
+
         mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
     }
 

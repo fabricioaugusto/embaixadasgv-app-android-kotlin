@@ -15,6 +15,8 @@ import com.balloondigital.egvapp.adapter.EventListAdapter
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -30,6 +32,7 @@ class AgendaFragment : Fragment() {
     private lateinit var mContext: Context
     private lateinit var mAdapter: EventListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -55,8 +58,12 @@ class AgendaFragment : Fragment() {
     private fun setRecyclerView(events: MutableList<Event>) {
 
         mAdapter = EventListAdapter(events)
-        mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_event)
+            .shimmer(true).show()
 
         mAdapter.onItemClick = {
                 event ->

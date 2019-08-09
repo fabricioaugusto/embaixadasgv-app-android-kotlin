@@ -26,6 +26,8 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostLike
 import com.balloondigital.egvapp.model.User
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -48,6 +50,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
+    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
     private lateinit var mLikeList: MutableList<PostLike>
     private lateinit var mBtFeedMenu: ImageButton
@@ -123,8 +126,12 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
 
         mAdapter = PostListAdapter(mPostList)
         mAdapter.setHasStableIds(true)
-        mRecyclerView.adapter = mAdapter
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_post)
+            .shimmer(true).show()
 
         mAdapter.onItemClick = {
                 post, pos ->
@@ -182,6 +189,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
                 }
 
                 mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
                 mSwipeLayoutFeed.isRefreshing = false
             } .addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())

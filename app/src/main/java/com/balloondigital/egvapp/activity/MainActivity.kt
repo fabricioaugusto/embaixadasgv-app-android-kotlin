@@ -1,9 +1,11 @@
 package com.balloondigital.egvapp.activity
 
 import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
@@ -15,13 +17,18 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreatePostActivity
 import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
+import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.model.User
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
@@ -32,8 +39,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
+    private lateinit var mCPDialog: DialogPlus
     private lateinit var mAgendaFragment: Fragment
     private lateinit var mHighlightsFragment: Fragment
+    private lateinit var mNavView: BottomNavigationView
     private lateinit var mUser: User
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
@@ -46,7 +55,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         super.onStart()
 
         mAuth = MyFirebase.auth()
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +67,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         mHighlightsFragment = HighlightsFragment()
 
         mAdapter = CreatePostDialogAdapter(this, false, 3)
+        mNavView = findViewById(R.id.navView)
 
         //init vars
         val bundle: Bundle? = intent.extras
@@ -70,13 +79,15 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         mUsersFragment.arguments = bundle
 
         PermissionConfig.validatePermission(permissions, this)
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+        mNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
-        setBottomNavigationView(navView)
+        setBottomNavigationView(mNavView)
     }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
         makeToast(position.toString())
+
+        mCPDialog.dismiss()
 
         if(position == 0) {
             val intent: Intent = Intent(this, CreateToughtActivity::class.java)
@@ -134,7 +145,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             }
             R.id.navigation_post -> {
                 setCreatePostDialog()
-                return@OnNavigationItemSelectedListener true
+                return@OnNavigationItemSelectedListener false
             }
             R.id.navigation_agenda -> {
                 if(mAgendaFragmentAdded) fragmentTransition.show(mAgendaFragment)
@@ -162,7 +173,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         false
     }
 
-    fun setCreatePostDialog() {
+    private fun setCreatePostDialog() {
 
         val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(this)
         if(dialogBuilder != null) {
@@ -170,7 +181,8 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             dialogBuilder.onItemClickListener = this
             dialogBuilder.setHeader(R.layout.header_dialog)
             dialogBuilder.setPadding(16, 16, 16, 48)
-            dialogBuilder.create().show()
+            mCPDialog = dialogBuilder.create()
+            mCPDialog.show()
         }
     }
 

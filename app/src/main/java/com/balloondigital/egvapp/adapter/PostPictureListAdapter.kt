@@ -77,7 +77,6 @@ class PostPictureListAdapter(postList: List<Post>): RecyclerView.Adapter<PostPic
 
             Glide.with(context)
                 .load(user.profile_img)
-                .placeholder(R.color.backgroundGrey)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(mImgAdPostUser)
 
