@@ -167,7 +167,9 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
     private fun getListPosts() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS).orderBy("date", Query.Direction.DESCENDING)
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", false)
+            .orderBy("date", Query.Direction.DESCENDING)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mPostList.clear()

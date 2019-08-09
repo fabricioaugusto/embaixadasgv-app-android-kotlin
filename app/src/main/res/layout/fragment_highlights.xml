@@ -1,31 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              tools:context=".fragment.HighlightsFragment"
               android:orientation="vertical">
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+        <!-- TODO: Update blank fragment layout -->
         <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 android:theme="?attr/actionBarTheme"
-                android:minHeight="?attr/actionBarSize" android:id="@+id/highlightsToolbar">
-
-            <TextView
-                    android:text="Eventos"
+                android:minHeight="?attr/actionBarSize" android:id="@+id/feedToolbar" app:contentInsetStart="0dp">
+            <ImageButton
+                    app:srcCompat="@drawable/ic_menu_grey"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView" android:textColor="@color/colorGrey"/>
+                    android:layout_height="wrap_content" android:id="@+id/btFeedMenu"
+                    android:background="@android:color/transparent" android:paddingLeft="16dp"
+                    android:paddingRight="20dp" android:paddingTop="12dp" android:paddingBottom="12dp"/>
+            <ImageView
+                    android:src="@drawable/horizontal_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"/>
 
         </androidx.appcompat.widget.Toolbar>
-        <TextView
-                android:text="Destaques"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textView6"/>
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:id="@+id/swipeLayoutFeed">
+            <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/postsRecyclerView"
+            >
+            </androidx.recyclerview.widget.RecyclerView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 </FrameLayout>

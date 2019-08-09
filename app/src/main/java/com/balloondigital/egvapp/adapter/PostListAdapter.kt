@@ -132,6 +132,8 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
                     }
             }
 
+            Log.d("EGVAPPLOG", post.user_verified.toString())
+
             mImgProfileVerified.isGone = !post.user_verified
 
             if(post.post_likes > 0) {
