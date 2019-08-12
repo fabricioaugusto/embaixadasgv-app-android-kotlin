@@ -91,10 +91,12 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
         if(id == R.id.btEnrollEvent) {
             if(btEnrollEvent.isSelected) {
                 btEnrollEvent.isSelected = false
+                btEnrollEvent.isEnabled = false
                 btEnrollEvent.text = "Confirmar presença"
                 deleteEnrollment()
             } else {
                 btEnrollEvent.isSelected = true
+                btEnrollEvent.isEnabled = false
                 btEnrollEvent.text = "Presença confirmada!"
                 saveEnrollment()
             }
@@ -235,6 +237,7 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             .addOnSuccessListener {
                 documentReference ->
                 documentReference.update("id", documentReference.id)
+                btEnrollEvent.isEnabled = true
             }
     }
 
@@ -247,8 +250,7 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             .document(mUserEnrollment.id)
             .delete()
             .addOnSuccessListener {
-                mEnrollmentList.remove(mUserEnrollment)
-                bindEnrollment()
+                btEnrollEvent.isEnabled = true
             }
     }
 

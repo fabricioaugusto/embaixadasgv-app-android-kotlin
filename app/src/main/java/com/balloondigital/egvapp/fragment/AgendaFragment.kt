@@ -90,6 +90,7 @@ class AgendaFragment : Fragment() {
             }
     }
 
+
     private fun setRecyclerView(events: MutableList<Event>) {
 
         mAdapter = EventListAdapter(events)

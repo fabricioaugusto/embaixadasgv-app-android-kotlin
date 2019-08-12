@@ -31,7 +31,8 @@ data class User(
     var behance: String? = null,
     var github: String? = null,
     var website: String? = null,
-    var embassy: Embassy? = null
+    var embassy: Embassy? = null,
+    var post_likes: MutableList<String> = mutableListOf()
 ) : Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {

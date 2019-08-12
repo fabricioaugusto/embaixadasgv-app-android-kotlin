@@ -78,6 +78,7 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
             email_sender = mUser.email,
             name_receiver = name,
             email_receiver = email,
+            embassy_receiver = mUser.embassy,
             invite_code = code
         )
 

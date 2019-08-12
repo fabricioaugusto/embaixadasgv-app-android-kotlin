@@ -15,6 +15,7 @@ data class PostLike(
     fun toMap(): Map<String, Any?> {
         return mapOf(
             "id" to id,
+            "user_id" to user_id,
             "post_id" to post_id,
             "user" to user.toBasicMap()
         )

@@ -78,8 +78,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
-        getListPosts()
-        setRecyclerView()
+        getPostLikes()
         setListeners()
 
         return view
@@ -124,7 +123,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList)
+        mAdapter = PostListAdapter(mPostList, mUser)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
@@ -193,6 +192,21 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
                 mSwipeLayoutFeed.isRefreshing = false
             } .addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
+            }
+    }
+
+    private fun getPostLikes() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
+            .whereEqualTo("user_id", mUser.id)
+            .get()
+            .addOnSuccessListener {
+                    querySnapshot ->
+                for(document in querySnapshot) {
+                    val postLike = document.toObject(PostLike::class.java)
+                    mUser.post_likes.add(postLike.post_id)
+                }
+                setRecyclerView()
+                getListPosts()
             }
     }
 

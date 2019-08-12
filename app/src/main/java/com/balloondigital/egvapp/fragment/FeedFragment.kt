@@ -1,6 +1,5 @@
 package com.balloondigital.egvapp.fragment
 
-
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -11,12 +10,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Menu.MenuActivity
 import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
@@ -33,11 +29,8 @@ import com.google.firebase.firestore.Query
 import com.balloondigital.egvapp.model.PostLike
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
-import com.ethanhua.skeleton.SkeletonScreen
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
-import kotlinx.android.synthetic.main.fragment_users.*
-
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,8 +76,6 @@ class FeedFragment : Fragment(), View.OnClickListener {
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
-        getListPosts()
-        setRecyclerView()
         setListeners()
 
         return view
@@ -123,7 +114,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
     override fun onResume() {
         super.onResume()
-        getListPosts()
+        getPostLikes()
     }
 
 
@@ -134,7 +125,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList)
+        mAdapter = PostListAdapter(mPostList, mUser)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
@@ -202,6 +193,21 @@ class FeedFragment : Fragment(), View.OnClickListener {
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
                 mSwipeLayoutFeed.isRefreshing = false
+            }
+    }
+
+    private fun getPostLikes() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
+            .whereEqualTo("user_id", mUser.id)
+            .get()
+            .addOnSuccessListener {
+                querySnapshot ->
+                for(document in querySnapshot) {
+                    val postLike = document.toObject(PostLike::class.java)
+                    mUser.post_likes.add(postLike.post_id)
+                }
+                setRecyclerView()
+                getListPosts()
             }
     }
 

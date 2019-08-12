@@ -26,21 +26,22 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.like.LikeButton
 import com.like.OnLikeListener
 import android.content.DialogInterface
+import android.os.Handler
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
 import com.google.android.gms.tasks.Task
 
 
-class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {
+class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {
 
     private val mPostList: MutableList<Post> = postList
+    private val mUser: User = user
     private lateinit var mContext: Context
     var onItemClick: ((post: Post, position: Int) -> Unit)? = null
     private val THOUGHT: Int = 0
     private val NOTE: Int = 1
     private val PICTURE: Int = 2
     private lateinit var mType: String
-    private lateinit var mUserID: String
     private var mLikeID: String? = null
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mPostCollection: CollectionReference
@@ -52,7 +53,6 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
         mPostCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
         mLikesCollection = mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
         mContext = parent.context
-        mUserID = UserService.authCurrentUser()!!.uid
         val inflater: LayoutInflater = LayoutInflater.from(mContext)
         var view: View? = null
 
@@ -114,25 +114,10 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
         fun bindData(post: Post, position: Int) {
 
             val user: User = post.user
-            mButtomLike.isLiked = post.liked
 
-
-            if(!post.like_verified) {
-                mLikesCollection.whereEqualTo("post_id", post.id)
-                    .whereEqualTo("user_id", mUserID)
-                    .get().addOnSuccessListener {
-                            data ->
-                        if(data.documents.size > 0) {
-                            Log.d("PostAdapterLog", "Achou")
-                            mLikeID = data.documents[0].id
-                            mButtomLike.isLiked = true
-                            post.liked = true
-                        }
-                        post.like_verified = true
-                    }
+            if(mUser.post_likes.contains(post.id)) {
+                mButtomLike.isLiked = true
             }
-
-            Log.d("EGVAPPLOG", post.user_verified.toString())
 
             mImgProfileVerified.isGone = !post.user_verified
 
@@ -145,20 +130,28 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
             }
 
             val likeListener = object : OnLikeListener {
-                override fun liked(likeButton: LikeButton?) {
+                override fun liked(likeButton: LikeButton) {
+
+                    mUser.post_likes.add(post.id)
+
+                    likeButton.isEnabled = false
                     post.liked = true
                     mTxtAdPostLikes.text = (post.post_likes+1).toString()
 
-                    val postLike: PostLike = PostLike(post_id = post.id, user_id = mUserID, user = user)
+                    val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = user)
                     post.post_likes = post.post_likes+1
-                    mLikesCollection.add(postLike).addOnSuccessListener {
+                    mLikesCollection.add(postLike.toMap()).addOnSuccessListener {
                         it.update("id", it.id)
                         mPostCollection.document(post.id).update("post_likes", post.post_likes)
+                        likeButton.isEnabled = true
                     }
                 }
 
-                override fun unLiked(likeButton: LikeButton?) {
+                override fun unLiked(likeButton: LikeButton) {
+                    likeButton.isEnabled = false
                     post.liked = false
+
+                    mUser.post_likes.remove(post.id)
 
                     val numLikes = post.post_likes-1
 
@@ -173,6 +166,9 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
 
                     if(mLikeID != null) {
                         mLikesCollection.document(mLikeID!!).delete()
+                            .addOnSuccessListener {
+                                likeButton.isEnabled = true
+                            }
                     }
                 }
             }
@@ -207,8 +203,7 @@ class PostListAdapter(postList: MutableList<Post>): RecyclerView.Adapter<PostLis
             mBtAdPostOptions.setOnClickListener(View.OnClickListener {
                 val alertbox = AlertDialog.Builder(context)
 
-
-                if(user.id == mUserID)   {
+                if(user.id == mUser.id)   {
                     alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
                         if(pos == 0) {
                             val deletePost = mPostCollection.document(post.id).delete()

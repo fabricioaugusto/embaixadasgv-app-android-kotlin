@@ -123,11 +123,15 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     fun saveUser(id: String, name: String, email: String) {
 
         val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+        val embassy = mInvite.embassy_receiver
 
         val user = HashMap<String, Any>()
         user["id"] = id
         user["name"] = name
         user["email"] = email
+        if(embassy != null) {
+            user["embassy"] = embassy
+        }
 
         collection.document(id).set(user)
             .addOnSuccessListener {

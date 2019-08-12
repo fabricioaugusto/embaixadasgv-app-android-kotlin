@@ -1,6 +1,5 @@
 package com.balloondigital.egvapp.activity.Create
 
-import android.app.Activity
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -214,6 +213,4 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
-
-
 }

@@ -13,6 +13,7 @@ data class Invite(
     var email_sender: String = "",
     var name_receiver: String = "",
     var email_receiver: String = "",
+    var embassy_receiver: Embassy? = null,
     var invite_code: Int = 0
 ): Serializable {
     @Exclude

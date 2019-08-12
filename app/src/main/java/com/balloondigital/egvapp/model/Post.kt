@@ -22,6 +22,7 @@ data class Post(
     var list_likes: MutableList<PostLike>? = null,
     var user_id: String = "",
     var user_verified: Boolean = false,
+    var likes_ids: List<String>? = null,
     var user: User = User()
     ): Serializable {
     @Exclude

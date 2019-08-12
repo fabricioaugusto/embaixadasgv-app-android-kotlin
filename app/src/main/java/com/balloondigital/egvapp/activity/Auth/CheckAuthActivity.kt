@@ -27,25 +27,21 @@ class CheckAuthActivity : AppCompatActivity() {
 
         // Initialize the SDK
         Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_check_auth)
 
         mDatabase = MyFirebase.database()
         mAuth = MyFirebase.auth()
 
         val currentUser = mAuth.currentUser
         if (currentUser != null) {
-
-            val sharedPref: SharedPreferences = getSharedPreferences("oF0kMyuPKmAH", Context.MODE_PRIVATE)
-            val editor: SharedPreferences.Editor = sharedPref.edit()
-            editor.putString("fb_uid", currentUser.uid)
             getCurrentUser(currentUser.uid)
         } else {
             startLoginActivity()
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_check_auth)
     }
 
     fun getCurrentUser(uid: String) {
@@ -53,7 +49,12 @@ class CheckAuthActivity : AppCompatActivity() {
         collection.document(uid)
             .get().addOnSuccessListener {
                     documentSnapshot ->
-                mUser = documentSnapshot.toObject(User::class.java)!!
+                if(documentSnapshot != null) {
+                    val user = documentSnapshot.toObject(User::class.java)
+                    if(user != null) {
+                        mUser = user
+                    }
+                }
                 checkUser()
             }
     }
