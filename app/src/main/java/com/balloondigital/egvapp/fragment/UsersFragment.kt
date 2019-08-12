@@ -5,11 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
+import android.widget.SearchView.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -35,13 +38,15 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class UsersFragment : Fragment() {
+class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: UserListAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mClient: Client
+    private lateinit var mToolbar: Toolbar
+    private lateinit var mImgLogoToolbar: ImageView
     private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSearchView: SearchView
@@ -54,42 +59,73 @@ class UsersFragment : Fragment() {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_users, container, false)
 
+        mImgLogoToolbar = view.findViewById(R.id.imgLogoToolbar)
+        mToolbar = view.findViewById(R.id.searchToolbar)
+        mToolbar.title = ""
+
+        if (activity is AppCompatActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        }
+
+        setHasOptionsMenu(true)
+
         mDatabase = MyFirebase.database()
         mListUsers = mutableListOf()
         mContext = view.context
         mRecyclerView = view.findViewById(R.id.usersRecyclerView)
-        mSearchView = view.findViewById(R.id.svUserList)
         mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mIndex = mClient.getIndex("users")
 
         getListUsers()
         setRecyclerView()
-        setListeners()
 
         return view
     }
 
-    private fun setListeners() {
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
 
-        val searchListener = object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(text: String?): Boolean {
-
-                return true
-            }
-
-            override fun onQueryTextChange(text: String?): Boolean {
-                Log.d("searchView", "Listening..$text")
-                if(!text.isNullOrEmpty()) {
-                    searchUser(text)
-                }
-                return true
-            }
-
-        }
-
-        mSearchView.setOnQueryTextListener(searchListener)
-
+        inflater.inflate(R.menu.menu_users_toolbar, menu)
+        val searchItem = menu?.findItem(R.id.bar_search)
+        mSearchView = searchItem?.actionView as SearchView
+        mSearchView.setOnQueryTextListener(this)
+        mSearchView.setOnCloseListener(this)
+        mSearchView.setOnSearchClickListener(this)
+        return super.onCreateOptionsMenu(menu, inflater)
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.bar_search -> {
+                return true
+            }
+            else -> true
+        }
+    }
+
+    override fun onQueryTextChange(str: String): Boolean {
+        Log.d("searchView", "Listening..$str")
+        if(str.isNotEmpty()) {
+            searchUser(str)
+        }
+        return true
+    }
+
+    override fun onClick(view: View) {
+        val id = view.id
+        if(id == R.id.bar_search) {
+            mImgLogoToolbar.isGone = true
+        }
+    }
+
+    override fun onClose(): Boolean {
+        mImgLogoToolbar.isGone = false
+        return false
+    }
+
+    override fun onQueryTextSubmit(p0: String?): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
 
     private fun searchUser(query: String) {
 
@@ -98,25 +134,21 @@ class UsersFragment : Fragment() {
         val query = Query(query)
             .setAttributesToRetrieve("name", "profile_img")
             .setHitsPerPage(50)
-        mIndex.searchAsync(query, object : CompletionHandler {
-            override fun requestCompleted(obj: JSONObject?, p1: AlgoliaException?) {
+        mIndex.searchAsync(query) { obj, p1 ->
+            if(obj != null) {
+                val listObj = obj.get("hits") as JSONArray
 
-                if(obj != null) {
-                    val listObj = obj.get("hits") as JSONArray
-
-                    for (i in 0 until listObj.length()) {
-                        val user = User()
-                        val userObj = listObj.getJSONObject(i)
-                        user.name = userObj.getString("name")
-                        user.profile_img = userObj.getString("profile_img")
-                        mListUsers.add(user)
-                    }
+                for (i in 0 until listObj.length()) {
+                    val user = User()
+                    val userObj = listObj.getJSONObject(i)
+                    user.name = userObj.getString("name")
+                    user.profile_img = userObj.getString("profile_img")
+                    mListUsers.add(user)
                 }
-
-                mAdapter.notifyDataSetChanged()
             }
 
-        })
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun getListUsers() {

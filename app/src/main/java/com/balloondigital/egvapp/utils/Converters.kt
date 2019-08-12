@@ -5,14 +5,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import java.io.InputStream
 import java.net.URL
-import android.R.attr.src
 import java.io.IOException
 import java.net.HttpURLConnection
 import android.os.StrictMode
-
-
+import android.util.Log
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class Converters private constructor(){
@@ -43,6 +43,20 @@ class Converters private constructor(){
 
             return bitmap
         }
+
+        fun stringToDate(str_date: String): Date? {
+
+            val formatter: SimpleDateFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
+
+            return try {
+                val date: Date? = formatter.parse(str_date)
+                date
+            } catch (e: ParseException) {
+                e.printStackTrace()
+                null
+            }
+        }
+
 
         fun urlToBitmap(url_string: String): Bitmap? {
 

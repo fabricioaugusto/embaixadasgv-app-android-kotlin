@@ -9,6 +9,7 @@ import android.view.View
 import android.widget.AdapterView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
+import com.balloondigital.egvapp.activity.Create.CreateEventActivity
 import com.balloondigital.egvapp.activity.Edit.ChangePassActivity
 import com.balloondigital.egvapp.activity.Edit.ChangeProfilePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.EditProfileActivity
@@ -104,7 +105,7 @@ class MenuActivity : AppCompatActivity() {
                 MenuItens.myEmbassy -> startMyEmbassyActivity()
                 MenuItens.myEnrolledEvents -> startEnrolledEventsActivity()
                 MenuItens.myFavoriteEvents -> startFavoriteEventsActivity()
-                MenuItens.newEvent -> startUserProfileActivity()
+                MenuItens.newEvent -> startCreateEventsActivity()
                 MenuItens.sendInvites -> startInvitesActivity()
                 MenuItens.sentEmbassyPhotos -> startUserProfileActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
@@ -179,6 +180,12 @@ class MenuActivity : AppCompatActivity() {
 
     private fun startFavoriteEventsActivity() {
         val intent: Intent = Intent(this, FavoriteEventsActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startCreateEventsActivity() {
+        val intent: Intent = Intent(this, CreateEventActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 

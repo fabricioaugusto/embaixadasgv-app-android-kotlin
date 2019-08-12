@@ -31,7 +31,7 @@ data class User(
     var behance: String? = null,
     var github: String? = null,
     var website: String? = null,
-    var embassy: String? = null
+    var embassy: Embassy? = null
 ) : Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
@@ -59,7 +59,7 @@ data class User(
             "behance" to behance,
             "github" to github,
             "website" to website,
-            "embassy" to embassy
+            "embassy" to embassy?.toBasicMap()
         )
     }
     @Exclude

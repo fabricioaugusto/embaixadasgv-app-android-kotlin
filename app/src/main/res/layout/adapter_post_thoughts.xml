@@ -3,14 +3,20 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
-              android:paddingRight="16dp" android:paddingLeft="16dp">
+              android:layout_height="wrap_content" android:paddingBottom="24dp"
+>
 
+    <View
+            android:id="@+id/divider7"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="24dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="center_vertical"
-            android:layout_marginBottom="12sp">
+            android:layout_marginBottom="12sp" android:paddingLeft="16dp" android:paddingRight="16dp">
         <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgAdPostUser"
@@ -31,7 +37,8 @@
                         android:text="Fabrício Augusto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
-                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"/>
+                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"
+                        android:textSize="16sp"/>
                 <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp" app:srcCompat="@drawable/ic_profile_verified"
@@ -57,32 +64,38 @@
             android:text="No início, eles duvidam e fazem chacota. Depois de seu sucesso, dão tapinhas nas costas e dizem que sempre acreditaram em você. "
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostText" android:textSize="24sp"
-            android:textColor="@color/colorText" android:layout_marginBottom="16dp" android:clickable="true"/>
+            android:textColor="@color/colorText" android:clickable="true" android:paddingLeft="16dp"
+            android:paddingRight="16dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:gravity="center_vertical">
+            android:layout_height="match_parent" android:gravity="center_vertical"
+            android:layout_marginTop="16dp" android:paddingLeft="16dp" android:paddingRight="16dp">
         <com.like.LikeButton
                 app:icon_type="heart"
-                app:icon_size="25dp"
+                app:icon_size="30dp"
+                app:unlike_drawable="@drawable/ic_heart_grey"
+                app:like_drawable="@drawable/ic_like_red"
                 android:id="@+id/btLikeButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp" app:liked="false"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
-                android:gravity="center_vertical" android:layout_marginLeft="4dp"
-                android:textColor="@color/colorText" android:textStyle="bold" tools:visibility="visible"/>
+                android:gravity="center_vertical" android:layout_marginLeft="6dp"
+                android:textColor="@color/colorText" android:textStyle="bold" android:visibility="visible"
+                android:textSize="16sp"/>
         <ImageButton
                 app:srcCompat="@drawable/ic_comment_grey"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btAdThoughtComment"
+                android:layout_height="wrap_content" android:id="@+id/btAdPostComment"
                 android:background="@color/backgroundGrey"
                 android:layout_marginLeft="16dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostComments"
-                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
+                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"
+                android:layout_marginLeft="6dp"/>
     </LinearLayout>
     <TextView
             android:text="TextView"

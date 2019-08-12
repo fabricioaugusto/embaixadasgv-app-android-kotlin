@@ -38,7 +38,7 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         setContentView(R.layout.activity_complete_register)
 
         val toolbar: androidx.appcompat.widget.Toolbar = toolbarCR
-        toolbar.setTitle("Complete seu perfil")
+        toolbar.title = "Complete seu perfil"
         toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
         setSupportActionBar(toolbar)
 

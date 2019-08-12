@@ -28,9 +28,6 @@ class CheckAuthActivity : AppCompatActivity() {
         // Initialize the SDK
         Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
 
-        // Create a new Places client instance
-        val placesClient = Places.createClient(this)
-
         mDatabase = MyFirebase.database()
         mAuth = MyFirebase.auth()
 

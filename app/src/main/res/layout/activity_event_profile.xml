@@ -14,17 +14,17 @@
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="200dp" app:srcCompat="@drawable/event_cover"
-                android:id="@+id/imageView4" app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/imgEventCover" app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 android:scaleType="centerCrop"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar3"/>
+                app:layout_constraintTop_toTopOf="parent"/>
         <TextView
                 android:text="Mahogany Bridal Fair 2016"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView12"
-                app:layout_constraintTop_toBottomOf="@+id/imageView4" app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/txtEventTheme"
+                app:layout_constraintTop_toBottomOf="@+id/imgEventCover" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp" android:layout_marginTop="24dp" android:textSize="20dp"
@@ -32,9 +32,9 @@
         <TextView
                 android:text="SUN, 23 OCT, 4:30 PM BST"
                 android:layout_width="0dp"
-                android:layout_height="16dp" android:id="@+id/textView14"
+                android:layout_height="16dp" android:id="@+id/txtEventDate"
                 android:layout_marginTop="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView12" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtEventTheme" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp" android:textColor="@color/colorText"/>
@@ -42,41 +42,33 @@
                 android:text="Confirmar Presença"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/button"
-                app:layout_constraintTop_toBottomOf="@+id/textView15" app:layout_constraintStart_toStartOf="parent"
+                android:id="@+id/btEnrollEvent"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp" android:layout_marginTop="24dp" android:background="@color/colorRed"
-                android:textColor="@color/backgroundGrey"/>
-        <TextView
-                android:text="#Fashion"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView15" android:layout_marginTop="12dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView14" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp" android:textColor="@color/colorText"/>
+                android:layout_marginRight="16dp" android:background="@drawable/bt_enroll_select"
+                android:textColor="@color/backgroundGrey" android:layout_marginTop="24dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtEventDate"/>
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@+id/button" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btEnrollEvent" app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
                 android:layout_marginStart="16dp" android:gravity="center_vertical" android:id="@+id/linearLayout3">
             <TextView
-                    android:text="2 pessoas confirmadas"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/textView16" android:layout_weight="1"
+                    android:layout_height="wrap_content" android:id="@+id/txtCountEnrolled" android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_group_grey_dark" android:drawablePadding="8dp"
-                    android:gravity="center_vertical" android:textColor="@color/colorText"/>
+                    android:gravity="center_vertical" android:textColor="@color/colorText"
+                    tools:text="Nenhuma pessoa confirmada"/>
 
             <LinearLayout
                     android:orientation="horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical|end" android:paddingRight="16dp"
                     android:paddingLeft="16dp">
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -86,7 +78,7 @@
                         android:src="@drawable/avatar"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                        android:layout_marginEnd="6dp"/>
+                        android:layout_marginEnd="6dp" android:visibility="gone"/>
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_enrolled_2"
                         android:layout_width="25dp"
@@ -94,7 +86,7 @@
                         android:src="@drawable/avatar"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                        android:layout_marginEnd="6dp"/>
+                        android:layout_marginEnd="6dp" android:visibility="gone"/>
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_enrolled_3"
                         android:layout_width="25dp"
@@ -102,14 +94,14 @@
                         android:src="@drawable/avatar"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                        android:layout_marginEnd="6dp"/>
+                        android:layout_marginEnd="6dp" android:visibility="gone"/>
                 <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_enrolled_more"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:src="@drawable/avatar"
                         app:civ_border_width="2dp"
-                        app:civ_border_color="#FFF"/>
+                        app:civ_border_color="#FFF" android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
         <View
@@ -125,7 +117,7 @@
                 android:text="Established in 1996, Mahogany International has  many years' experience and is a recognised  brand within the fashion and…"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView17"
+                android:id="@+id/txtEventDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
@@ -137,7 +129,8 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintTop_toBottomOf="@+id/textView17" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtEventDescription"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginTop="24dp"/>
         <TextView
@@ -151,7 +144,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="0dp"
-                android:layout_height="157dp" android:layout_marginTop="8dp"
+                android:layout_height="wrap_content" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/textView13" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
@@ -166,8 +159,8 @@
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:id="@+id/imgEventModerator1"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
                         android:src="@drawable/avatar"
                         app:civ_border_width="2dp"
                         app:civ_border_color="#FFF"/>
@@ -194,7 +187,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:gravity="center_vertical"
                     android:paddingLeft="16dp" android:paddingTop="8dp" android:paddingRight="16dp"
-                    android:paddingBottom="8dp">
+                    android:paddingBottom="8dp" android:visibility="gone">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -244,7 +237,7 @@
                 android:text="The Grand Connaught Rooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView19" android:layout_marginTop="16dp"
+                android:id="@+id/txtEventPlace" android:layout_marginTop="16dp"
                 app:layout_constraintTop_toBottomOf="@+id/textView18" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                 android:textColor="@color/colorText" android:textStyle="bold"/>
@@ -252,21 +245,30 @@
                 android:text="61-65 Great Queen St, Holborn, WC2B 5DA  London, United Kingdom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView20" android:layout_marginTop="8dp"
-                app:layout_constraintTop_toBottomOf="@+id/textView19" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="16dp"
-                android:layout_marginEnd="16dp" android:textColor="@color/colorText" android:layout_marginBottom="32dp"
-                app:layout_constraintBottom_toBottomOf="parent"/>
-        <androidx.appcompat.widget.Toolbar
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorPrimary"
-                android:theme="?attr/actionBarTheme"
-                android:minHeight="?attr/actionBarSize"
-                android:id="@+id/toolbar3" app:layout_constraintTop_toTopOf="parent"
+                android:id="@+id/txtEventAddress"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/txtEventPlace"
                 app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-        />
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textColor="@color/colorText"
+                android:layout_marginBottom="32dp"/>
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:id="@+id/map"
+                  android:name="com.google.android.gms.maps.SupportMapFragment"
+                  android:layout_width="match_parent"
+                  android:layout_height="200dp"
+                  app:layout_constraintTop_toBottomOf="@+id/txtEventAddress"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintBottom_toBottomOf="parent"
+
+                  android:layout_marginTop="16dp" android:layout_marginBottom="64dp"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

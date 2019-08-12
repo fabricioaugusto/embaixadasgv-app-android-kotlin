@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,6 +25,7 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mBrazilCollection: CollectionReference
     private lateinit var mCitiesCollection: CollectionReference
     private lateinit var mEmbassiesCollection: CollectionReference
+    private lateinit var mEmbassy: Embassy
     private lateinit var mStateId: String
     private lateinit var mStateName: String
     private lateinit var mCityId: String
@@ -188,12 +190,21 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
     fun saveEmbassy() {
 
-        mUser.embassy = mEmbassyId
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .whereEqualTo("id", mEmbassyId).get()
+            .addOnSuccessListener { querySnapshot ->
+
+                val documents =  querySnapshot.documents
+
+                if(documents.size > 0) {
+                    mEmbassy = documents[0].toObject(Embassy::class.java)!!
+                }
+            }
 
         btSaveEmbassy.startAnimation()
 
         val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-        collection.document(mUser.id!!).set(mUser.toMap())
+        collection.document(mUser.id).set(mUser.toMap())
             .addOnSuccessListener {
                 Log.d("FirebaseLog", "Embaixada Adicionada com Sucesso!")
                 startCheckAuthActivity()

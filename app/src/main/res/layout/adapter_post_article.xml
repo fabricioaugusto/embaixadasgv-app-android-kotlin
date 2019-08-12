@@ -3,14 +3,20 @@
               xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:paddingTop="16dp" android:paddingBottom="12dp"
-              android:background="@color/backgroundGrey" android:paddingRight="16dp" android:paddingLeft="16dp">
+              android:layout_height="wrap_content" android:paddingBottom="24dp"
+              android:background="@color/backgroundGrey">
 
+    <View
+            android:id="@+id/divider7"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            android:layout_marginBottom="24dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="center_vertical"
-            android:layout_marginBottom="12sp">
+            android:layout_marginBottom="12sp" android:paddingRight="16dp" android:paddingLeft="16dp">
         <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/imgAdPostUser"
@@ -30,7 +36,8 @@
                         android:text="Fabrício Augusto"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
-                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"/>
+                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"
+                        android:textSize="16sp"/>
                 <ImageView
                         android:layout_width="15dp"
                         android:layout_height="15dp" app:srcCompat="@drawable/ic_profile_verified"
@@ -50,50 +57,57 @@
     </LinearLayout>
     <ImageView
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:id="@+id/imgAdPostPicture" android:adjustViewBounds="false"
-            android:layout_marginBottom="16dp" android:scaleType="centerCrop"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/imgAdPostPicture"
+            android:layout_marginBottom="16dp" android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp" android:adjustViewBounds="true"/>
     <TextView
             android:text="The Different Methods Of Hair Removal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostTitle" android:textSize="16sp"
-            android:textStyle="bold" android:textColor="@color/colorText" android:layout_marginBottom="4dp"/>
+            android:textStyle="bold" android:textColor="@color/colorText" android:layout_marginBottom="4dp"
+            android:paddingLeft="16dp" android:paddingRight="16dp"/>
     <TextView
             android:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostText"
-            android:textColor="@color/colorText" android:textSize="15sp" android:clickable="true"
-            android:maxLength="300"/>
+            android:textColor="@color/colorText" android:textSize="16sp" android:clickable="true"
+            android:maxLength="300" android:paddingLeft="16dp" android:paddingRight="16dp"/>
     <TextView
             android:text="Continue Lendo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdArticleRead" android:paddingTop="16dp"
             android:paddingBottom="16dp" android:textAllCaps="true" android:textColor="@color/colorLink"
-            android:textStyle="bold"/>
+            android:textStyle="bold" android:paddingLeft="16dp" android:paddingRight="16dp"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:gravity="center_vertical" android:id="@+id/mTxtAdPostComments">
+            android:layout_height="match_parent" android:gravity="center_vertical"
+            android:paddingLeft="16dp" android:paddingRight="16dp">
         <com.like.LikeButton
                 app:icon_type="heart"
-                app:icon_size="25dp"
+                app:icon_size="30dp"
+                app:unlike_drawable="@drawable/ic_heart_grey"
+                app:like_drawable="@drawable/ic_like_red"
                 android:id="@+id/btLikeButton"
                 android:layout_width="30dp"
                 android:layout_height="30dp" app:liked="false"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostLikes"
-                android:gravity="center_vertical" android:layout_marginLeft="4dp"
-                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"/>
+                android:gravity="center_vertical" android:layout_marginLeft="6dp"
+                android:textColor="@color/colorText" android:textStyle="bold" android:visibility="visible"
+                android:textSize="16sp"/>
         <ImageButton
                 app:srcCompat="@drawable/ic_comment_grey"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btAdArticleComment"
+                android:layout_height="wrap_content" android:id="@+id/btAdPostComment"
                 android:background="@color/backgroundGrey"
                 android:layout_marginLeft="16dp"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostComments"
-                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
+                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"
+                android:layout_marginLeft="6dp"/>
     </LinearLayout>
 </LinearLayout>

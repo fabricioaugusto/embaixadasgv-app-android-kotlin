@@ -5,26 +5,24 @@
              android:layout_height="match_parent"
              tools:context=".fragment.UsersFragment"
             android:orientation="vertical">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:orientation="vertical" android:background="@color/backgroundGrey">
         <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
-                android:theme="?attr/actionBarTheme"
+                android:theme="@style/AppBarOverlay"
                 android:minHeight="?attr/actionBarSize" android:id="@+id/searchToolbar" app:contentInsetStart="0dp">
-
-            <SearchView
+            <ImageButton
+                    app:srcCompat="@drawable/ic_menu_grey"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:searchIcon="@drawable/ic_search_grey"
-                    android:paddingLeft="12dp" android:id="@+id/svUserList">
-                <TextView
-                        android:text="Persquisar participantes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/textView"
-                        android:textColor="@color/colorGrey" android:paddingTop="12dp" android:paddingBottom="12dp"/>
-            </SearchView>
-
+                    android:layout_height="wrap_content" android:id="@+id/btFeedMenu"
+                    android:background="@android:color/transparent" android:paddingLeft="16dp"
+                    android:paddingRight="20dp" android:paddingTop="12dp" android:paddingBottom="12dp"/>
+            <ImageView
+                    android:src="@drawable/horizontal_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp" android:id="@+id/imgLogoToolbar" android:adjustViewBounds="true"/>
 
         </androidx.appcompat.widget.Toolbar>
         <androidx.recyclerview.widget.RecyclerView

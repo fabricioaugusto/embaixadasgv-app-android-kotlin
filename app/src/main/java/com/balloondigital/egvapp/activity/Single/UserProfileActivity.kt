@@ -89,16 +89,9 @@ class UserProfileActivity : AppCompatActivity(), View.OnClickListener {
         txtUserProfileOccupation.text = mUser.occupation
         txtUserProfileCity.text = city
         txtUserProfileBiography.text = mUser.description
+        txtUserProfileEmbassy.text = mUser.embassy?.name
 
         getSocialData()
-
-        val collection = mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-        collection.document(mUser.embassy!!)
-            .get().addOnSuccessListener {
-                    documentSnapshot ->
-                mEmbassy = documentSnapshot.toObject(Embassy::class.java)!!
-                txtUserProfileEmbassy.text = mEmbassy.name
-            }
     }
 
     private fun getSocialData() {

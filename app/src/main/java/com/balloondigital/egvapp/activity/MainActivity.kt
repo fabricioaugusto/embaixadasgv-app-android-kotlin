@@ -36,7 +36,6 @@ import com.orhanobut.dialogplus.OnItemClickListener
 
 class MainActivity : AppCompatActivity(), OnItemClickListener {
 
-    private lateinit var mAuth: FirebaseAuth
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mCPDialog: DialogPlus
@@ -51,15 +50,12 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private var mAgendaFragmentAdded = false
     private var mHighlightsFragmentAdded = false
 
-    override fun onStart() {
-        super.onStart()
-
-        mAuth = MyFirebase.auth()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Log.d("EGVAPPLIFECYCLE", "onCreate")
 
         mFeedFragment = FeedFragment()
         mUsersFragment = UsersFragment()
@@ -77,11 +73,17 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         mUsersFragment.arguments = bundle
+        mAgendaFragment.arguments = bundle
 
         PermissionConfig.validatePermission(permissions, this)
         mNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
 
         setBottomNavigationView(mNavView)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("EGVAPPLIFECYCLE", "onResume")
     }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
@@ -114,7 +116,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransition.add(R.id.mainViewPager, mFeedFragment).commit()
+
+        if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
+        else fragmentTransition.add(R.id.mainViewPager, mFeedFragment).commit()
+
         mFeedFragmentAdded = true
     }
 
@@ -174,6 +179,9 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     }
 
     private fun setCreatePostDialog() {
+
+        mNavView.selectedItemId = R.id.home
+        mNavView.menu.getItem(0).isChecked = true
 
         val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(this)
         if(dialogBuilder != null) {

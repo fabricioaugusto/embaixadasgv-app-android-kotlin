@@ -18,106 +18,162 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.Create.CreateEventActivity">
+        <activity android:name=".activity.Create.CreateEventActivity"
+                  android:theme="@style/AppThemeToolbar"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.Auth.SubmitInviteCodeActivity">
+        <activity android:name=".activity.Auth.SubmitInviteCodeActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.InvitesActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Single.SingleArticleActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Single.SingleThoughtActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Single.SinglePostActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Create.CreatePostActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Create.CreateArticleActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Create.CreateToughtActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Edit.ChangeProfilePhotoActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.AppRateActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.SuggestsActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.FavoriteEventsActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.EnrolledEventsActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.PrivacyActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.SetPrivacyActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.MyEmbassyActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.SendMessageActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.AboutAppActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Menu.AboutEmbassiesActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Edit.EditSocialActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Edit.ChangePassActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Edit.EditProfileActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.Edit.ChoosePhotoActivity">
+        <activity android:name=".activity.Edit.ChoosePhotoActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.Edit.CompleteRegisterActivity">
+        <activity android:name=".activity.Edit.CompleteRegisterActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.Auth.CheckAuthActivity">
+        <activity android:name=".activity.Auth.CheckAuthActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN"
+                        />
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.Edit.ChooseEmbassyActivity">
+        <activity android:name=".activity.Edit.ChooseEmbassyActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name=".activity.Auth.ResetPasswordActivity">
         </activity>
@@ -125,19 +181,36 @@
                 android:name=".activity.Menu.MenuActivity"
                 android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.Single.EventProfileActivity">
+        <activity android:name=".activity.Single.EventProfileActivity"
+                  android:theme="@style/AppThemeToolbar"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
         <activity
                 android:name=".activity.Single.UserProfileActivity"
-                android:theme="@style/AppThemeToolbar">
+                android:theme="@style/AppThemeToolbar"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".activity.Auth.RegisterActivity">
+        <activity android:name=".activity.Auth.RegisterActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait">
         </activity>
         <activity android:name=".activity.Auth.LoginActivity"/>
-        <activity android:name=".activity.MainActivity"/>
+        <activity android:name=".activity.MainActivity"
+                  android:configChanges="orientation"
+                  android:screenOrientation="portrait"/>
         <activity
                 android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-                android:theme="@style/Base.Theme.AppCompat"/>
+                android:theme="@style/Base.Theme.AppCompat"
+                android:configChanges="orientation"
+                android:screenOrientation="portrait"/>
+        <meta-data
+                android:name="com.google.android.gms.version"
+                android:value="@integer/google_play_services_version" />
+        <meta-data
+                android:name="com.google.android.geo.API_KEY"
+                android:value="AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY"/>
     </application>
 
 </manifest>

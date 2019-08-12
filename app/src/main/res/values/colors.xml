@@ -9,6 +9,7 @@
     <color name="colorSubText">#9E9E9E</color>
     <color name="colorSkeleton">#E2E2E2</color>
     <color name="colorGrey">#D1D3D4</color>
+    <color name="colorLineGrey">#C7C7C7</color>
     <color name="colorGreen">#5FAD56</color>
     <color name="backgroundGrey">#FAFAFA</color>
     <color name="backgroundModal">#B3000000</color>

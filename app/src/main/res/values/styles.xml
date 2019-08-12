@@ -19,4 +19,6 @@
         <item name="colorPrimary">@color/colorRed</item>
     </style>
 
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
 </resources>
