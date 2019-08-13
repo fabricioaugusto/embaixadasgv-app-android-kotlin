@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
+    private lateinit var mHomeFragment: Fragment
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAgendaFragment: Fragment
     private lateinit var mHighlightsFragment: Fragment
@@ -45,6 +46,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUser: User
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+    private var mHomeFragmentAdded = false
     private var mFeedFragmentAdded = false
     private var mUsersFragmentAdded = false
     private var mAgendaFragmentAdded = false
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         Log.d("EGVAPPLIFECYCLE", "onCreate")
 
+        mHomeFragment = HomeFragment()
         mFeedFragment = FeedFragment()
         mUsersFragment = UsersFragment()
         mAgendaFragment = AgendaFragment()
@@ -72,6 +75,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             mUser = bundle.getSerializable("user") as User
         }
 
+        mHomeFragment.arguments = bundle
         mUsersFragment.arguments = bundle
         mAgendaFragment.arguments = bundle
         mHighlightsFragment.arguments = bundle
@@ -118,10 +122,10 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         val fragmentManager: FragmentManager = supportFragmentManager
         val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
 
-        if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
-        else fragmentTransition.add(R.id.mainViewPager, mFeedFragment).commit()
+        if(mHomeFragmentAdded) fragmentTransition.show(mHomeFragment)
+        else fragmentTransition.add(R.id.mainViewPager, mHomeFragment).commit()
 
-        mFeedFragmentAdded = true
+        mHomeFragmentAdded = true
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -131,7 +135,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         when (item.itemId) {
             R.id.navigation_home -> {
-                if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
+                if(mHomeFragmentAdded) fragmentTransition.show(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
                 if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
                 if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
@@ -143,7 +147,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 else fragmentTransition.add(R.id.mainViewPager, mUsersFragment)
                 mUsersFragmentAdded = true
 
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
                 if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
                 fragmentTransition.commit()
@@ -154,11 +158,11 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 return@OnNavigationItemSelectedListener false
             }
             R.id.navigation_agenda -> {
-                if(mAgendaFragmentAdded) fragmentTransition.show(mAgendaFragment)
+                if(mHomeFragmentAdded) fragmentTransition.show(mAgendaFragment)
                 else fragmentTransition.add(R.id.mainViewPager, mAgendaFragment)
                 mAgendaFragmentAdded = true
 
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
                 if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
                 fragmentTransition.commit()
@@ -169,7 +173,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 else fragmentTransition.add(R.id.mainViewPager, mHighlightsFragment)
                 mHighlightsFragmentAdded = true
 
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
+                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
                 if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
                 fragmentTransition.commit()

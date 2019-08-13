@@ -30,6 +30,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
@@ -45,6 +46,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class HighlightsFragment : Fragment(), View.OnClickListener {
 
+    private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
@@ -53,7 +55,6 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
     private lateinit var mLikeList: MutableList<PostLike>
-    private lateinit var mBtFeedMenu: ImageButton
     private var mAdapterPosition: Int = 0
     private lateinit var mUser: User
     private lateinit var mDbListener: ListenerRegistration
@@ -66,34 +67,21 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
         val view: View = inflater.inflate(R.layout.fragment_highlights, container, false)
 
         mContext = view.context
-        mBtFeedMenu = view.findViewById(R.id.btFeedMenu)
+        mAuth = MyFirebase.auth()
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
-
-        val bundle: Bundle? = arguments
-        if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLogFeed", mUser.toString())
-        }
         mDatabase = MyFirebase.database()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
         setListeners()
+        getAuthUserDetails()
 
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-        getPostLikes()
     }
 
     override fun onClick(view: View) {
         val id = view.id
 
-        if(id == R.id.btFeedMenu) {
-            startMenuActivity()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,7 +109,6 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        mBtFeedMenu.setOnClickListener(this)
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
     }
 
@@ -172,6 +159,27 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
         intent.putExtra("post_id", post.id)
         intent.putExtra("user", mUser)
         startActivityForResult(intent, 100)
+    }
+
+    private fun getAuthUserDetails() {
+
+        val currentUser = mAuth.currentUser
+
+        if(currentUser != null) {
+            mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+                .document(currentUser.uid)
+                .get()
+                .addOnSuccessListener {
+                    documentSnapshot ->
+                    val user = documentSnapshot.toObject(User::class.java)
+                    if(user != null) {
+                        mUser = user
+                        getPostLikes()
+                    }
+                }
+        }
+
+
     }
 
     private fun getListPosts() {
