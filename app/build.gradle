@@ -58,6 +58,7 @@ dependencies {
     implementation 'com.github.leinardi:FloatingActionButtonSpeedDial:master-SNAPSHOT'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'com.ethanhua:skeleton:1.1.2'
+    implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'
     implementation 'com.ogaclejapan.smarttablayout:utils-v4:2.0.0@aar'
     implementation 'com.android.support:multidex:1.0.3'

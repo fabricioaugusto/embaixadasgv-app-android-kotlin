@@ -7,17 +7,36 @@
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                   android:orientation="vertical">
+        <!-- TODO: Update blank fragment layout -->
+        <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:theme="?attr/actionBarTheme"
+                android:minHeight="?attr/actionBarSize" android:id="@+id/homeToolbar" app:contentInsetStart="0dp">
+            <ImageButton
+                    app:srcCompat="@drawable/ic_menu_grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/btHomeMenu"
+                    android:background="@android:color/transparent" android:paddingLeft="16dp"
+                    android:paddingRight="20dp" android:paddingTop="12dp" android:paddingBottom="12dp"/>
+            <ImageView
+                    android:src="@drawable/horizontal_logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"/>
+
+        </androidx.appcompat.widget.Toolbar>
         <com.ogaclejapan.smarttablayout.SmartTabLayout
                 android:id="@+id/viewpagertab"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/backgroundGrey"
                 app:stl_indicatorAlwaysInCenter="false"
                 app:stl_indicatorWithoutPadding="false"
                 app:stl_indicatorInFront="false"
                 app:stl_indicatorInterpolation="smart"
                 app:stl_indicatorGravity="bottom"
-                app:stl_indicatorColor="#FFF"
+                app:stl_indicatorColor="@color/colorRed"
                 app:stl_indicatorThickness="4dp"
                 app:stl_indicatorWidth="auto"
                 app:stl_indicatorCornerRadius="2dp"
@@ -28,7 +47,7 @@
                 app:stl_dividerColor="@android:color/transparent"
                 app:stl_dividerThickness="1dp"
                 app:stl_defaultTabTextAllCaps="true"
-                app:stl_defaultTabTextColor="#FFF"
+                app:stl_defaultTabTextColor="@color/colorPrimary"
                 app:stl_defaultTabTextSize="12sp"
                 app:stl_defaultTabTextHorizontalPadding="16dp"
                 app:stl_defaultTabTextMinWidth="0dp"
