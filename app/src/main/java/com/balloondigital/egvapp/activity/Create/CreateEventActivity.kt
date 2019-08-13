@@ -89,7 +89,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
         mEvent = Event()
         mListUsers = mutableListOf()
-
+        mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mDatabase = MyFirebase.database()
         mStorage = MyFirebase.storage()
         mCollections = MyFirebase.COLLECTIONS
@@ -99,7 +99,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         mSearchView = findViewById(R.id.svFindModerator)
         mSearchView.isIconified = false
 
-        mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
+
         mIndex = mClient.getIndex("users")
 
         getListUsers()

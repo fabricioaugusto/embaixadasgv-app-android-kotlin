@@ -78,10 +78,14 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
-        getPostLikes()
         setListeners()
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getPostLikes()
     }
 
     override fun onClick(view: View) {

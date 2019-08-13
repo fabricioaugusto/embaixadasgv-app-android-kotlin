@@ -10,6 +10,7 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Enrollment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
 import com.ethanhua.skeleton.SkeletonScreen
 import com.google.android.gms.maps.GoogleMap
@@ -91,12 +92,12 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
         if(id == R.id.btEnrollEvent) {
             if(btEnrollEvent.isSelected) {
                 btEnrollEvent.isSelected = false
-                btEnrollEvent.isEnabled = false
+                btEnrollEvent.isClickable = false
                 btEnrollEvent.text = "Confirmar presença"
                 deleteEnrollment()
             } else {
                 btEnrollEvent.isSelected = true
-                btEnrollEvent.isEnabled = false
+                btEnrollEvent.isClickable = false
                 btEnrollEvent.text = "Presença confirmada!"
                 saveEnrollment()
             }
@@ -158,6 +159,8 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
     private fun bindData() {
 
+        val eventDate = Converters.dateToString(mEvent.date!!)
+
         Glide.with(this)
             .load(mEvent.cover_img)
             .into(imgEventCover)
@@ -170,12 +173,12 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
         imgEventCover
         txtEventTheme.text = mEvent.theme
-        txtEventDate.text = mEvent.date.toString()
         txtEventDescription.text = mEvent.description
         txtModeratorName1.text = mEvent.moderator_1?.name
         txtModeratorProfession1.text = "Eu sou GV"
         txtEventPlace.text = mEvent.place
         txtEventAddress.text = mEvent.address
+        txtEventDate.text = "${eventDate.date} de ${eventDate.monthName} de ${eventDate.fullyear} às ${eventDate.hours}:${eventDate.minutes}"
     }
 
     private fun bindEnrollment() {
@@ -237,7 +240,7 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             .addOnSuccessListener {
                 documentReference ->
                 documentReference.update("id", documentReference.id)
-                btEnrollEvent.isEnabled = true
+                btEnrollEvent.isClickable = true
             }
     }
 
@@ -250,7 +253,7 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             .document(mUserEnrollment.id)
             .delete()
             .addOnSuccessListener {
-                btEnrollEvent.isEnabled = true
+                btEnrollEvent.isClickable = true
             }
     }
 

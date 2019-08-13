@@ -38,7 +38,12 @@ class CheckAuthActivity : AppCompatActivity() {
 
         val currentUser = mAuth.currentUser
         if (currentUser != null) {
-            getCurrentUser(currentUser.uid)
+            val uid = currentUser.uid
+            if(uid != null) {
+                getCurrentUser(currentUser.uid)
+            } else {
+                startLoginActivity()
+            }
         } else {
             startLoginActivity()
         }
@@ -53,9 +58,12 @@ class CheckAuthActivity : AppCompatActivity() {
                     val user = documentSnapshot.toObject(User::class.java)
                     if(user != null) {
                         mUser = user
+                        checkUser()
+                    } else {
+                        mAuth.signOut()
+                        startLoginActivity()
                     }
                 }
-                checkUser()
             }
     }
 

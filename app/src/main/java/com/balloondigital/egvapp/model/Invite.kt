@@ -25,6 +25,7 @@ data class Invite(
             "email_sender" to email_sender,
             "name_receiver" to name_receiver,
             "email_receiver" to email_receiver,
+            "embassy_receiver" to embassy_receiver,
             "invite_code" to invite_code
         )
     }

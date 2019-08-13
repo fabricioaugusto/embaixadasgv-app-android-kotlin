@@ -18,9 +18,9 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import android.app.Activity
 import android.widget.Toast
 import com.balloondigital.egvapp.api.MyFirebase
+import com.google.android.libraries.places.api.net.PlacesClient
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import io.ghyeok.stickyswitch.widget.StickySwitch.OnSelectedChangeListener
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -42,6 +42,9 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
         setSupportActionBar(toolbar)
 
+        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY");
+        mPlacesClient = Places.createClient(applicationContext)
+
         val bundle: Bundle? = intent.extras
         if(bundle != null) {
             mUser = bundle.getSerializable("user") as User
@@ -50,7 +53,6 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
 
         mDatabase = MyFirebase.database()
         mCollections = MyFirebase.COLLECTIONS
-        mPlacesClient = Places.createClient(this)
         mPlaceFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
 
         setListeners()

@@ -9,7 +9,9 @@ import java.net.URL
 import java.io.IOException
 import java.net.HttpURLConnection
 import android.os.StrictMode
-import android.util.Log
+import com.balloondigital.egvapp.model.DateStr
+import com.google.firebase.Timestamp
+
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +57,35 @@ class Converters private constructor(){
                 e.printStackTrace()
                 null
             }
+        }
+
+
+        fun dateToString(timestamp: Timestamp): DateStr {
+            val date = timestamp.toDate()
+            val formatDate = SimpleDateFormat("dd")
+            val formatWeekday = SimpleDateFormat("ddd")
+            val formatMonth = SimpleDateFormat("MM")
+            val formatMonthAbr = SimpleDateFormat("MMM")
+            val formatMonthName = SimpleDateFormat("MMMM")
+            val formatFullyear = SimpleDateFormat("yyyy")
+            val formatYear = SimpleDateFormat("yy")
+            val formatHours = SimpleDateFormat("HH")
+            val formatMinutes = SimpleDateFormat("mm")
+
+            val monthNames = listOf<String>("Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro")
+            val monthAbrs = listOf<String>("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+
+            return DateStr(
+                date = formatDate.format(date),
+                weekday = formatWeekday.format(date),
+                month = formatMonth.format(date),
+                monthAbr = monthAbrs[date.month],
+                monthName = monthNames[date.month],
+                fullyear = formatFullyear.format(date),
+                year = formatYear.format(date),
+                hours = formatHours.format(date),
+                minutes = formatMinutes.format(date)
+            )
         }
 
 

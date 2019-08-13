@@ -74,6 +74,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
         mUsersFragment.arguments = bundle
         mAgendaFragment.arguments = bundle
+        mHighlightsFragment.arguments = bundle
 
         PermissionConfig.validatePermission(permissions, this)
         mNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
