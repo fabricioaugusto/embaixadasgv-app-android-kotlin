@@ -63,7 +63,7 @@ class Converters private constructor(){
         fun dateToString(timestamp: Timestamp): DateStr {
             val date = timestamp.toDate()
             val formatDate = SimpleDateFormat("dd")
-            val formatWeekday = SimpleDateFormat("ddd")
+            val formatWeekday = SimpleDateFormat("EEEE")
             val formatMonth = SimpleDateFormat("MM")
             val formatMonthAbr = SimpleDateFormat("MMM")
             val formatMonthName = SimpleDateFormat("MMMM")

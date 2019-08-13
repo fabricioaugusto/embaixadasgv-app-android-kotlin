@@ -31,7 +31,8 @@ data class User(
     var behance: String? = null,
     var github: String? = null,
     var website: String? = null,
-    var embassy: Embassy? = null,
+    var embassy_id: String? = null,
+    var embassy: Embassy = Embassy(),
     var post_likes: MutableList<String> = mutableListOf()
 ) : Serializable {
     @Exclude

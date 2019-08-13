@@ -12,6 +12,7 @@
     <color name="colorLineGrey">#C7C7C7</color>
     <color name="colorGreen">#5FAD56</color>
     <color name="backgroundGrey">#FAFAFA</color>
+    <color name="backgroundGreyStrong">#F3F4F6</color>
     <color name="backgroundModal">#B3000000</color>
     <color name="blue200">#FF90CAF9</color>
     <color name="blue500">#FF2196F3</color>

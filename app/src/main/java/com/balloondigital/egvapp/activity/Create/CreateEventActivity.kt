@@ -395,6 +395,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         mEvent.theme = theme
         mEvent.description = description
         mEvent.embassy = mUser.embassy
+        mEvent.embassy_id = mUser.embassy.id
 
         btSaveNewEvent.startAnimation()
 
@@ -423,6 +424,8 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                             mDatabase.collection(mCollections.EVENTS)
                                 .add(mEvent.toMap())
                                 .addOnSuccessListener {
+                                    documentReference ->
+                                    documentReference.update("id", documentReference.id)
                                     btSaveNewEvent.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
                                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))

@@ -27,6 +27,7 @@ data class Event(
     var long: Double? = null,
     var moderator_1: User? = null,
     var moderator_2: User? = null,
+    var embassy_id: String? = null,
     var embassy: Embassy? = null
 ) : Serializable {
     @Exclude

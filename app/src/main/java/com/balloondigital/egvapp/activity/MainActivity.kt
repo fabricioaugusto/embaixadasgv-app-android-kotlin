@@ -138,7 +138,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 if(mHomeFragmentAdded) fragmentTransition.show(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
                 if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
-                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
                 fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
@@ -149,7 +149,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
                 if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
-                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
                 fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
@@ -164,14 +164,14 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
 
                 if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
-                if(mHighlightsFragmentAdded) fragmentTransition.hide(mHighlightsFragment)
+                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
                 fragmentTransition.commit()
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                if(mHighlightsFragmentAdded) fragmentTransition.show(mHighlightsFragment)
-                else fragmentTransition.add(R.id.mainViewPager, mHighlightsFragment)
-                mHighlightsFragmentAdded = true
+                if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
+                else fragmentTransition.add(R.id.mainViewPager, mFeedFragment)
+                mFeedFragmentAdded = true
 
                 if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
                 if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)

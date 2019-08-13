@@ -131,6 +131,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         user["email"] = email
         if(embassy != null) {
             user["embassy"] = embassy
+            user["embassy_id"] = embassy.id
         }
 
         collection.document(id).set(user)
