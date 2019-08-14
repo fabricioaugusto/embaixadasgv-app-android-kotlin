@@ -12,7 +12,7 @@
             app:cardElevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-    >
+            app:cardBackgroundColor="@android:color/white">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -39,9 +39,9 @@
                         android:gravity="bottom" android:paddingLeft="16dp"
                         android:paddingRight="16dp" android:paddingBottom="24dp" android:alpha="1">
                     <TextView
-                            android:text="#Food e Drinks"
+                            android:text="Embaixada Ipatinga"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTag"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventEmbassy"
                             android:textColor="@color/colorGrey"/>
                     <TextView
                             android:text="Gin Festival London 2017"
@@ -51,86 +51,53 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:paddingTop="8dp"
+                    android:paddingBottom="@dimen/keyline_1_minus_8dp">
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="75dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="4dp" android:gravity="center">
+                    <TextView
+                            android:text="Abr"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventMonthAbr"
+                            android:gravity="center_horizontal" android:textAllCaps="true"
+                            android:textStyle="bold" android:textSize="16sp"
+                            android:textColor="@color/colorText"/>
+                    <TextView
+                            android:text="17"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventDate"
+                            android:gravity="center_horizontal" android:textSize="36dp" android:textStyle="bold"
+                            android:textColor="@color/colorRed" android:layout_marginTop="-8dp"/>
+                </LinearLayout>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    <TextView
+                            android:text="Terça-feira ás 19:30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTime"
+                            android:padding="4dp"
+                            android:textColor="@color/colorText"/>
+                    <TextView
+                            android:text="Ipatinga, MG"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventPlace"
+                            android:drawableLeft="@drawable/ic_place_red" android:gravity="center_vertical"
+                            android:padding="4dp" android:textColor="@color/colorText"
+                            android:drawablePadding="2dp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
             >
-                <TextView
-                        android:text="Av Crisântemo, 930, Esperança - Ipatinga"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdEventPlace"
-                        android:drawableLeft="@drawable/ic_place_grey" android:gravity="center_vertical"
-                        android:padding="8dp" android:textColor="@color/colorText"
-                        android:drawablePadding="16dp"/>
-                <View
-                        android:id="@+id/divider3"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"
-                />
-                <LinearLayout
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    <TextView
-                            android:text="19 de Julho - 19:30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdEventDate"
-                            android:layout_weight="1"
-                            android:drawableLeft="@drawable/ic_time_grey" android:padding="8dp"
-                            android:drawablePadding="16dp" android:textColor="@color/colorText"/>
-                    <LinearLayout
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent" android:layout_weight="1"
-                            android:gravity="center_vertical|end" android:paddingRight="16dp"
-                            android:paddingLeft="16dp">
-                        <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/profile_enrolled_1"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:src="@drawable/avatar"
-                                app:civ_border_width="2dp"
-                                app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                                android:layout_marginEnd="6dp"/>
-                        <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/profile_enrolled_2"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:src="@drawable/avatar"
-                                app:civ_border_width="2dp"
-                                app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                                android:layout_marginEnd="6dp"/>
-                        <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/profile_enrolled_3"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:src="@drawable/avatar"
-                                app:civ_border_width="2dp"
-                                app:civ_border_color="#FFF" android:layout_marginRight="6dp"
-                                android:layout_marginEnd="6dp"/>
-                        <de.hdodenhof.circleimageview.CircleImageView
-                                android:id="@+id/profile_enrolled_more"
-                                android:layout_width="25dp"
-                                android:layout_height="25dp"
-                                android:src="@drawable/avatar"
-                                app:civ_border_width="2dp"
-                                app:civ_border_color="#FFF"/>
-                    </LinearLayout>
-                </LinearLayout>
-                <View
-                        android:id="@+id/divider6"
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="?android:attr/listDivider"
-                />
-                <TextView
-                        android:text="Embaixada Ipatinga"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:padding="8dp"
-                        android:drawableLeft="@drawable/ic_logo_transparent" android:drawablePadding="16dp"
-                        android:id="@+id/txtAdEventEmbassy" android:textColor="@color/colorText"
-                        android:textStyle="bold"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
