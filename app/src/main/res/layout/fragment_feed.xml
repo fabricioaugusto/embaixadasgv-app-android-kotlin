@@ -15,18 +15,60 @@
                 android:background="?attr/colorPrimary"
                 android:theme="?attr/actionBarTheme"
                 android:minHeight="?attr/actionBarSize" android:id="@+id/feedToolbar" app:contentInsetStart="0dp">
-            <ImageButton
-                    app:srcCompat="@drawable/ic_menu_grey"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/btFeedMenu"
-                    android:background="@android:color/transparent" android:paddingLeft="16dp"
-                    android:paddingRight="20dp" android:paddingTop="12dp" android:paddingBottom="12dp"/>
             <ImageView
                     android:src="@drawable/horizontal_logo"
                     android:layout_width="wrap_content"
-                    android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"/>
+                    android:layout_height="28dp" android:id="@+id/imageView2" android:adjustViewBounds="true"
+                    android:layout_marginLeft="16dp"/>
 
         </androidx.appcompat.widget.Toolbar>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="50dp">
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:layout_weight="1">
+                    <Button
+                            android:text="Destaques"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/button7"
+                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"
+                    />
+                </LinearLayout>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:layout_weight="1">
+                    <Button
+                            android:text="Minha Embaixada"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/button8"
+                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"/>
+                </LinearLayout>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent" android:layout_weight="1">
+                    <Button
+                            android:text="Geral"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/button9"
+                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"/>
+                </LinearLayout>
+            </LinearLayout>
+            <View
+                    android:id="@+id/divider3"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+            />
+        </LinearLayout>
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -34,7 +76,7 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/postsRecyclerView"
-            >
+                    android:background="@color/backgroundGreyStrong">
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>

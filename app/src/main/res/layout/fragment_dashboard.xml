@@ -10,12 +10,6 @@
             android:background="?attr/colorPrimary"
             android:theme="?attr/actionBarTheme"
             android:minHeight="?attr/actionBarSize" android:id="@+id/homeToolbar" app:contentInsetStart="0dp">
-        <ImageButton
-                app:srcCompat="@drawable/ic_menu_grey"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btHomeMenu"
-                android:background="@android:color/transparent" android:paddingLeft="16dp"
-                android:paddingRight="20dp" android:paddingTop="12dp" android:paddingBottom="12dp"/>
         <ImageView
                 android:src="@drawable/horizontal_logo"
                 android:layout_width="wrap_content"

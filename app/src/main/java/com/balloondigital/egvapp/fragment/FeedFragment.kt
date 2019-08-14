@@ -50,11 +50,8 @@ class FeedFragment : Fragment(), View.OnClickListener {
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
-    private lateinit var mLikeList: MutableList<PostLike>
-    private lateinit var mBtFeedMenu: ImageButton
     private var mAdapterPosition: Int = 0
     private lateinit var mUser: User
-    private lateinit var mDbListener: ListenerRegistration
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,7 +61,6 @@ class FeedFragment : Fragment(), View.OnClickListener {
         val view: View = inflater.inflate(R.layout.fragment_feed, container, false)
 
         mContext = view.context
-        mBtFeedMenu = view.findViewById(R.id.btFeedMenu)
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
 
         val bundle: Bundle? = arguments
@@ -84,9 +80,7 @@ class FeedFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         val id = view.id
 
-        if(id == R.id.btFeedMenu) {
-            startMenuActivity()
-        }
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -119,7 +113,6 @@ class FeedFragment : Fragment(), View.OnClickListener {
 
 
     private fun setListeners() {
-        mBtFeedMenu.setOnClickListener(this)
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
     }
 

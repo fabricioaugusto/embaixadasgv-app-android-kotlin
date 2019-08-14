@@ -14,15 +14,15 @@
 
     <item
             android:id="@+id/navigation_post"
-            android:icon="@drawable/ic_add_circle_grey"
-            android:title="Posts"/>
+            android:icon="@drawable/ic_edit_grey"
+            android:title="Conteúdo"/>
     <item
             android:id="@+id/navigation_agenda"
             android:icon="@drawable/ic_event_grey"
             android:title="Agenda"/>
     <item
             android:id="@+id/navigation_highlights"
-            android:icon="@drawable/ic_highlights_grey"
-            android:title="Destaques"/>
+            android:icon="@drawable/ic_menu_grey"
+            android:title="Mais"/>
 
 </menu>

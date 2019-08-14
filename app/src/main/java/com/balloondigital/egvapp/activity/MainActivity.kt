@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mHomeFragment: Fragment
+    private lateinit var mMenuFragment: Fragment
     private lateinit var mDashboardFragment: Fragment
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAgendaFragment: Fragment
@@ -47,11 +48,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUser: User
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-    private var mHomeFragmentAdded = false
-    private var mFeedFragmentAdded = false
-    private var mUsersFragmentAdded = false
-    private var mAgendaFragmentAdded = false
-    private var mHighlightsFragmentAdded = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +57,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         Log.d("EGVAPPLIFECYCLE", "onCreate")
 
         mHomeFragment = HomeFragment()
+        mMenuFragment = MenuFragment()
         mFeedFragment = FeedFragment()
         mUsersFragment = UsersFragment()
         mAgendaFragment = AgendaFragment()
@@ -78,6 +75,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         }
 
         mDashboardFragment.arguments = bundle
+        mMenuFragment.arguments = bundle
         mHomeFragment.arguments = bundle
         mUsersFragment.arguments = bundle
         mAgendaFragment.arguments = bundle
@@ -136,15 +134,15 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
-                setCreatePostDialog()
-                return@OnNavigationItemSelectedListener false
+                openFragment(mFeedFragment)
+                return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {
                 openFragment(mAgendaFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                openFragment(mFeedFragment)
+                openFragment(mMenuFragment)
                 return@OnNavigationItemSelectedListener true
             }
         }
