@@ -37,8 +37,9 @@
                     <Button
                             android:text="Destaques"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/button7"
-                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"
+                            android:layout_height="wrap_content" android:id="@+id/btFeedHighlight"
+                            android:background="@drawable/bg_feed_tab_select"
+                            android:textColor="@color/colorPrimary"
                     />
                 </LinearLayout>
                 <LinearLayout
@@ -48,8 +49,8 @@
                     <Button
                             android:text="Minha Embaixada"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/button8"
-                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"/>
+                            android:layout_height="wrap_content" android:id="@+id/btFeedEmbassy"
+                            android:background="@drawable/bg_feed_tab_select" android:textColor="@color/colorPrimary"/>
                 </LinearLayout>
                 <LinearLayout
                         android:orientation="vertical"
@@ -58,8 +59,8 @@
                     <Button
                             android:text="Geral"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/button9"
-                            android:background="@color/backgroundGrey" android:textColor="@color/colorPrimary"/>
+                            android:layout_height="wrap_content" android:id="@+id/btFeedAll"
+                            android:background="@drawable/bg_feed_tab_select" android:textColor="@color/colorPrimary"/>
                 </LinearLayout>
             </LinearLayout>
             <View

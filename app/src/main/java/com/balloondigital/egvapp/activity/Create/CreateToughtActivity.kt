@@ -1,5 +1,6 @@
 package com.balloondigital.egvapp.activity.Create
 
+import android.app.Activity
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -204,6 +205,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
                         resources.getColor(R.color.colorGreen),
                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                     ).apply {
+                        setResult(Activity.RESULT_OK)
                         finish()
                     }
                 }

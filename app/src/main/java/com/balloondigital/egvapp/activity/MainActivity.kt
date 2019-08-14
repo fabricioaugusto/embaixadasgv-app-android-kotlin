@@ -34,7 +34,7 @@ import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
 
 
-class MainActivity : AppCompatActivity(), OnItemClickListener {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
@@ -92,30 +92,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         Log.d("EGVAPPLIFECYCLE", "onResume")
     }
 
-    override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
-        makeToast(position.toString())
-
-        mCPDialog.dismiss()
-
-        if(position == 0) {
-            val intent: Intent = Intent(this, CreateToughtActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivity(intent)
-        }
-
-        if(position == 1) {
-            val intent: Intent = Intent(this, CreateArticleActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivity(intent)
-        }
-
-        if(position == 2) {
-            val intent: Intent = Intent(this, CreatePostActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivity(intent)
-        }
-    }
-
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
 
         bnv.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
@@ -154,22 +130,6 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         transaction.replace(R.id.mainViewPager, fragment)
         transaction.addToBackStack(null)
         transaction.commit()
-    }
-
-    private fun setCreatePostDialog() {
-
-        mNavView.selectedItemId = R.id.home
-        mNavView.menu.getItem(0).isChecked = true
-
-        val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(this)
-        if(dialogBuilder != null) {
-            dialogBuilder.adapter = mAdapter
-            dialogBuilder.onItemClickListener = this
-            dialogBuilder.setHeader(R.layout.header_dialog)
-            dialogBuilder.setPadding(16, 16, 16, 48)
-            mCPDialog = dialogBuilder.create()
-            mCPDialog.show()
-        }
     }
 
     fun makeToast(text: String) {

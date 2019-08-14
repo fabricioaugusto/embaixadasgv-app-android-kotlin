@@ -227,6 +227,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                                             resources.getColor(R.color.colorGreen),
                                             Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                         ).apply {
+                                            setResult(Activity.RESULT_OK)
                                             finish()
                                         }
 

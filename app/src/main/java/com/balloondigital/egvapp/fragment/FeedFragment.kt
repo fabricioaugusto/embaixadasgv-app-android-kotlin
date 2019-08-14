@@ -5,32 +5,40 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
+import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
+import com.balloondigital.egvapp.activity.Create.CreatePostActivity
+import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.activity.Menu.MenuActivity
 import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
 import com.balloondigital.egvapp.activity.Single.SinglePostActivity
 import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
+import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.balloondigital.egvapp.model.PostLike
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.orhanobut.dialogplus.DialogPlus
+import com.orhanobut.dialogplus.DialogPlusBuilder
+import com.orhanobut.dialogplus.OnItemClickListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -41,16 +49,23 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class FeedFragment : Fragment(), View.OnClickListener {
+class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
+    private lateinit var mBtFeedHighlight: Button
+    private lateinit var mBtFeedEmbassy: Button
+    private lateinit var mBtFeedAll: Button
+    private lateinit var mToolbar: Toolbar
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
+    private lateinit var mAdapterDialog: CreatePostDialogAdapter
+    private lateinit var mCPDialog: DialogPlus
     private lateinit var mPostList: MutableList<Post>
     private var mAdapterPosition: Int = 0
+    private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
 
     override fun onCreateView(
@@ -60,18 +75,36 @@ class FeedFragment : Fragment(), View.OnClickListener {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_feed, container, false)
 
+        mToolbar = view.findViewById(R.id.feedToolbar)
+        mToolbar.title = ""
+
+        if (activity is AppCompatActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        }
+
+        setHasOptionsMenu(true)
+
         mContext = view.context
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
-
+        mBtFeedHighlight = view.findViewById(R.id.btFeedHighlight)
+        mBtFeedEmbassy = view.findViewById(R.id.btFeedEmbassy)
+        mBtFeedAll = view.findViewById(R.id.btFeedAll)
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
             Log.d("FirebaseLogFeed", mUser.toString())
         }
+
+        mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
         mDatabase = MyFirebase.database()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
+        mBtFeedHighlight.isSelected = true
+        mBtFeedEmbassy.isSelected = false
+        mBtFeedAll.isSelected = false
+
+        getPostLikes()
         setListeners()
 
         return view
@@ -80,40 +113,107 @@ class FeedFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
         val id = view.id
 
+        if(id == R.id.btFeedHighlight) {
+            mBtFeedHighlight.isSelected = true
+            mBtFeedEmbassy.isSelected = false
+            mBtFeedAll.isSelected = false
+            getPostLikes()
+        }
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        if (requestCode == 100) {
-            if (resultCode == Activity.RESULT_OK) {
-                if(data != null) {
-                    val removed: Boolean = data.getBooleanExtra("removed", false)
-                    if(removed) {
-                        mPostList.removeAt(mAdapterPosition)
-                        mAdapter.notifyItemRemoved(mAdapterPosition)
-                        mAdapter.notifyItemRangeChanged(mAdapterPosition, mPostList.size)
-                        mAdapter.notifyDataSetChanged()
-                    }
-                }
-            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-                // TODO: Handle the error.
-                val status = Autocomplete.getStatusFromIntent(data!!)
-                Log.i("GooglePlaceLog", status.statusMessage)
-            } else if (resultCode == Activity.RESULT_CANCELED) {
-                // The user canceled the operation.
-            }
+        if(id == R.id.btFeedEmbassy) {
+            mBtFeedHighlight.isSelected = false
+            mBtFeedEmbassy.isSelected = true
+            mBtFeedAll.isSelected = false
+            getPostLikes()
+        }
+        if(id == R.id.btFeedAll) {
+            mBtFeedHighlight.isSelected = false
+            mBtFeedEmbassy.isSelected = false
+            mBtFeedAll.isSelected = true
+            getPostLikes()
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getPostLikes()
+    override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
+
+        mCPDialog.dismiss()
+
+        if(position == 0) {
+            val intent: Intent = Intent(mContext, CreateToughtActivity::class.java)
+            intent.putExtra("user", mUser)
+            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
+        }
+
+        if(position == 1) {
+            val intent: Intent = Intent(mContext, CreateArticleActivity::class.java)
+            intent.putExtra("user", mUser)
+            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
+        }
+
+        if(position == 2) {
+            val intent: Intent = Intent(mContext, CreatePostActivity::class.java)
+            intent.putExtra("user", mUser)
+            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_feed_toolbar, menu)
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.bar_create_post -> {
+                setCreatePostDialog()
+                return true
+            }
+            else -> true
+        }
     }
 
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+
+        if (resultCode == Activity.RESULT_OK) {
+
+            when(requestCode){
+                100 -> {
+                    if(data != null) {
+                        val removed: Boolean = data.getBooleanExtra("removed", false)
+                        if(removed) {
+                            mPostList.removeAt(mAdapterPosition)
+                            mAdapter.notifyItemRemoved(mAdapterPosition)
+                            mAdapter.notifyItemRangeChanged(mAdapterPosition, mPostList.size)
+                            mAdapter.notifyDataSetChanged()
+                        }
+                    }
+                }
+                CREATE_POST_ACTIVITY_CODE -> {
+                    mBtFeedHighlight.isSelected = false
+                    mBtFeedEmbassy.isSelected = true
+                    mBtFeedAll.isSelected = false
+                    getPostLikes()
+                }
+            }
+
+
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            // TODO: Handle the error.
+            val status = Autocomplete.getStatusFromIntent(data!!)
+            Log.i("GooglePlaceLog", status.statusMessage)
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            // The user canceled the operation.
+        }
+
+    }
+
     private fun setListeners() {
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
+        mBtFeedHighlight.setOnClickListener(this)
+        mBtFeedEmbassy.setOnClickListener(this)
+        mBtFeedAll.setOnClickListener(this)
     }
 
     private fun setRecyclerView() {
@@ -165,6 +265,59 @@ class FeedFragment : Fragment(), View.OnClickListener {
         startActivityForResult(intent, 100)
     }
 
+    private fun getEmbassyListPosts() {
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", false)
+            .whereEqualTo("embassy_id", mUser.embassy_id)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .get().addOnSuccessListener { documentSnapshot ->
+
+                mPostList.clear()
+
+                if(documentSnapshot != null) {
+                    for(document in documentSnapshot) {
+                        val post: Post? = document.toObject(Post::class.java)
+                        if(post != null) {
+                            mPostList.add(post)
+                        }
+                    }
+                }
+
+                mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
+                mSwipeLayoutFeed.isRefreshing = false
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
+    }
+
+    private fun getHighlightListPosts() {
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", true)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .get().addOnSuccessListener { documentSnapshot ->
+
+                mPostList.clear()
+
+                if(documentSnapshot != null) {
+                    for(document in documentSnapshot) {
+                        val post: Post? = document.toObject(Post::class.java)
+                        if(post != null) {
+                            mPostList.add(post)
+                        }
+                    }
+                }
+
+                mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
+                mSwipeLayoutFeed.isRefreshing = false
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
+    }
+
     private fun getListPosts() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
@@ -200,8 +353,32 @@ class FeedFragment : Fragment(), View.OnClickListener {
                     mUser.post_likes.add(postLike.post_id)
                 }
                 setRecyclerView()
-                getListPosts()
+
+                if(mBtFeedHighlight.isSelected) {
+                    getHighlightListPosts()
+                }
+
+                if(mBtFeedEmbassy.isSelected) {
+                    getEmbassyListPosts()
+                }
+
+                if(mBtFeedAll.isSelected) {
+                    getListPosts()
+                }
             }
+    }
+
+    private fun setCreatePostDialog() {
+
+        val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(mContext)
+        if(dialogBuilder != null) {
+            dialogBuilder.adapter = mAdapterDialog
+            dialogBuilder.onItemClickListener = this
+            dialogBuilder.setHeader(R.layout.header_dialog)
+            dialogBuilder.setPadding(16, 16, 16, 48)
+            mCPDialog = dialogBuilder.create()
+            mCPDialog.show()
+        }
     }
 
     private fun startUserProfileActivity(singleUser: User) {
