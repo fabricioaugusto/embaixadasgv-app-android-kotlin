@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mHomeFragment: Fragment
+    private lateinit var mDashboardFragment: Fragment
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAgendaFragment: Fragment
     private lateinit var mHighlightsFragment: Fragment
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
         mUsersFragment = UsersFragment()
         mAgendaFragment = AgendaFragment()
         mHighlightsFragment = HighlightsFragment()
+        mDashboardFragment = DashboardFragment()
 
         mAdapter = CreatePostDialogAdapter(this, false, 3)
         mNavView = findViewById(R.id.navView)
@@ -75,6 +77,7 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
             mUser = bundle.getSerializable("user") as User
         }
 
+        mDashboardFragment.arguments = bundle
         mHomeFragment.arguments = bundle
         mUsersFragment.arguments = bundle
         mAgendaFragment.arguments = bundle
@@ -118,39 +121,18 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
 
         bnv.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
-
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
-
-        if(mHomeFragmentAdded) fragmentTransition.show(mHomeFragment)
-        else fragmentTransition.add(R.id.mainViewPager, mHomeFragment).commit()
-
-        mHomeFragmentAdded = true
+        openFragment(mDashboardFragment)
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
-        val fragmentManager: FragmentManager = supportFragmentManager
-        val fragmentTransition: FragmentTransaction = fragmentManager.beginTransaction()
-
         when (item.itemId) {
             R.id.navigation_home -> {
-                if(mHomeFragmentAdded) fragmentTransition.show(mHomeFragment)
-                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
-                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
-                fragmentTransition.commit()
+                openFragment(mDashboardFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                if(mUsersFragmentAdded) fragmentTransition.show(mUsersFragment)
-                else fragmentTransition.add(R.id.mainViewPager, mUsersFragment)
-                mUsersFragmentAdded = true
-
-                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
-                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
-                fragmentTransition.commit()
+                openFragment(mUsersFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
@@ -158,29 +140,22 @@ class MainActivity : AppCompatActivity(), OnItemClickListener {
                 return@OnNavigationItemSelectedListener false
             }
             R.id.navigation_agenda -> {
-                if(mHomeFragmentAdded) fragmentTransition.show(mAgendaFragment)
-                else fragmentTransition.add(R.id.mainViewPager, mAgendaFragment)
-                mAgendaFragmentAdded = true
-
-                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
-                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
-                if(mFeedFragmentAdded) fragmentTransition.hide(mFeedFragment)
-                fragmentTransition.commit()
+                openFragment(mAgendaFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                if(mFeedFragmentAdded) fragmentTransition.show(mFeedFragment)
-                else fragmentTransition.add(R.id.mainViewPager, mFeedFragment)
-                mFeedFragmentAdded = true
-
-                if(mHomeFragmentAdded) fragmentTransition.hide(mHomeFragment)
-                if(mUsersFragmentAdded) fragmentTransition.hide(mUsersFragment)
-                if(mAgendaFragmentAdded) fragmentTransition.hide(mAgendaFragment)
-                fragmentTransition.commit()
+                openFragment(mFeedFragment)
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
+    }
+
+    private fun openFragment(fragment: Fragment) {
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.mainViewPager, fragment)
+        transaction.addToBackStack(null)
+        transaction.commit()
     }
 
     private fun setCreatePostDialog() {

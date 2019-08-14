@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.model.Event
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
 
 class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
@@ -38,9 +39,11 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
 
         val mEventCoverImage: ImageView = itemView.findViewById(R.id.imgAdEventCover)
         val mEventTheme: TextView = itemView.findViewById(R.id.txtAdEventTheme)
-        val mEventTag: TextView = itemView.findViewById(R.id.txtAdEventTag)
+        val mEventEmbassy: TextView = itemView.findViewById(R.id.txtAdEventEmbassy)
         val mEventPlace: TextView = itemView.findViewById(R.id.txtAdEventPlace)
-
+        val mEventMonthAbr: TextView = itemView.findViewById(R.id.txtAdEventMonthAbr)
+        val mEventDate: TextView = itemView.findViewById(R.id.txtAdEventDate)
+        val mEventEventTime: TextView = itemView.findViewById(R.id.txtAdEventTime)
 
         init {
             itemView.setOnClickListener {
@@ -49,10 +52,14 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
         }
 
         fun bindData(event: Event) {
+            val dateStr =  Converters.dateToString(event.date!!)
 
             mEventTheme.text = event.theme
-            mEventPlace.text = event.place
-            mEventTag.text = event.tag
+            mEventPlace.text = "${event.city}, ${event.state_short}"
+            mEventEmbassy.text = event.embassy!!.name
+            mEventMonthAbr.text = dateStr.monthAbr
+            mEventDate.text = dateStr.date
+            mEventEventTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
 
             if(event.cover_img != null) {
                 Glide.with(context)
