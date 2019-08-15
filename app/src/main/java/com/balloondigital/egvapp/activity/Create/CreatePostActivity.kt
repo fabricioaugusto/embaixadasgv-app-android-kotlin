@@ -141,8 +141,6 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                             val uri = data.data
                             Log.d("GalleryActivity", "Chegou aqui")
                             CropImage.activity(uri)
-                                .setAspectRatio(1, 1)
-                                .setFixAspectRatio(true)
                                 .start(this)
                         }
                     }
@@ -190,9 +188,9 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
-        val currentDate = sdf.format(Date())
 
         mPost.text = description
+        mPost.embassy_id = mUser.embassy_id
 
         btPostPublish.startAnimation()
 

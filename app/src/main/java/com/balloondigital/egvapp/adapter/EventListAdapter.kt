@@ -39,7 +39,6 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
 
         val mEventCoverImage: ImageView = itemView.findViewById(R.id.imgAdEventCover)
         val mEventTheme: TextView = itemView.findViewById(R.id.txtAdEventTheme)
-        val mEventEmbassy: TextView = itemView.findViewById(R.id.txtAdEventEmbassy)
         val mEventPlace: TextView = itemView.findViewById(R.id.txtAdEventPlace)
         val mEventMonthAbr: TextView = itemView.findViewById(R.id.txtAdEventMonthAbr)
         val mEventDate: TextView = itemView.findViewById(R.id.txtAdEventDate)
@@ -55,8 +54,7 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
             val dateStr =  Converters.dateToString(event.date!!)
 
             mEventTheme.text = event.theme
-            mEventPlace.text = "${event.city}, ${event.state_short}"
-            mEventEmbassy.text = event.embassy!!.name
+            mEventPlace.text = "${event.embassy!!.name} - ${event.city}, ${event.state_short}"
             mEventMonthAbr.text = dateStr.monthAbr
             mEventDate.text = dateStr.date
             mEventEventTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"

@@ -57,7 +57,7 @@
             android:id="@+id/imgAdPostPicture"
             android:layout_marginBottom="8dp"
             tools:srcCompat="@drawable/photo_demo_4_3"
-            android:adjustViewBounds="true"/>
+            android:adjustViewBounds="true" android:clickable="false"/>
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostTitle" android:visibility="gone"
@@ -65,7 +65,7 @@
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:id="@+id/txtAdPostText"
-            android:textColor="@color/colorText" android:textSize="16sp" android:clickable="true"
+            android:textColor="@color/colorText" android:textSize="16sp" android:clickable="false"
             tools:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
             android:paddingLeft="16dp" android:paddingRight="16dp"/>
     <LinearLayout
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/btAdPostComment"
                 android:background="@color/backgroundGrey"
-                android:layout_marginLeft="16dp"/>
+                android:layout_marginLeft="16dp" android:clickable="false"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/txtAdPostComments"

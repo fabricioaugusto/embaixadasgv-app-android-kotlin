@@ -4,7 +4,7 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="wrap_content" android:padding="16dp">
+              android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
@@ -12,12 +12,14 @@
             app:cardElevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:cardBackgroundColor="@android:color/white">
+            app:cardBackgroundColor="@android:color/white" android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp" android:layout_marginBottom="6dp" android:layout_marginTop="6dp">
 
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:background="@drawable/bg_card_event">
+                android:layout_height="match_parent" android:background="@drawable/bg_card_event"
+                android:paddingBottom="4dp">
             <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                                android:layout_height="wrap_content">
 
@@ -28,27 +30,6 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintBottom_toBottomOf="@+id/imgAdEventCover"
-                        android:background="@drawable/bg_gradient_cover"
-                        android:gravity="bottom" android:paddingLeft="16dp"
-                        android:paddingRight="16dp" android:paddingBottom="24dp" android:alpha="1">
-                    <TextView
-                            android:text="Embaixada Ipatinga"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdEventEmbassy"
-                            android:textColor="@color/colorGrey"/>
-                    <TextView
-                            android:text="Gin Festival London 2017"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTheme"
-                            android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="18sp"/>
-                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
             <LinearLayout
                     android:orientation="horizontal"
@@ -71,7 +52,7 @@
                             android:text="17"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventDate"
-                            android:gravity="center_horizontal" android:textSize="36dp" android:textStyle="bold"
+                            android:gravity="center_horizontal" android:textSize="42dp" android:textStyle="bold"
                             android:textColor="@color/colorRed" android:layout_marginTop="-8dp"/>
                 </LinearLayout>
                 <LinearLayout
@@ -79,17 +60,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                     <TextView
+                            android:text="Gin Festival London 2017"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTheme"
+                            android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
+                    <TextView
                             android:text="Terça-feira ás 19:30"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventTime"
                             android:padding="4dp"
-                            android:textColor="@color/colorText"/>
+                            android:textColor="@color/colorText"
+                            android:capitalize="sentences"/>
                     <TextView
-                            android:text="Ipatinga, MG"
+                            android:text="Embaixada Ipatinga - Ipatinga, MG"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventPlace"
                             android:drawableLeft="@drawable/ic_place_red" android:gravity="center_vertical"
-                            android:padding="4dp" android:textColor="@color/colorText"
+                            android:textColor="@color/colorText"
                             android:drawablePadding="2dp"/>
                 </LinearLayout>
             </LinearLayout>

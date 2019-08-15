@@ -13,19 +13,20 @@
             android:layout_marginStart="0dp" android:layout_alignParentLeft="true" android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true" android:layout_marginRight="0dp" android:layout_marginEnd="0dp"
             android:layout_marginBottom="60dp" android:layout_alignBottom="@+id/layoutCommentBox"
-            android:layout_alignParentBottom="false">
+            android:layout_alignParentBottom="false" android:background="@color/backgroundGreyStrong">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                      android:orientation="vertical" android:paddingTop="24dp" android:paddingLeft="16dp"
-                      android:paddingRight="16dp">
+                      android:orientation="vertical" android:paddingTop="16dp" android:paddingLeft="12dp"
+                      android:paddingRight="12dp">
             <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content" android:background="@drawable/bg_card_event"
+                    android:paddingTop="16dp" android:paddingBottom="16dp">
                 <LinearLayout
                         android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:gravity="center_vertical"
-                        android:layout_marginBottom="12sp">
+                        android:layout_marginBottom="12sp" android:paddingLeft="16dp">
                     <de.hdodenhof.circleimageview.CircleImageView
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/imgPostUser"
@@ -41,7 +42,7 @@
                                 android:text="Fabrício Augusto"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/txtPostUserName"
-                                android:textColor="@color/colorText"/>
+                                android:textColor="@color/colorText" android:textStyle="bold" android:textSize="16sp"/>
                         <TextView
                                 android:text="26 Oct 2018"
                                 android:layout_width="match_parent"
@@ -58,25 +59,29 @@
                         android:layout_width="match_parent"
                         android:layout_height="300dp"
                         android:id="@+id/imgPostPicture" android:adjustViewBounds="false"
-                        android:layout_marginBottom="16dp" android:scaleType="centerCrop"/>
+                        android:layout_marginBottom="16dp" android:scaleType="centerCrop" android:clickable="false"/>
                 <TextView
                         android:text="The Different Methods Of Hair Removal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/txtPostTitle" android:textSize="18sp"
                         android:textStyle="bold" android:textColor="@color/colorText"
-                        android:layout_marginBottom="4dp"/>
+                        android:layout_marginBottom="4dp" android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp" android:clickable="false"/>
                 <TextView
                         android:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/txtPostText"
-                        android:textColor="@color/colorText" android:textSize="16sp" android:clickable="false"/>
+                        android:textColor="@color/colorText" android:textSize="16sp" android:clickable="false"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp"/>
             </LinearLayout>
-            <View
-                    android:id="@+id/divider11"
+            <TextView
+                    android:text="Nenhum comentário nesta publicação. Seja o primeiro!"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider"
-                    android:layout_marginTop="16dp" android:layout_marginBottom="16dp"/>
+                    android:layout_height="wrap_content" android:id="@+id/txtPostEmptyComments"
+                    android:gravity="center_horizontal" android:textSize="16sp"
+                    android:textColor="@color/colorSubText" android:layout_marginBottom="48dp"
+                    android:layout_marginTop="16dp" android:visibility="gone" android:paddingLeft="32dp"
+                    android:paddingRight="32dp"/>
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/recyclerViewComments"
@@ -103,17 +108,18 @@
                     android:layout_height="wrap_content" android:layout_weight="1"
                     android:gravity="center_vertical|fill_vertical" android:background="@drawable/bg_box_comment"
                     android:paddingLeft="16dp" android:paddingRight="8dp"
-                    android:paddingTop="12dp" android:paddingBottom="8dp">
+                    android:paddingTop="@dimen/keyline_1_minus_8dp" android:paddingBottom="8dp">
                 <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:inputType="textPersonName"
+                        android:inputType="textMultiLine"
                         android:ems="10"
                         android:id="@+id/etCommentMessage" android:layout_weight="1"
-                        android:background="@android:color/white" android:hint="Comente aqui..."/>
+                        android:background="@android:color/white" android:hint="Comente aqui..."
+                        android:textSize="16sp"/>
                 <ImageButton
-                        android:layout_width="45dp"
-                        android:layout_height="45dp" app:srcCompat="@drawable/ic_send_grey_light"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp" app:srcCompat="@drawable/ic_send_grey_light"
                         android:id="@+id/btPostSendComment" android:background="@drawable/bg_send_button"/>
             </LinearLayout>
         </LinearLayout>

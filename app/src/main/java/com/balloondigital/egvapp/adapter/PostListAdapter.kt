@@ -115,18 +115,20 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
             val user: User = post.user
 
-            if(mUser.post_likes.contains(post.id)) {
-                mButtomLike.isLiked = true
-            }
+            mButtomLike.isLiked = mUser.post_likes.contains(post.id)
 
             mImgProfileVerified.isGone = !post.user_verified
 
             if(post.post_likes > 0) {
                 mTxtAdPostLikes.text = post.post_likes.toString()
+            } else {
+                mTxtAdPostLikes.text = ""
             }
 
             if(post.post_comments > 0) {
                 mTxtAdPostComments.text = post.post_comments.toString()
+            } else {
+                mTxtAdPostComments.text = ""
             }
 
             val likeListener = object : OnLikeListener {
@@ -136,10 +138,12 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
                     likeButton.isEnabled = false
                     post.liked = true
+
                     mTxtAdPostLikes.text = (post.post_likes+1).toString()
 
                     val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = user)
                     post.post_likes = post.post_likes+1
+
                     mLikesCollection.add(postLike.toMap()).addOnSuccessListener {
                         it.update("id", it.id)
                         mPostCollection.document(post.id).update("post_likes", post.post_likes)
@@ -148,10 +152,11 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                 }
 
                 override fun unLiked(likeButton: LikeButton) {
-                    likeButton.isEnabled = false
-                    post.liked = false
 
                     mUser.post_likes.remove(post.id)
+
+                    likeButton.isEnabled = false
+                    post.liked = false
 
                     val numLikes = post.post_likes-1
 

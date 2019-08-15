@@ -193,6 +193,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         val currentDate = sdf.format(Date())
 
         mPost.text = text
+        mPost.embassy_id = mUser.embassy_id
 
         btToughtPublish.startAnimation()
 

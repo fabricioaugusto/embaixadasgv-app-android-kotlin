@@ -41,7 +41,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mHomeFragment: Fragment
     private lateinit var mMenuFragment: Fragment
     private lateinit var mDashboardFragment: Fragment
-    private lateinit var mCPDialog: DialogPlus
     private lateinit var mAgendaFragment: Fragment
     private lateinit var mHighlightsFragment: Fragment
     private lateinit var mNavView: BottomNavigationView

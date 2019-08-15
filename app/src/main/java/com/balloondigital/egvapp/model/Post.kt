@@ -23,6 +23,7 @@ data class Post(
     var user_id: String = "",
     var user_verified: Boolean = false,
     var likes_ids: List<String>? = null,
+    var embassy_id: String? = null,
     var user: User = User()
     ): Serializable {
     @Exclude
@@ -39,6 +40,7 @@ data class Post(
             "post_comments" to post_comments,
             "user_id" to user.id,
             "user_verified" to user.verified,
+            "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
     }
@@ -55,6 +57,7 @@ data class Post(
             "post_comments" to post_comments,
             "user_id" to user.id,
             "user_verified" to user.verified,
+            "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
     }
@@ -72,6 +75,7 @@ data class Post(
             "post_comments" to post_comments,
             "user_id" to user.id,
             "user_verified" to user.verified,
+            "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
     }

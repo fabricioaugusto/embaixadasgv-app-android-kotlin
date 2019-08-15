@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -114,6 +115,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
         val id = view.id
 
         if(id == R.id.btFeedHighlight) {
+            mRecyclerView.isGone = true
             mBtFeedHighlight.isSelected = true
             mBtFeedEmbassy.isSelected = false
             mBtFeedAll.isSelected = false
@@ -121,12 +123,14 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
         }
 
         if(id == R.id.btFeedEmbassy) {
+            mRecyclerView.isGone = true
             mBtFeedHighlight.isSelected = false
             mBtFeedEmbassy.isSelected = true
             mBtFeedAll.isSelected = false
             getPostLikes()
         }
         if(id == R.id.btFeedAll) {
+            mRecyclerView.isGone = true
             mBtFeedHighlight.isSelected = false
             mBtFeedEmbassy.isSelected = false
             mBtFeedAll.isSelected = true
@@ -210,7 +214,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
     }
 
     private fun setListeners() {
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getPostLikes() })
         mBtFeedHighlight.setOnClickListener(this)
         mBtFeedEmbassy.setOnClickListener(this)
         mBtFeedAll.setOnClickListener(this)
@@ -343,6 +347,9 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
     }
 
     private fun getPostLikes() {
+
+        mUser.post_likes.clear()
+
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
             .whereEqualTo("user_id", mUser.id)
             .get()
@@ -352,20 +359,25 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
                     val postLike = document.toObject(PostLike::class.java)
                     mUser.post_likes.add(postLike.post_id)
                 }
+                mRecyclerView.isGone = false
                 setRecyclerView()
-
-                if(mBtFeedHighlight.isSelected) {
-                    getHighlightListPosts()
-                }
-
-                if(mBtFeedEmbassy.isSelected) {
-                    getEmbassyListPosts()
-                }
-
-                if(mBtFeedAll.isSelected) {
-                    getListPosts()
-                }
+                refreshData()
             }
+    }
+
+    private fun refreshData() {
+
+        if(mBtFeedHighlight.isSelected) {
+            getHighlightListPosts()
+        }
+
+        if(mBtFeedEmbassy.isSelected) {
+            getEmbassyListPosts()
+        }
+
+        if(mBtFeedAll.isSelected) {
+            getListPosts()
+        }
     }
 
     private fun setCreatePostDialog() {
@@ -379,17 +391,5 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
             mCPDialog = dialogBuilder.create()
             mCPDialog.show()
         }
-    }
-
-    private fun startUserProfileActivity(singleUser: User) {
-        val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
-        intent.putExtra("user", singleUser)
-        startActivity(intent)
-    }
-
-    fun startMenuActivity() {
-        val intent: Intent = Intent(mContext, MenuActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
     }
 }

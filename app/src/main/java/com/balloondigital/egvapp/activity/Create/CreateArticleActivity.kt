@@ -420,6 +420,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
 
         mPost.title = title
         mPost.text = text
+        mPost.embassy_id = mUser.embassy_id
 
         btArticlePublish.startAnimation()
 
