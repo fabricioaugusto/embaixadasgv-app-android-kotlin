@@ -117,7 +117,7 @@
                 <Button
                         android:text="Membros"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/button3" android:layout_weight="1"
+                        android:layout_height="wrap_content" android:id="@+id/btDashboardMembers" android:layout_weight="1"
                         android:background="@drawable/bg_white_box" android:textSize="10sp"
                         android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
                         android:textColor="@color/colorLink" android:drawableTop="@drawable/ic_group_blue"

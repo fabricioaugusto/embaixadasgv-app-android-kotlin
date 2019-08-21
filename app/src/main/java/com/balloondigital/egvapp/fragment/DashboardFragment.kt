@@ -1,18 +1,21 @@
 package com.balloondigital.egvapp.fragment
 
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.core.view.isGone
-
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.DateStr
 import com.balloondigital.egvapp.model.Event
+import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,28 +31,64 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class DashboardFragment : Fragment() {
+class DashboardFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mUser: User
     private lateinit var mEvent: Event
+    private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
+    private lateinit var mBtDashboardMembers: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
+        val view: View = inflater.inflate(R.layout.fragment_dashboard, container, false)
+
         mAuth = MyFirebase.auth()
+        mContext = view.context
         mDatabase = MyFirebase.database()
         mColletions = MyFirebase.COLLECTIONS
+        mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
 
-        getNextEvent()
+        val currentUser = mAuth.currentUser
+        if(currentUser != null) {
+            getUserDetails(currentUser.uid)
+        }
 
+        setListeners()
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        return view
     }
 
+    override fun onClick(view: View) {
+        val id = view.id
+        if(id == R.id.btDashboardMembers) {
+            startEmbassyMembersActivity()
+        }
+    }
+
+
+    private fun setListeners() {
+        mBtDashboardMembers.setOnClickListener(this)
+    }
+
+    private fun getUserDetails(userId: String) {
+        mDatabase.collection(mColletions.USERS)
+            .document(userId)
+            .get()
+            .addOnSuccessListener {
+                documentSnapshot ->
+                val user = documentSnapshot.toObject(User::class.java)
+                if(user != null) {
+                    mUser = user
+                    getNextEvent()
+                }
+            }
+    }
 
     private fun getNextEvent() {
 
@@ -86,5 +125,11 @@ class DashboardFragment : Fragment() {
 
         progressBarDashboard.isGone = true
         rootView.isGone = false
+    }
+
+    private fun startEmbassyMembersActivity() {
+        val intent: Intent = Intent(mContext, EmbassyMembersActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
     }
 }
