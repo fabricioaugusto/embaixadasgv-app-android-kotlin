@@ -60,24 +60,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                     <TextView
+                            android:text="terça-feira ás 19:30"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTime"
+                            android:textColor="@color/colorRed"
+                            android:capitalize="sentences" android:textSize="12sp" android:textAllCaps="true"/>
+                    <TextView
                             android:text="Gin Festival London 2017"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventTheme"
                             android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
-                    <TextView
-                            android:text="Terça-feira ás 19:30"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/txtAdEventTime"
-                            android:padding="4dp"
-                            android:textColor="@color/colorText"
-                            android:capitalize="sentences"/>
                     <TextView
                             android:text="Embaixada Ipatinga - Ipatinga, MG"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventPlace"
                             android:drawableLeft="@drawable/ic_place_red" android:gravity="center_vertical"
                             android:textColor="@color/colorText"
-                            android:drawablePadding="2dp"/>
+                            android:drawablePadding="2dp" android:layout_marginTop="4dp"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

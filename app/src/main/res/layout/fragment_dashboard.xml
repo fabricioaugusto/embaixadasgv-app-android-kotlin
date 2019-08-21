@@ -76,16 +76,16 @@
                             android:paddingLeft="12dp" android:paddingRight="12dp" android:paddingTop="8dp"
                             android:paddingBottom="8dp">
                         <TextView
+                                android:text="Terça-feira, ás 19:30"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content" android:id="@+id/txtDashboardTime"
+                                android:textAllCaps="true" android:textSize="12sp" android:textColor="@color/colorRed"/>
+                        <TextView
                                 android:text="Design Thinking para Inovação de Negócios"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/txtDashboardTheme"
                                 android:maxLines="1"
                                 android:textStyle="bold" android:textColor="@color/colorText"/>
-                        <TextView
-                                android:text="Terça-feira, ás 19:30"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content" android:id="@+id/txtDashboardTime"
-                                android:inputType="textCapSentences"/>
                         <TextView
                                 android:text="Rio de Janeiro - RJ"
                                 android:layout_width="match_parent"

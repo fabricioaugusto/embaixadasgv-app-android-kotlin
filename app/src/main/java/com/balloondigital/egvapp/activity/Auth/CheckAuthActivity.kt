@@ -14,6 +14,7 @@ import android.content.SharedPreferences
 import com.balloondigital.egvapp.activity.Edit.ChooseEmbassyActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity
+import com.balloondigital.egvapp.api.GoogleAPI
 
 
 class CheckAuthActivity : AppCompatActivity() {
@@ -26,7 +27,7 @@ class CheckAuthActivity : AppCompatActivity() {
         super.onStart()
 
         // Initialize the SDK
-        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
+        Places.initialize(applicationContext, GoogleAPI.KEY)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

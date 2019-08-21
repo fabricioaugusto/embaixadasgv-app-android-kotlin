@@ -29,6 +29,9 @@ import android.content.DialogInterface
 import android.os.Handler
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
 
 
@@ -46,6 +49,8 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mPostCollection: CollectionReference
     private lateinit var mLikesCollection: CollectionReference
+    private var mListLikes: MutableList<PostLike> = mUser.post_likes
+    private var mLikeIsProcessing = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
 
@@ -93,7 +98,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
     inner class PostViewHolder(itemView: View, val context: Context): RecyclerView.ViewHolder(itemView) {
 
-        private val mImgAdPostUser: CircleImageView = itemView.findViewById(R.id.imgAdPostUser)
+        private val mImgAdPostUser: ImageView = itemView.findViewById(R.id.imgAdPostUser)
         private val mTxtAdPostUserName: TextView = itemView.findViewById(R.id.txtAdPostUserName)
         private val mTxtAdPostDate: TextView = itemView.findViewById(R.id.txtAdPostDate)
         private val mTxtAdPostText: TextView = itemView.findViewById(R.id.txtAdPostText)
@@ -115,7 +120,16 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
             val user: User = post.user
 
-            mButtomLike.isLiked = mUser.post_likes.contains(post.id)
+            val requestOptions: RequestOptions = RequestOptions()
+            val options = requestOptions.transforms(CenterCrop(), RoundedCorners(60))
+
+            Glide.with(itemView.context)
+                .load(user.profile_img!!.toUri())
+                .transition(withCrossFade())
+                .apply(options)
+                .into(mImgAdPostUser)
+
+            mButtomLike.isLiked = mListLikes.any { it.post_id == post.id }
 
             mImgProfileVerified.isGone = !post.user_verified
 
@@ -134,56 +148,58 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
             val likeListener = object : OnLikeListener {
                 override fun liked(likeButton: LikeButton) {
 
-                    mUser.post_likes.add(post.id)
+                    if(!mListLikes.any { it.post_id == post.id } && !mLikeIsProcessing){
 
-                    likeButton.isEnabled = false
-                    post.liked = true
+                        val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = user)
 
-                    mTxtAdPostLikes.text = (post.post_likes+1).toString()
+                        mLikeIsProcessing = true
 
-                    val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = user)
-                    post.post_likes = post.post_likes+1
+                        val numLikes = post.post_likes+1
 
-                    mLikesCollection.add(postLike.toMap()).addOnSuccessListener {
-                        it.update("id", it.id)
-                        mPostCollection.document(post.id).update("post_likes", post.post_likes)
-                        likeButton.isEnabled = true
+                        mTxtAdPostLikes.text = numLikes.toString()
+
+                        mLikesCollection.add(postLike.toMap()).addOnSuccessListener {
+                            postLike.id = it.id
+                            mPostList[position].post_likes = numLikes
+                            it.update("id", it.id).addOnSuccessListener {
+                                mPostCollection.document(post.id).update("post_likes", post.post_likes)
+                                mListLikes.add(postLike)
+                                mLikeIsProcessing = false
+                            }
+                        }
                     }
                 }
 
                 override fun unLiked(likeButton: LikeButton) {
 
-                    mUser.post_likes.remove(post.id)
+                    if(mListLikes.any { it.post_id == post.id } && !mLikeIsProcessing){
 
-                    likeButton.isEnabled = false
-                    post.liked = false
+                        val list = mListLikes.filter {it.post_id == post.id}
 
-                    val numLikes = post.post_likes-1
+                        if(list.isNotEmpty()) {
+                            mLikeIsProcessing = true
 
-                    if(numLikes > 0) {
-                        mTxtAdPostLikes.text = (post.post_likes-1).toString()
-                    } else {
-                        mTxtAdPostLikes.text = ""
-                    }
+                            mListLikes.remove(list[0])
+                            val numLikes = post.post_likes-1
 
-                    post.post_likes = numLikes
-                    mPostCollection.document(post.id).update("post_likes", numLikes)
+                            mPostList[position].post_likes = numLikes
+                            notifyItemChanged(position)
 
-                    if(mLikeID != null) {
-                        mLikesCollection.document(mLikeID!!).delete()
-                            .addOnSuccessListener {
-                                likeButton.isEnabled = true
-                            }
+                            mLikesCollection.document(list[0].id).delete()
+                                .addOnSuccessListener {
+                                    mPostCollection.document(post.id).update("post_likes", numLikes)
+                                    post.post_likes = numLikes
+                                    mLikeIsProcessing = false
+                                }
+                        }
+
                     }
                 }
             }
 
             mButtomLike.setOnLikeListener(likeListener)
 
-            Glide.with(itemView.context)
-                .load(user.profile_img!!.toUri())
-                .transition(withCrossFade())
-                .into(mImgAdPostUser)
+
 
             mTxtAdPostUserName.text = user.name
             mTxtAdPostText.text = KnifeParser.fromHtml(post.text)

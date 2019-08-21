@@ -32,8 +32,10 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
     private lateinit var mCurrentUser: FirebaseUser
     private lateinit var mUserEnrollment: Enrollment
     private lateinit var mEnrollmentList: MutableList<Enrollment>
+    private lateinit var mUserEnrollmentList: MutableList<Enrollment>
     private var mPlaceLat: Double = 0.0
     private var mPlaceLng: Double = 0.0
+    private var mEnrollProcessing  = false
     private lateinit var mPlaceName: String
     private lateinit var mDatabase: FirebaseFirestore
 
@@ -57,6 +59,7 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
         mDatabase = MyFirebase.database()
         mEnrollmentList = mutableListOf()
+        mUserEnrollmentList = mutableListOf()
 
         if(MyFirebase.auth().currentUser != null) {
             mCurrentUser = MyFirebase.auth().currentUser!!
@@ -91,14 +94,8 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
         val id = view.id
         if(id == R.id.btEnrollEvent) {
             if(btEnrollEvent.isSelected) {
-                btEnrollEvent.isSelected = false
-                btEnrollEvent.isClickable = false
-                btEnrollEvent.text = "Confirmar presença"
                 deleteEnrollment()
             } else {
-                btEnrollEvent.isSelected = true
-                btEnrollEvent.isClickable = false
-                btEnrollEvent.text = "Presença confirmada!"
                 saveEnrollment()
             }
         }
@@ -117,7 +114,18 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
                 val user = documentSnapshot.toObject(User::class.java)
                 if(user!= null) {
                     mUser = user
-                    getEvent()
+                    mDatabase.collection(MyFirebase.COLLECTIONS.ENROLLMENTS)
+                        .whereEqualTo("user_id", mUser.id).get()
+                        .addOnSuccessListener{
+                            querySnapshot ->
+                            for(document in querySnapshot.documents) {
+                                val enrollment = document.toObject(Enrollment::class.java)
+                                if(enrollment != null) {
+                                    mUserEnrollmentList.add(enrollment)
+                                }
+                            }
+                            getEvent()
+                        }
                 }
             }
     }
@@ -169,6 +177,11 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
             .load(mEvent.moderator_1?.profile_img)
             .into(imgEventModerator1)
 
+        btEnrollEvent.isSelected = mUserEnrollmentList.any { it.event_id == mEvent.id }
+        if(btEnrollEvent.isSelected) {
+            btEnrollEvent.text = "Presença confirmada"
+        }
+
         bindEnrollment()
 
         imgEventCover
@@ -178,7 +191,13 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
         txtModeratorProfession1.text = "Eu sou GV"
         txtEventPlace.text = mEvent.place
         txtEventAddress.text = mEvent.address
-        txtEventDate.text = "${eventDate.date} de ${eventDate.monthName} de ${eventDate.fullyear} às ${eventDate.hours}:${eventDate.minutes}"
+        txtEventEmassy.text = "${mEvent.embassy!!.name} - ${mEvent.city}, ${mEvent.state_short}"
+        txtEventDate.text = eventDate.date
+        txtEventMonthAbr.text = eventDate.monthAbr
+        txtEventTime.text = "${eventDate.weekday} às ${eventDate.hours}:${eventDate.minutes}"
+
+        pbSingleEvent.isGone = true
+        rootViewSingleEvent.isGone = false
     }
 
     private fun bindEnrollment() {
@@ -223,38 +242,69 @@ class EventProfileActivity : AppCompatActivity(), OnMapReadyCallback, View.OnCli
 
     private fun saveEnrollment() {
 
-        val enrollment: Enrollment = Enrollment(
-            event = mEvent,
-            user = mUser,
-            user_id = mUser.id,
-            event_id = mEventId,
-            event_date = mEvent.date
-        )
+        if(!mUserEnrollmentList.any { it.event_id == mEvent.id } && !mEnrollProcessing) {
 
-        mEnrollmentList.add(enrollment)
+            btEnrollEvent.isSelected = true
+            btEnrollEvent.text = "Presença confirmada"
 
-        bindEnrollment()
+            mEnrollProcessing = true
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.ENROLLMENTS)
-            .add(enrollment.toMap())
-            .addOnSuccessListener {
-                documentReference ->
-                documentReference.update("id", documentReference.id)
-                btEnrollEvent.isClickable = true
-            }
+            val enrollment: Enrollment = Enrollment(
+                event = mEvent,
+                user = mUser,
+                user_id = mUser.id,
+                event_id = mEventId,
+                event_date = mEvent.date
+            )
+
+            mUserEnrollment = enrollment
+            mEnrollmentList.add(enrollment)
+
+            bindEnrollment()
+
+            mDatabase.collection(MyFirebase.COLLECTIONS.ENROLLMENTS)
+                .add(enrollment.toMap())
+                .addOnSuccessListener {
+                    documentReference ->
+                    enrollment.id = documentReference.id
+                    mUserEnrollmentList.add(enrollment)
+                    documentReference.update("id", documentReference.id)
+                        .addOnSuccessListener {
+                            mEnrollProcessing = false
+                        }
+                }
+        }
     }
 
     private fun deleteEnrollment() {
 
-        mEnrollmentList.remove(mUserEnrollment)
-        bindEnrollment()
+        if(mUserEnrollmentList.any { it.event_id == mEvent.id } && !mEnrollProcessing) {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.ENROLLMENTS)
-            .document(mUserEnrollment.id)
-            .delete()
-            .addOnSuccessListener {
-                btEnrollEvent.isClickable = true
+            val list = mUserEnrollmentList.filter { it.event_id == mEvent.id }
+
+            if(list.isNotEmpty()) {
+
+                btEnrollEvent.isSelected = false
+                btEnrollEvent.text = "Confirmar presença"
+
+                mEnrollProcessing = true
+                mUserEnrollmentList.remove(mUserEnrollment)
+
+                mEnrollmentList.remove(mUserEnrollment)
+                bindEnrollment()
+
+                mDatabase.collection(MyFirebase.COLLECTIONS.ENROLLMENTS)
+                    .document(list[0].id)
+                    .delete()
+                    .addOnSuccessListener {
+                        mEnrollProcessing = false
+                    }
             }
+
+
+        }
+
+
     }
 
 }

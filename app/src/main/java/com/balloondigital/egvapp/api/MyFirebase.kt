@@ -46,5 +46,12 @@ class MyFirebase private constructor(){
         val POST_LIKES = "post_likes"
         val POST_COMMENTS = "post_comments"
         val APP_INVITATIONS = "app_invitations"
+        val APP_MESSAGES = "app_messages"
+        object APP_CONTENT {
+            val name = "app_content"
+            object KEYS {
+                val ABOUT_EMBASSY = "about_embassy"
+            }
+        }
     }
 }

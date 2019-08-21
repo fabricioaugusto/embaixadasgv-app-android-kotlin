@@ -215,7 +215,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
                     querySnapshot ->
                 for(document in querySnapshot) {
                     val postLike = document.toObject(PostLike::class.java)
-                    mUser.post_likes.add(postLike.post_id)
+                    mUser.post_likes.add(postLike)
                 }
                 setRecyclerView()
                 getListPosts()

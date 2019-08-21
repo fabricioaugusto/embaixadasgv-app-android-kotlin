@@ -27,7 +27,8 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/eventsRecyclerView"
-            />
+                    android:paddingBottom="32dp" android:clipToPadding="false"
+                    android:paddingTop="12dp"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 </FrameLayout>

@@ -280,7 +280,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
                 mPostList.clear()
 
                 if(documentSnapshot != null) {
-                    for(document in documentSnapshot) {
+                    for(document in documentSnapshot.documents) {
                         val post: Post? = document.toObject(Post::class.java)
                         if(post != null) {
                             mPostList.add(post)
@@ -306,7 +306,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
                 mPostList.clear()
 
                 if(documentSnapshot != null) {
-                    for(document in documentSnapshot) {
+                    for(document in documentSnapshot.documents) {
                         val post: Post? = document.toObject(Post::class.java)
                         if(post != null) {
                             mPostList.add(post)
@@ -332,7 +332,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
                 mPostList.clear()
 
                 if(documentSnapshot != null) {
-                    for(document in documentSnapshot) {
+                    for(document in documentSnapshot.documents) {
                         val post: Post? = document.toObject(Post::class.java)
                         if(post != null) {
                             mPostList.add(post)
@@ -355,9 +355,11 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
             .get()
             .addOnSuccessListener {
                 querySnapshot ->
-                for(document in querySnapshot) {
+                for(document in querySnapshot.documents) {
                     val postLike = document.toObject(PostLike::class.java)
-                    mUser.post_likes.add(postLike.post_id)
+                    if(postLike != null) {
+                        mUser.post_likes.add(postLike)
+                    }
                 }
                 mRecyclerView.isGone = false
                 setRecyclerView()

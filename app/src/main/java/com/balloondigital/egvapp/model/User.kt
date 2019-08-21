@@ -33,7 +33,7 @@ data class User(
     var website: String? = null,
     var embassy_id: String? = null,
     var embassy: Embassy = Embassy(),
-    var post_likes: MutableList<String> = mutableListOf()
+    var post_likes: MutableList<PostLike> = mutableListOf()
 ) : Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {

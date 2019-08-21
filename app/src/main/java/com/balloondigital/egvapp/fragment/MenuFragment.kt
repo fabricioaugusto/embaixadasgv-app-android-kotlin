@@ -244,6 +244,7 @@ class MenuFragment : Fragment() {
 
     private fun startSendMessageActivity() {
         val intent: Intent = Intent(mContext, SendMessageActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
