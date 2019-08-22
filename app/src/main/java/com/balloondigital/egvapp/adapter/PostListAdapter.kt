@@ -26,9 +26,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.like.LikeButton
 import com.like.OnLikeListener
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Handler
+import android.text.Layout
+import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isGone
+import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -109,6 +113,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
         private var mBtAdPostOptions: ImageButton = itemView.findViewById(R.id.btAdPostOptions)
         private var mTxtAdPostComments: TextView = itemView.findViewById(R.id.txtAdPostComments)
         private var mImgProfileVerified: ImageView = itemView.findViewById(R.id.imgProfileVerified)
+        private var mLayoutUserProfile: LinearLayout = itemView.findViewById(R.id.layoutUserProfile)
 
         init {
             itemView.setOnClickListener {
@@ -199,8 +204,6 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
             mButtomLike.setOnLikeListener(likeListener)
 
-
-
             mTxtAdPostUserName.text = user.name
             mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
 
@@ -220,6 +223,11 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                     .into(mImgAdPostPicture)
             }
 
+            mLayoutUserProfile.setOnClickListener {
+                val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
+                intent.putExtra("user", post.user)
+                mContext.startActivity(intent)
+            }
 
             mBtAdPostOptions.setOnClickListener(View.OnClickListener {
                 val alertbox = AlertDialog.Builder(context)

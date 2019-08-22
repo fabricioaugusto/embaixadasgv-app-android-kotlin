@@ -2,23 +2,29 @@ package com.balloondigital.egvapp.adapter
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.utils.SquareImageView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.assist.FailReason
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener
 
 class GridPhotosAdapter(context: Context, resource: Int, photosURL: MutableList<String>) :
-    ArrayAdapter<String>(context, resource, photosURL) {
+    BaseAdapter() {
 
     private val mContext: Context = context
     private val mPhotosUrl: MutableList<String> = photosURL
@@ -40,28 +46,37 @@ class GridPhotosAdapter(context: Context, resource: Int, photosURL: MutableList<
             view = mInflater!!.inflate(R.layout.adapter_grid_photo, null)
             holder.mImgAdEmbassyPhoto = view.findViewById(R.id.imgAdEmbassyPhoto) as SquareImageView
             holder.mPbAdEmbassyPhoto = view.findViewById(R.id.pbAdEmbassyPhoto) as ProgressBar
+            holder.mImgAdEmbassyPhoto.setImageDrawable(view.resources.getDrawable(R.drawable.bg_upload_image))
             view!!.tag = holder
         } else {
             view = convertView
             holder = view!!.tag as ViewHolder
         }
-        holder.mImgAdEmbassyPhoto.setImageDrawable(view.resources.getDrawable(R.drawable.bg_upload_image))
-        ImageLoader.getInstance().displayImage(mPhotosUrl[position], holder.mImgAdEmbassyPhoto!!, object: ImageLoadingListener {
-            override fun onLoadingComplete(imageUri: String?, view: View?, loadedImage: Bitmap?) {
-                holder.mPbAdEmbassyPhoto.isGone = true
-            }
 
-            override fun onLoadingStarted(imageUri: String?, view: View?) {
-            }
+        Glide.with(view.context)
+            .load(mPhotosUrl[position])
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    return true
+                }
 
-            override fun onLoadingCancelled(imageUri: String?, view: View?) {
-            }
-
-            override fun onLoadingFailed(imageUri: String?, view: View?, failReason: FailReason?) {
-            }
-
-        })
-
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    holder.mPbAdEmbassyPhoto.isGone = true
+                    return false
+                }
+            })
+            .into(holder.mImgAdEmbassyPhoto)
         return view
     }
 

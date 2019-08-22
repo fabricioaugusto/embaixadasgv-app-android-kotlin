@@ -13,36 +13,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="center_vertical"
             android:layout_marginBottom="12sp" android:paddingRight="16dp" android:paddingLeft="16dp">
-        <ImageView
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/imgAdPostUser"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="8dp"/>
         <LinearLayout
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_weight="1">
+                android:layout_height="match_parent" android:layout_weight="1" android:id="@+id/layoutUserProfile"
+                android:clickable="true">
+            <ImageView
+                    android:id="@+id/imgAdPostUser"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/avatar" android:layout_marginRight="8dp"/>
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" android:gravity="center_vertical">
+                    android:layout_height="wrap_content" android:layout_weight="1">
+                <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:gravity="center_vertical">
+                    <TextView
+                            android:text="Fabrício Augusto"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
+                            android:textColor="@color/colorText" android:layout_marginRight="6dp"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+                    <ImageView
+                            android:layout_width="15dp"
+                            android:layout_height="15dp" app:srcCompat="@drawable/ic_profile_verified"
+                            android:id="@+id/imgProfileVerified" android:layout_marginTop="1dp"
+                            tools:visibility="gone"/>
+                </LinearLayout>
                 <TextView
-                        android:text="Fabrício Augusto"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/txtAdPostUserName"
-                        android:textColor="@color/colorText" android:layout_marginRight="6dp" android:textStyle="bold"
-                        android:textSize="16sp"/>
-                <ImageView
-                        android:layout_width="15dp"
-                        android:layout_height="15dp" app:srcCompat="@drawable/ic_profile_verified"
-                        android:id="@+id/imgProfileVerified" android:layout_marginTop="1dp" tools:visibility="gone"/>
+                        android:text="26 Oct 2018"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
+                        android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
             </LinearLayout>
-            <TextView
-                    android:text="26 Oct 2018"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/txtAdPostDate"
-                    android:textColor="@color/colorSubText" android:layout_marginTop="-2dp"/>
         </LinearLayout>
         <ImageButton
                 android:layout_width="wrap_content"

@@ -76,8 +76,8 @@ class EmbassyPhotosActivity : AppCompatActivity() {
 
                 if(data != null) {
                     mEmbassyPhoto = data.getSerializableExtra("embassyPhoto") as EmbassyPhoto
-                    mPhotoList.add(mEmbassyPhoto.picture.toString())
-                    mEmbassyPhotoList.add(mEmbassyPhoto)
+                    mPhotoList.add(0, mEmbassyPhoto.picture.toString())
+                    mEmbassyPhotoList.add(0, mEmbassyPhoto)
                     mAdapter.notifyDataSetChanged()
                 }
 
@@ -127,6 +127,7 @@ class EmbassyPhotosActivity : AppCompatActivity() {
                     }
                 }
                 mAdapter = GridPhotosAdapter(this, R.layout.adapter_grid_photo, mPhotoList)
+                mAdapter.hasStableIds()
                 gvEmbassyPhotos.adapter = mAdapter
                 swipeLayoutEmbassyPhotos.isRefreshing = false
             }
