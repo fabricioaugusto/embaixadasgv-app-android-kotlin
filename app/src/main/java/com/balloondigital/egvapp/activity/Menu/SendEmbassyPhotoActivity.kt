@@ -179,13 +179,15 @@ class SendEmbassyPhotoActivity : AppCompatActivity(), View.OnClickListener {
                             mDatabase.collection(mCollections.EMBASSY_PHOTOS)
                                 .add(mEmbassyPhoto.toMapNote())
                                 .addOnSuccessListener { document ->
-
+                                    mEmbassyPhoto.id = document.id
                                     document.update("id", document.id).addOnSuccessListener {
                                         btEmbassyPhotoPublish.doneLoadingAnimation(
                                             resources.getColor(R.color.colorGreen),
                                             Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                         ).apply {
-                                            setResult(Activity.RESULT_OK)
+                                            val returnIntent = Intent()
+                                            returnIntent.putExtra("embassyPhoto", mEmbassyPhoto)
+                                            setResult(Activity.RESULT_OK, returnIntent)
                                             finish()
                                         }
 

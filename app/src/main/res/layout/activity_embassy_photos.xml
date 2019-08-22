@@ -6,13 +6,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.Dashboard.EmbassyPhotosActivity">
-
-    <GridView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipeLayoutEmbassyPhotos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:id="@+id/gvEmbassyPhotos" android:numColumns="3"/>
+            app:layout_constraintBottom_toBottomOf="parent">
+        <GridView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:id="@+id/gvEmbassyPhotos" android:numColumns="3"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,25 @@
 package com.balloondigital.egvapp.activity.Dashboard
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.widget.AdapterView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Menu.SendEmbassyPhotoActivity
 import com.balloondigital.egvapp.activity.Single.SinglePhotoActivity
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
+import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.EmbassyPhoto
 import com.balloondigital.egvapp.model.User
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
 import com.nostra13.universalimageloader.core.ImageLoader
@@ -24,6 +33,7 @@ class EmbassyPhotosActivity : AppCompatActivity() {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: GridPhotosAdapter
     private lateinit var mPhotoList: MutableList<String>
+    private lateinit var mEmbassyPhoto: EmbassyPhoto
     private lateinit var mEmbassyPhotoList: MutableList<EmbassyPhoto>
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +62,38 @@ class EmbassyPhotosActivity : AppCompatActivity() {
             .build()
         ImageLoader.getInstance().init(config)
 
+        swipeLayoutEmbassyPhotos.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            setGridView()
+        })
+
         setGridView()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (requestCode == 100) {
+            if (resultCode == Activity.RESULT_OK) {
+
+                if(data != null) {
+                    mEmbassyPhoto = data.getSerializableExtra("embassyPhoto") as EmbassyPhoto
+                    mPhotoList.add(mEmbassyPhoto.picture.toString())
+                    mEmbassyPhotoList.add(mEmbassyPhoto)
+                    mAdapter.notifyDataSetChanged()
+                }
+
+            } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+                // TODO: Handle the error.
+                val status = Autocomplete.getStatusFromIntent(data!!)
+                Log.i("GooglePlaceLog", status.statusMessage)
+            } else if (resultCode == Activity.RESULT_CANCELED) {
+                // The user canceled the operation.
+            }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_embassy_photos_toolbar, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -61,11 +102,17 @@ class EmbassyPhotosActivity : AppCompatActivity() {
                 onBackPressed()
                 return true
             }
+            R.id.bar_add_picture -> {
+                startSendEmbassyPhotosActivity()
+                return true
+            }
             else -> true
         }
     }
 
     private fun setGridView() {
+
+        mPhotoList.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
             .whereEqualTo("embassy_id", mUser.embassy_id)
@@ -81,6 +128,7 @@ class EmbassyPhotosActivity : AppCompatActivity() {
                 }
                 mAdapter = GridPhotosAdapter(this, R.layout.adapter_grid_photo, mPhotoList)
                 gvEmbassyPhotos.adapter = mAdapter
+                swipeLayoutEmbassyPhotos.isRefreshing = false
             }
 
         val photoSelectListener = AdapterView.OnItemClickListener{
@@ -95,6 +143,12 @@ class EmbassyPhotosActivity : AppCompatActivity() {
         val intent: Intent = Intent(this, SinglePhotoActivity::class.java)
         intent.putExtra("photoUrl", photoUrl)
         startActivity(intent)
+    }
+
+    private fun startSendEmbassyPhotosActivity() {
+        val intent: Intent = Intent(this, SendEmbassyPhotoActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivityForResult(intent, 100)
     }
 
 }
