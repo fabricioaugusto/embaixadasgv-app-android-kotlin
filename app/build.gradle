@@ -54,6 +54,8 @@ dependencies {
     implementation "io.github.yavski:fab-speed-dial:1.0.6"
     implementation 'com.algolia:algoliasearch-android:3.27.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.github.leinardi:FloatingActionButtonSpeedDial:master-SNAPSHOT'
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'

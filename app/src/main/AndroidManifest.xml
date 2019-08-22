@@ -18,11 +18,22 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.Dashboard.EmbassyAgendaActivity">
+        <activity android:name=".activity.Menu.SendEmbassyPhotoActivity"
+                  android:theme="@style/AppThemeToolbar">
         </activity>
-        <activity android:name=".activity.Dashboard.EmbassyPhotosActivity">
+        <activity android:name=".activity.Single.SinglePhotoActivity">
         </activity>
-        <activity android:name=".activity.Dashboard.EmbassyMembersActivity">
+        <activity
+                android:name=".activity.Dashboard.EmbassyAgendaActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.Dashboard.EmbassyPhotosActivity"
+                android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.Dashboard.EmbassyMembersActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
                 android:name=".activity.Create.CreateEventActivity"

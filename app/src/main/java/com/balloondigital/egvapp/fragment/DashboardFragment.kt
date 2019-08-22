@@ -13,6 +13,7 @@ import android.widget.Button
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
+import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -40,6 +41,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
     private lateinit var mBtDashboardMembers: Button
+    private lateinit var mBtDashboardPhotos: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +55,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         mDatabase = MyFirebase.database()
         mColletions = MyFirebase.COLLECTIONS
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
+        mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
 
         val currentUser = mAuth.currentUser
         if(currentUser != null) {
@@ -66,14 +69,20 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
     override fun onClick(view: View) {
         val id = view.id
+
         if(id == R.id.btDashboardMembers) {
             startEmbassyMembersActivity()
+        }
+
+        if(id == R.id.btDashboardPhotos) {
+            startEmbassyPhotosActivity()
         }
     }
 
 
     private fun setListeners() {
         mBtDashboardMembers.setOnClickListener(this)
+        mBtDashboardPhotos.setOnClickListener(this)
     }
 
     private fun getUserDetails(userId: String) {
@@ -125,6 +134,12 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
         progressBarDashboard.isGone = true
         rootView.isGone = false
+    }
+
+    private fun startEmbassyPhotosActivity() {
+        val intent: Intent = Intent(mContext, EmbassyPhotosActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
     }
 
     private fun startEmbassyMembersActivity() {
