@@ -134,7 +134,7 @@ class MenuFragment : Fragment() {
                 MenuItens.myFavoriteEvents -> startFavoriteEventsActivity()
                 MenuItens.newEvent -> startCreateEventsActivity()
                 MenuItens.sendInvites -> startInvitesActivity()
-                MenuItens.sentEmbassyPhotos -> startUserProfileActivity()
+                MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startUserProfileActivity()
@@ -218,6 +218,12 @@ class MenuFragment : Fragment() {
 
     private fun startInvitesActivity() {
         val intent: Intent = Intent(mContext, InvitesActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startSendEmbassyPhotosActivity() {
+        val intent: Intent = Intent(mContext, SendEmbassyPhotoActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
     }

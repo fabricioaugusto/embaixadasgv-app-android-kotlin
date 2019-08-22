@@ -36,7 +36,6 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
     private lateinit var mImgLogoToolbar: ImageView
     private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mSearchView: SearchView
     private lateinit var mListUsers: MutableList<User>
     private lateinit var mListFiltered: MutableList<User>
 
@@ -57,6 +56,7 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
         mIndex = mClient.getIndex("users")
 
         setListeners()
+        setRecyclerView()
         getListUsers()
     }
 
@@ -64,6 +64,8 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
         Log.d("searchView", "Listening..$str")
         if(str.isNotEmpty()) {
             searchUser(str)
+        } else {
+            setSearchRecyclerView(mListUsers)
         }
         return true
     }
@@ -79,17 +81,16 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-
     private fun setListeners() {
+        svEmbassyUsers.isIconified = false
         svEmbassyUsers.setOnQueryTextListener(this)
     }
 
     private fun searchUser(str: String) {
 
-        val fullList = mListUsers
         val query = str.toLowerCase()
         val mSearchList: List<User> = mListUsers.filter {it.name.toLowerCase().contains(query)}
-        setRecyclerView(mSearchList.toMutableList())
+        setSearchRecyclerView(mSearchList.toMutableList())
     }
 
     private fun getListUsers() {
@@ -107,15 +108,15 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
                         mListUsers.add(user)
                     }
                 }
-                setRecyclerView(mListUsers)
+                mListUsers.remove(mUser)
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }
     }
 
-    private fun setRecyclerView(listUser: MutableList<User>) {
+    private fun setRecyclerView() {
 
-        mAdapter = UserListAdapter(listUser)
+        mAdapter = UserListAdapter(mListUsers)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -123,6 +124,16 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
             .adapter(mAdapter)
             .load(R.layout.item_skeleton_user)
             .shimmer(true).show()
+
+        mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
+    }
+
+    private fun setSearchRecyclerView(listUser: MutableList<User>) {
+
+        mAdapter = UserListAdapter(listUser)
+        mAdapter.setHasStableIds(true)
+        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        mRecyclerView.adapter = mAdapter
 
         mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
     }

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
@@ -96,6 +97,8 @@ class MenuActivity : AppCompatActivity() {
 
         val listViewListener = AdapterView.OnItemClickListener { adapter, view, pos, posLong ->
 
+            Toast.makeText(this, mMenuItensList[pos], Toast.LENGTH_LONG).show()
+
             when(mMenuItensList[pos]) {
                 MenuItens.profile -> startUserProfileActivity()
                 MenuItens.editProfile -> startEditProfileActivity()
@@ -107,7 +110,7 @@ class MenuActivity : AppCompatActivity() {
                 MenuItens.myFavoriteEvents -> startFavoriteEventsActivity()
                 MenuItens.newEvent -> startCreateEventsActivity()
                 MenuItens.sendInvites -> startInvitesActivity()
-                MenuItens.sentEmbassyPhotos -> startUserProfileActivity()
+                MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startUserProfileActivity()
@@ -191,6 +194,12 @@ class MenuActivity : AppCompatActivity() {
 
     private fun startInvitesActivity() {
         val intent: Intent = Intent(this, InvitesActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startSendEmbassyPhotosActivity() {
+        val intent: Intent = Intent(this, SendEmbassyPhotoActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
     }
