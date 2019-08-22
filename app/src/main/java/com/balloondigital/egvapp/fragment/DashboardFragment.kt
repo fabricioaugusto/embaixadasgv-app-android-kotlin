@@ -10,10 +10,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.LinearLayout
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
+import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -40,6 +42,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
+    private lateinit var mLayoutNextEvent: LinearLayout
     private lateinit var mBtDashboardMembers: Button
     private lateinit var mBtDashboardPhotos: Button
 
@@ -56,7 +59,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         mColletions = MyFirebase.COLLECTIONS
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
-
+        mLayoutNextEvent = view.findViewById(R.id.layoutNextEvent)
         val currentUser = mAuth.currentUser
         if(currentUser != null) {
             getUserDetails(currentUser.uid)
@@ -77,12 +80,17 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         if(id == R.id.btDashboardPhotos) {
             startEmbassyPhotosActivity()
         }
+
+        if(id == R.id.layoutNextEvent) {
+            startSingleEventActivity(mEvent)
+        }
     }
 
 
     private fun setListeners() {
         mBtDashboardMembers.setOnClickListener(this)
         mBtDashboardPhotos.setOnClickListener(this)
+        mLayoutNextEvent.setOnClickListener(this)
     }
 
     private fun getUserDetails(userId: String) {
@@ -115,7 +123,6 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                         val event = document.toObject(Event::class.java)
                         if(event != null) {
                             mEvent = event
-                            Log.d("EGVAPPLOGDASH", event.toString())
                             bindEventData()
                         }
                     }
@@ -145,6 +152,15 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private fun startEmbassyMembersActivity() {
         val intent: Intent = Intent(mContext, EmbassyMembersActivity::class.java)
         intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startSingleEventActivity(event: Event) {
+        val intent: Intent = Intent(mContext, EventProfileActivity::class.java)
+        intent.putExtra("eventId", event.id)
+        intent.putExtra("placeLat", event.lat)
+        intent.putExtra("placeLng", event.long)
+        intent.putExtra("placeName", event.place)
         startActivity(intent)
     }
 }

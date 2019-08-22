@@ -129,15 +129,13 @@ class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnC
 
     private fun searchUser(query: String) {
 
-        mListUsers.clear()
-
         val query = Query(query)
             .setAttributesToRetrieve("name", "profile_img")
             .setHitsPerPage(50)
         mIndex.searchAsync(query) { obj, p1 ->
             if(obj != null) {
+                mListUsers.clear()
                 val listObj = obj.get("hits") as JSONArray
-
                 for (i in 0 until listObj.length()) {
                     val user = User()
                     val userObj = listObj.getJSONObject(i)
@@ -146,7 +144,6 @@ class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnC
                     mListUsers.add(user)
                 }
             }
-
             mAdapter.notifyDataSetChanged()
         }
     }

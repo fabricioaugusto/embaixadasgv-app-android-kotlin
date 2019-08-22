@@ -76,22 +76,33 @@ class UserProfileActivity : AppCompatActivity(), View.OnClickListener {
         btUserProfileYt.setOnClickListener(this)
     }
 
-    fun getUserDetails() {
+    private fun getUserDetails() {
 
-        Glide
-            .with(this)
-            .load(mUser.profile_img)
-            .into(imgUserProfile)
+        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .document(mUser.id)
+            .get()
+            .addOnSuccessListener {
+                documentSnapshot ->
+                val user = documentSnapshot.toObject(User::class.java)
+                if(user != null) {
+                    mUser = user
+                    Glide
+                        .with(this)
+                        .load(mUser.profile_img)
+                        .into(imgUserProfile)
 
-        val city = "${mUser.city}, ${mUser.state_short}"
+                    val city = "${mUser.city}, ${mUser.state_short}"
 
-        txtUserProfileName.text = mUser.name
-        txtUserProfileOccupation.text = mUser.occupation
-        txtUserProfileCity.text = city
-        txtUserProfileBiography.text = mUser.description
-        txtUserProfileEmbassy.text = mUser.embassy?.name
+                    txtUserProfileName.text = mUser.name
+                    txtUserProfileOccupation.text = mUser.occupation
+                    txtUserProfileCity.text = city
+                    txtUserProfileBiography.text = mUser.description
+                    txtUserProfileEmbassy.text = mUser.embassy.name
 
-        getSocialData()
+                    getSocialData()
+                }
+            }
+
     }
 
     private fun getSocialData() {
@@ -151,6 +162,9 @@ class UserProfileActivity : AppCompatActivity(), View.OnClickListener {
             }
             btUserProfileBh.isVisible = true
         }
+
+        pbSingleUser.isGone = true
+        rootViewSingleUser.isGone = false
     }
 
     private fun openExternalLink(url: String) {

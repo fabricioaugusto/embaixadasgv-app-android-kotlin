@@ -61,6 +61,7 @@ data class User(
             "behance" to behance,
             "github" to github,
             "website" to website,
+            "embassy_id" to embassy_id,
             "embassy" to embassy?.toBasicMap()
         )
     }
@@ -70,6 +71,7 @@ data class User(
             "id" to id,
             "name" to name,
             "profile_img" to profile_img,
+            "embassy_id" to embassy_id,
             "verified" to verified
         )
     }
