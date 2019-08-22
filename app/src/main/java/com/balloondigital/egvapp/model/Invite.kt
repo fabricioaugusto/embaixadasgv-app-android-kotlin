@@ -14,6 +14,8 @@ data class Invite(
     var name_receiver: String = "",
     var email_receiver: String = "",
     var embassy_receiver: Embassy? = null,
+    var isLeader: Boolean = false,
+    var isManager: Boolean = false,
     var invite_code: Int = 0
 ): Serializable {
     @Exclude
@@ -26,6 +28,8 @@ data class Invite(
             "name_receiver" to name_receiver,
             "email_receiver" to email_receiver,
             "embassy_receiver" to embassy_receiver,
+            "isLeader" to isLeader,
+            "isManager" to isManager,
             "invite_code" to invite_code
         )
     }

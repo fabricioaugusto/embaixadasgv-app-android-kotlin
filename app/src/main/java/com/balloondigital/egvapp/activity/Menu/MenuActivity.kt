@@ -115,7 +115,7 @@ class MenuActivity : AppCompatActivity() {
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startUserProfileActivity()
                 MenuItens.aboutEmbassy -> startAboutEmbassiesActivity()
-                MenuItens.abaoutApp -> startAboutAppActivity()
+                MenuItens.aboutApp -> startAboutAppActivity()
                 MenuItens.suggestFeatures -> startSuggestsActivity()
                 MenuItens.rateApp -> startAppRateActivity()
                 MenuItens.sendUsMessage -> startSendMessageActivity()

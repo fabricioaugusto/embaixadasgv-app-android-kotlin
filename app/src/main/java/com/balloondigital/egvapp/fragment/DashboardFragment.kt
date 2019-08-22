@@ -4,13 +4,11 @@ package com.balloondigital.egvapp.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
@@ -22,7 +20,6 @@ import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_dashboard.*
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,6 +40,13 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
     private lateinit var mLayoutNextEvent: LinearLayout
+    private lateinit var mTxtMonthAbrDashboard: TextView
+    private lateinit var mTxtDashboardDate: TextView
+    private lateinit var mTxtDashboardTheme: TextView
+    private lateinit var mTxtDashboardTime: TextView
+    private lateinit var mTxtDashboardLocation: TextView
+    private lateinit var mProgressBarDashboard: ProgressBar
+    private lateinit var mRootView: ScrollView
     private lateinit var mBtDashboardMembers: Button
     private lateinit var mBtDashboardPhotos: Button
 
@@ -60,6 +64,14 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
         mLayoutNextEvent = view.findViewById(R.id.layoutNextEvent)
+        mTxtMonthAbrDashboard = view.findViewById(R.id.txtMonthAbrDashboard)
+        mTxtDashboardDate = view.findViewById(R.id.txtDashboardDate)
+        mTxtDashboardTheme = view.findViewById(R.id.txtDashboardTheme)
+        mTxtDashboardTime = view.findViewById(R.id.txtDashboardTime)
+        mTxtDashboardLocation = view.findViewById(R.id.txtDashboardLocation)
+        mProgressBarDashboard = view.findViewById(R.id.progressBarDashboard)
+        mRootView = view.findViewById(R.id.rootView)
+
         val currentUser = mAuth.currentUser
         if(currentUser != null) {
             getUserDetails(currentUser.uid)
@@ -133,14 +145,14 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private fun bindEventData() {
 
         val dateStr =  Converters.dateToString(mEvent.date!!)
-        txtMonthAbrDashboard.text = dateStr.monthAbr
-        txtDashboardDate.text = dateStr.date
-        txtDashboardTheme.text = mEvent.theme
-        txtDashboardTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
-        txtDashboardLocation.text = "${mEvent.city}, ${mEvent.state_short}"
+        mTxtMonthAbrDashboard.text = dateStr.monthAbr
+        mTxtDashboardDate.text = dateStr.date
+        mTxtDashboardTheme.text = mEvent.theme
+        mTxtDashboardTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
+        mTxtDashboardLocation.text = "${mEvent.city}, ${mEvent.state_short}"
 
-        progressBarDashboard.isGone = true
-        rootView.isGone = false
+        mProgressBarDashboard.isGone = true
+        mRootView.isGone = false
     }
 
     private fun startEmbassyPhotosActivity() {

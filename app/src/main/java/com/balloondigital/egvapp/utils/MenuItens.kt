@@ -2,26 +2,29 @@ package com.balloondigital.egvapp.utils
 
 class MenuItens private constructor() {
     companion object {
-        val profile = "profile"
-        val editProfile = "Editar perfil"
-        val changeProfilePhoto =  "Alerar foto de perfil"
-        val changePassword = "Alterar senha"
-        val editSocialNetwork = "Minhas redes sociais"
-        val myEmbassy = "Minha embaixada"
-        val myEnrolledEvents = "Meus eventos confirmados"
-        val myFavoriteEvents = "Meus eventos favoritos"
-        val newEvent = "Criar evento"
-        val sendInvites = "Enviar convites"
-        val sentEmbassyPhotos = "Enviar foto de encontro da embaixada"
-        val setPrivacy = "Configurações de privacidade"
-        val policyPrivacy = "Políticas de privacidade"
-        val embassyList = "Lista de embaixadas"
-        val aboutEmbassy = "Sobre as embaixadas"
-        val abaoutApp = "Sobre o aplicativo"
-        val suggestFeatures = "Sugira uma funcionalidade"
-        val rateApp = "Avalie o aplicativo"
-        val sendUsMessage = "Envie-nos uma mensagem"
-        val logout = "Sair"
+        const val profile = "profile"
+        const val editProfile = "Editar perfil"
+        const val changeProfilePhoto =  "Alerar foto de perfil"
+        const val changePassword = "Alterar senha"
+        const val editSocialNetwork = "Minhas redes sociais"
+        const val myEmbassy = "Minha embaixada"
+        const val myEnrolledEvents = "Meus eventos confirmados"
+        const val myFavoriteEvents = "Meus eventos favoritos"
+        const val newEvent = "Criar evento"
+        const val sendInvites = "Enviar convite"
+        const val sentEmbassyPhotos = "Enviar foto da embaixada"
+        const val inviteLeader = "Enviar convite para líderes"
+        const val createBulletin = "Novo Informativo"
+        const val setPrivacy = "Configurações de privacidade"
+        const val policyPrivacy = "Políticas de privacidade"
+        const val embassyList = "Lista de embaixadas"
+        const val aboutEmbassy = "Sobre as embaixadas"
+        const val aboutApp = "Sobre o aplicativo"
+        const val suggestFeatures = "Sugira uma funcionalidade"
+        const val rateApp = "Avalie o aplicativo"
+        const val sendUsMessage = "Envie-nos uma mensagem"
+        const val logout = "Sair"
+
 
         val menuList: List<String> = listOf(
             profile,
@@ -33,7 +36,36 @@ class MenuItens private constructor() {
             myEmbassy,
             "section",
             myEnrolledEvents,
-            MenuItens.myFavoriteEvents,
+            myFavoriteEvents,
+            "section",
+            setPrivacy,
+            policyPrivacy,
+            "section",
+            embassyList,
+            aboutEmbassy,
+            aboutApp,
+            suggestFeatures,
+            rateApp,
+            sendUsMessage,
+            logout)
+
+        val menuSectionList: List<String> = listOf(
+            "Configurações de Perfil",
+            "Eventos",
+            "Privacidade",
+            "Sobre")
+
+        val menuListLeader: List<String> = listOf(
+            profile,
+            "section",
+            editProfile,
+            changeProfilePhoto,
+            changePassword,
+            editSocialNetwork,
+            myEmbassy,
+            "section",
+            myEnrolledEvents,
+            myFavoriteEvents,
             "section",
             newEvent,
             sendInvites,
@@ -44,16 +76,54 @@ class MenuItens private constructor() {
             "section",
             embassyList,
             aboutEmbassy,
-            abaoutApp,
+            aboutApp,
             suggestFeatures,
             rateApp,
             sendUsMessage,
             logout)
 
-        val menuSectionList: List<String> = listOf(
+        val menuSectionListLeader: List<String> = listOf(
             "Configurações de Perfil",
             "Eventos",
             "Líderes",
+            "Privacidade",
+            "Sobre")
+
+        val menuListManager: List<String> = listOf(
+            profile,
+            "section",
+            editProfile,
+            changeProfilePhoto,
+            changePassword,
+            editSocialNetwork,
+            myEmbassy,
+            "section",
+            myEnrolledEvents,
+            myFavoriteEvents,
+            "section",
+            newEvent,
+            sendInvites,
+            sentEmbassyPhotos,
+            "section",
+            inviteLeader,
+            createBulletin,
+            "section",
+            setPrivacy,
+            policyPrivacy,
+            "section",
+            embassyList,
+            aboutEmbassy,
+            aboutApp,
+            suggestFeatures,
+            rateApp,
+            sendUsMessage,
+            logout)
+
+        val menuSectionListManager: List<String> = listOf(
+            "Configurações de Perfil",
+            "Eventos",
+            "Líderes",
+            "Gestores",
             "Privacidade",
             "Sobre")
     }

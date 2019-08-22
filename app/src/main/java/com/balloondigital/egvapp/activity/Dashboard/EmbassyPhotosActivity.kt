@@ -151,5 +151,4 @@ class EmbassyPhotosActivity : AppCompatActivity() {
         intent.putExtra("user", mUser)
         startActivityForResult(intent, 100)
     }
-
 }
