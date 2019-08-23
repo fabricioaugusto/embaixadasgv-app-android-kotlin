@@ -30,8 +30,8 @@ data class User(
     var behance: String? = null,
     var github: String? = null,
     var website: String? = null,
-    var isLeader: Boolean = false,
-    var isManager: Boolean = false,
+    var leader: Boolean = false,
+    var manager: Boolean = false,
     var embassy_id: String? = null,
     var embassy: Embassy = Embassy(),
     var post_likes: MutableList<PostLike> = mutableListOf()
@@ -61,6 +61,8 @@ data class User(
             "behance" to behance,
             "github" to github,
             "website" to website,
+            "leader" to leader,
+            "manager" to manager,
             "embassy_id" to embassy_id,
             "embassy" to embassy?.toBasicMap()
         )

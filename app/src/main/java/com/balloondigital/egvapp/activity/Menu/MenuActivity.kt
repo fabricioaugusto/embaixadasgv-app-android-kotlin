@@ -15,6 +15,7 @@ import com.balloondigital.egvapp.activity.Edit.ChangePassActivity
 import com.balloondigital.egvapp.activity.Edit.ChangeProfilePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.EditProfileActivity
 import com.balloondigital.egvapp.activity.Edit.EditSocialActivity
+import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
@@ -162,7 +163,7 @@ class MenuActivity : AppCompatActivity() {
     }
 
     private fun startMyEmbassyActivity() {
-        val intent: Intent = Intent(this, MyEmbassyActivity::class.java)
+        val intent: Intent = Intent(this, SingleEmbassyActivity::class.java)
         startActivity(intent)
     }
 

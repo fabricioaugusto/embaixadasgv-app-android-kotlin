@@ -4,9 +4,7 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,8 +13,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.bumptech.glide.Glide
@@ -24,17 +23,18 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
-import kotlinx.android.synthetic.main.activity_change_profile_photo.*
+import kotlinx.android.synthetic.main.activity_edit_embassy.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 
-class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
+class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
+    private lateinit var mEmbassy: Embassy
+    private lateinit var mEmbassyID: String
     private lateinit var mStorage: StorageReference
-    private lateinit var mCollections: MyFirebase.COLLECTIONS
+    private lateinit var mPhotoList: MutableList<String>
     private val GALLERY_CODE: Int = 200
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -44,24 +44,24 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_change_profile_photo)
+        setContentView(R.layout.activity_edit_embassy)
 
-        supportActionBar!!.title = "Alterar foto de perfil"
+        supportActionBar!!.title = "Minhas embaixadas"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         PermissionConfig.validatePermission(permissions, this)
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
+            mEmbassyID = bundle.getString("embassyID", "")
         }
 
         mDatabase = MyFirebase.database()
+        mPhotoList = mutableListOf()
         mStorage = MyFirebase.storage()
-        mCollections = MyFirebase.COLLECTIONS
 
         setListeners()
-        getUserDetails()
+        getEmbassyDetails()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -71,19 +71,6 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                 return true
             }
             else -> true
-        }
-    }
-
-    fun getUserDetails() {
-
-        if(mUser.profile_img != null) {
-            Glide.with(this)
-                .load(mUser.profile_img)
-                .into(imgChangeProfilePhoto)
-        } else {
-            if(mUser.gender == "Female") {
-                imgChangeProfilePhoto.setImageResource(R.drawable.avatar_woman)
-            }
         }
     }
 
@@ -107,7 +94,7 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                     CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
                         if (data != null) {
                             val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-                            imgChangeProfilePhoto.setImageURI(result.uri)
+                            imgEditEmbassyCover.setImageURI(result.uri)
                         }
                     }
                 }
@@ -119,22 +106,47 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
-        val id = view.id
 
-        if (id == R.id.btSaveChangeProfilePhoto) {
-            saveUserData()
+        val id = view.id
+        if(id == R.id.btEditEmbassySava) {
+            saveData()
         }
 
-        if (id == R.id.btChangeProfilePhoto || id == R.id.imgChangeProfilePhoto) {
+        if(id == R.id.imgEditEmbassyCover) {
             startGalleryActivity()
         }
     }
 
-    override fun onBackPressed() {
-        val returnIntent = Intent()
-        returnIntent.putExtra("user", mUser)
-        setResult(Activity.RESULT_OK, returnIntent)
-        finish()
+    private fun setListeners() {
+        btEditEmbassySava.setOnClickListener(this)
+        imgEditEmbassyCover.setOnClickListener(this)
+    }
+
+    private fun getEmbassyDetails() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .document(mEmbassyID)
+            .get()
+            .addOnSuccessListener {
+                    documentSnapshot ->
+                val embassy = documentSnapshot.toObject(Embassy::class.java)
+                if(embassy != null) {
+                    mEmbassy = embassy
+                    bindData()
+                }
+            }
+    }
+
+    private fun bindData() {
+        etEditEmbassyName.setText(mEmbassy.name)
+        etEditEmbassyPhone.setText(mEmbassy.phone)
+        etEditEmbassyEmail.setText(mEmbassy.email)
+        val coverImg = mEmbassy.cover_img
+
+        if(coverImg !=  null) {
+            Glide.with(this)
+                .load(coverImg)
+                .into(imgEditEmbassyCover)
+        }
     }
 
     private fun startGalleryActivity() {
@@ -142,20 +154,34 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
         startActivityForResult(intent, GALLERY_CODE)
     }
 
-    private fun setListeners() {
-        btSaveChangeProfilePhoto.setOnClickListener(this)
-        btChangeProfilePhoto.setOnClickListener(this)
-        imgChangeProfilePhoto.setOnClickListener(this)
-    }
+    private fun saveData() {
 
-    private fun saveUserData() {
+        val name = etEditEmbassyName.text.toString()
+        val email = etEditEmbassyPhone.text.toString()
+        val phone = etEditEmbassyEmail.text.toString()
 
-        btSaveChangeProfilePhoto.startAnimation()
+        if(name.isEmpty()) {
+            makeToast("O campo de Nome da embaixada não pode ficar vazio")
+            return
+        }
+
+
+        if(name == mEmbassy.name && email == mEmbassy.email && phone == mEmbassy.phone) {
+            makeToast("Nenhuma alteração foi realizada")
+            return
+        }
+
+        mEmbassy.name = name
+        mEmbassy.email = email
+        mEmbassy.phone = phone
+
+
+        btEditEmbassySava.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
         val storagePath: StorageReference = mStorage.child("images/user/profile/$imageName.jpg")
 
-        val bitmap = (imgChangeProfilePhoto.drawable as BitmapDrawable).bitmap
+        val bitmap = (imgEditEmbassyCover.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
         val data = baos.toByteArray()
@@ -173,14 +199,14 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                     ref.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
                         val uri = task.result
                         if (uri != null) {
-                            mUser.profile_img = uri.toString()
-                            mDatabase.collection(mCollections.USERS)
-                                .document(mUser.id)
-                                .set(mUser.toMap())
+                            mEmbassy.cover_img = uri.toString()
+                            mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+                                .document(mEmbassyID)
+                                .set(mEmbassy.toMap())
                                 .addOnSuccessListener {
-                                    btSaveChangeProfilePhoto.doneLoadingAnimation(
-                                        resources.getColor(R.color.colorGreen),
-                                        Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                    btEditEmbassySava.doneLoadingAnimation(
+                                        resources.getColor(com.balloondigital.egvapp.R.color.colorGreen),
+                                        Converters.drawableToBitmap(resources.getDrawable(com.balloondigital.egvapp.R.drawable.ic_check_grey_light))
                                     )
                                 }
                         }
@@ -193,5 +219,4 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
     private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
-
 }

@@ -18,8 +18,12 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".activity.Menu.SendEmbassyPhotoActivity"
+        <activity android:name=".activity.Edit.EditEmbassyActivity"
                   android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.Menu.SendEmbassyPhotoActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity android:name=".activity.Single.SinglePhotoActivity">
         </activity>
@@ -131,7 +135,7 @@
                 android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
-                android:name=".activity.Menu.MyEmbassyActivity"
+                android:name=".activity.Single.SingleEmbassyActivity"
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"
                 android:theme="@style/AppThemeToolbar">

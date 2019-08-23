@@ -45,6 +45,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private lateinit var mTxtDashboardTheme: TextView
     private lateinit var mTxtDashboardTime: TextView
     private lateinit var mTxtDashboardLocation: TextView
+    private lateinit var mTxtDashboardNoEvent: TextView
     private lateinit var mProgressBarDashboard: ProgressBar
     private lateinit var mRootView: ScrollView
     private lateinit var mBtDashboardMembers: Button
@@ -70,6 +71,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         mTxtDashboardTime = view.findViewById(R.id.txtDashboardTime)
         mTxtDashboardLocation = view.findViewById(R.id.txtDashboardLocation)
         mProgressBarDashboard = view.findViewById(R.id.progressBarDashboard)
+        mTxtDashboardNoEvent = view.findViewById(R.id.txtDashboardNoEvent)
         mRootView = view.findViewById(R.id.rootView)
 
         val currentUser = mAuth.currentUser
@@ -93,7 +95,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
             startEmbassyPhotosActivity()
         }
 
-        if(id == R.id.layoutNextEvent) {
+        if(id == R.id.layoutDashboardEvent) {
             startSingleEventActivity(mEvent)
         }
     }
@@ -138,6 +140,12 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                             bindEventData()
                         }
                     }
+                } else{
+                    mTxtDashboardNoEvent.text = "No momento não há eventos previstos!"
+                    mTxtDashboardNoEvent.isGone = false
+                    mLayoutNextEvent.isGone = true
+                    mProgressBarDashboard.isGone = true
+                    mRootView.isGone = false
                 }
             }
     }

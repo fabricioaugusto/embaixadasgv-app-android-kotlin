@@ -7,8 +7,13 @@ data class Embassy (
     var id: String = "",
     var name: String = "",
     var city: String = "",
-    var neighborhood: String? = null,
+    var neighborhood: String? = "",
     var state: String = "",
+    var state_short: String = "",
+    var cover_img: String? = null,
+    var phone: String? = null,
+    var email: String? = null,
+    var leader_id: String = "",
     var leader: User? = null
 ) : Serializable {
     @Exclude
@@ -27,6 +32,11 @@ data class Embassy (
             "city" to city,
             "neighborhood" to neighborhood,
             "state" to state,
+            "state_short" to state,
+            "cover_img" to cover_img,
+            "phone" to phone,
+            "email" to email,
+            "leader_id" to leader_id,
             "leader" to leader?.toBasicMap()
         )
     }

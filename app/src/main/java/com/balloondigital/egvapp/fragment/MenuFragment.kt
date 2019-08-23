@@ -16,11 +16,9 @@ import android.widget.ListView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
-import com.balloondigital.egvapp.activity.Edit.ChangePassActivity
-import com.balloondigital.egvapp.activity.Edit.ChangeProfilePhotoActivity
-import com.balloondigital.egvapp.activity.Edit.EditProfileActivity
-import com.balloondigital.egvapp.activity.Edit.EditSocialActivity
+import com.balloondigital.egvapp.activity.Edit.*
 import com.balloondigital.egvapp.activity.Menu.*
+import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
@@ -108,6 +106,18 @@ class MenuFragment : Fragment() {
         mMenuItensList = MenuItens.menuList
         mMenuSectionList = MenuItens.menuSectionList
 
+        if(mUser.leader) {
+            mMenuItensList = MenuItens.menuListLeader
+            mMenuSectionList = MenuItens.menuSectionListLeader
+        }
+
+        if(mUser.manager) {
+            mMenuItensList = MenuItens.menuListManager
+            mMenuSectionList = MenuItens.menuSectionListManager
+        }
+
+        Log.d("EGVAPPLOGMENU", mUser.toString())
+
         var sectionIndex = 0
 
         for(item in mMenuItensList) {
@@ -135,6 +145,7 @@ class MenuFragment : Fragment() {
                 MenuItens.newEvent -> startCreateEventsActivity()
                 MenuItens.sendInvites -> startInvitesActivity()
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
+                MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.inviteLeader -> startUserProfileActivity()
                 MenuItens.createBulletin -> startUserProfileActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
@@ -188,7 +199,8 @@ class MenuFragment : Fragment() {
     }
 
     private fun startMyEmbassyActivity() {
-        val intent: Intent = Intent(mContext, MyEmbassyActivity::class.java)
+        val intent: Intent = Intent(mContext, SingleEmbassyActivity::class.java)
+        intent.putExtra("embassyID", mUser.embassy_id)
         startActivity(intent)
     }
 
@@ -227,6 +239,12 @@ class MenuFragment : Fragment() {
     private fun startSendEmbassyPhotosActivity() {
         val intent: Intent = Intent(mContext, SendEmbassyPhotoActivity::class.java)
         intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startEditEmbassyActivity() {
+        val intent: Intent = Intent(mContext, EditEmbassyActivity::class.java)
+        intent.putExtra("embassyID", mUser.embassy_id)
         startActivity(intent)
     }
 

@@ -12,7 +12,8 @@ class MenuItens private constructor() {
         const val myFavoriteEvents = "Meus eventos favoritos"
         const val newEvent = "Criar evento"
         const val sendInvites = "Enviar convite"
-        const val sentEmbassyPhotos = "Enviar foto da embaixada"
+        const val sentEmbassyPhotos = "Adicionar foto"
+        const val editEmbassy = "Editar dados da embaixada"
         const val inviteLeader = "Enviar convite para líderes"
         const val createBulletin = "Novo Informativo"
         const val setPrivacy = "Configurações de privacidade"
@@ -70,6 +71,7 @@ class MenuItens private constructor() {
             newEvent,
             sendInvites,
             sentEmbassyPhotos,
+            editEmbassy,
             "section",
             setPrivacy,
             policyPrivacy,
@@ -104,6 +106,7 @@ class MenuItens private constructor() {
             newEvent,
             sendInvites,
             sentEmbassyPhotos,
+            editEmbassy,
             "section",
             inviteLeader,
             createBulletin,
