@@ -1,8 +1,11 @@
 package com.balloondigital.egvapp.activity.Single
 
+import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
@@ -12,8 +15,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_my_embassy.*
 
-class SingleEmbassyActivity : AppCompatActivity() {
-
+class SingleEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mEmbassy: Embassy
@@ -25,19 +27,20 @@ class SingleEmbassyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_embassy)
 
-        mDatabase = MyFirebase.database()
+        supportActionBar!!.title = "Minha embaixada"
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         val bundle: Bundle? = intent.extras
         if (bundle != null) {
             mEmbassyID = bundle.getString("embassyID", "")
         }
 
+        mDatabase = MyFirebase.database()
+
         mPhotoList = mutableListOf()
-        supportActionBar!!.title = "Minhas embaixadas"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        setListeners()
         getEmbassyDetails()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -48,6 +51,30 @@ class SingleEmbassyActivity : AppCompatActivity() {
             }
             else -> true
         }
+    }
+
+    override fun onClick(view: View) {
+        val id = view.id
+        if(id == R.id.btEmbassyPhone) {
+            mEmbassy.phone?.replace("(", "")
+            mEmbassy.phone?.replace(")", "")
+            mEmbassy.phone?.replace("-", "")
+            openExternalLink("https://wa.me/55${mEmbassy.phone}")
+        }
+
+        if(id == R.id.btEmbassyEmail) {
+            openExternalLink("mailto:${mEmbassy.email}")
+        }
+
+        if(id == R.id.btEmbassyAgenda) {
+
+        }
+    }
+
+    private fun setListeners() {
+        btEmbassyPhone.setOnClickListener(this)
+        btEmbassyEmail.setOnClickListener(this)
+        btEmbassyAgenda.setOnClickListener(this)
     }
 
     private fun getEmbassyDetails() {
@@ -69,6 +96,12 @@ class SingleEmbassyActivity : AppCompatActivity() {
         txtEmbassyCity.text = "${mEmbassy.city} - ${mEmbassy.state_short}"
         txtLeaderName.text = mEmbassy.leader?.name
 
+        if(mEmbassy.cover_img != null) {
+            Glide.with(this)
+                .load(mEmbassy.cover_img)
+                .into(imgEmbassyCover)
+        }
+
         Glide.with(this)
             .load(mEmbassy.leader?.profile_img)
             .into(imgEmbassyLeader)
@@ -89,5 +122,11 @@ class SingleEmbassyActivity : AppCompatActivity() {
                 mAdapter.hasStableIds()
                 gridEmbassyPhotos.adapter = mAdapter
             }
+    }
+
+    private fun openExternalLink(url: String) {
+        val uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
     }
 }

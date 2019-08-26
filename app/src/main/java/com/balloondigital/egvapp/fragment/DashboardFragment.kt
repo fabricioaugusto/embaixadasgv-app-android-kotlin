@@ -4,6 +4,7 @@ package com.balloondigital.egvapp.fragment
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Dashboard.EmbassyAgendaActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
 import com.balloondigital.egvapp.activity.Single.EventProfileActivity
@@ -50,6 +52,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private lateinit var mRootView: ScrollView
     private lateinit var mBtDashboardMembers: Button
     private lateinit var mBtDashboardPhotos: Button
+    private lateinit var mBtDashboardEvents: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,6 +67,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         mColletions = MyFirebase.COLLECTIONS
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
+        mBtDashboardEvents = view.findViewById(R.id.btDashboardEvents)
         mLayoutNextEvent = view.findViewById(R.id.layoutNextEvent)
         mTxtMonthAbrDashboard = view.findViewById(R.id.txtMonthAbrDashboard)
         mTxtDashboardDate = view.findViewById(R.id.txtDashboardDate)
@@ -95,6 +99,10 @@ class DashboardFragment : Fragment(), View.OnClickListener {
             startEmbassyPhotosActivity()
         }
 
+        if(id == R.id.btDashboardEvents) {
+            startEmbassyAgendaActivity()
+        }
+
         if(id == R.id.layoutDashboardEvent) {
             startSingleEventActivity(mEvent)
         }
@@ -104,6 +112,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
     private fun setListeners() {
         mBtDashboardMembers.setOnClickListener(this)
         mBtDashboardPhotos.setOnClickListener(this)
+        mBtDashboardEvents.setOnClickListener(this)
         mLayoutNextEvent.setOnClickListener(this)
     }
 
@@ -127,6 +136,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         val timestamp = com.google.firebase.Timestamp(today)
 
         mDatabase.collection(mColletions.EVENTS)
+            .whereEqualTo("embassy_id", mUser.embassy_id)
             .whereGreaterThan("date", timestamp)
             .limit(1)
             .get()
@@ -147,6 +157,8 @@ class DashboardFragment : Fragment(), View.OnClickListener {
                     mProgressBarDashboard.isGone = true
                     mRootView.isGone = false
                 }
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOGAGENDA", it.message.toString())
             }
     }
 
@@ -171,6 +183,12 @@ class DashboardFragment : Fragment(), View.OnClickListener {
 
     private fun startEmbassyMembersActivity() {
         val intent: Intent = Intent(mContext, EmbassyMembersActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startEmbassyAgendaActivity() {
+        val intent: Intent = Intent(mContext, EmbassyAgendaActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
     }

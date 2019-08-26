@@ -130,7 +130,9 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         btCPSavePhoto.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/user/profile/$imageName.jpg")
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.USER_PROFILE}/$imageName.jpg")
+        mUser.profile_img_file_name = fileName
 
         val bitmap = (imgCPUserProfile.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()

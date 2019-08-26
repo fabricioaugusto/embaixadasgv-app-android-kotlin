@@ -400,7 +400,9 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         btSaveNewEvent.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/event/cover/$imageName.jpg")
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EVENT_COVER}/$fileName")
+        mEvent.cover_img_file_name = fileName
 
         val bitmap = (imgEventInsertCover.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()

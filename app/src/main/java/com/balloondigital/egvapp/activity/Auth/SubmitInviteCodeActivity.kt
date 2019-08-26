@@ -12,6 +12,7 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
@@ -53,24 +54,23 @@ class SubmitInviteCodeActivity : AppCompatActivity(), View.OnClickListener {
         btSendInviteCode.startAnimation()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
-            .whereEqualTo("invite_code", code.toInt()).get()
-            .addOnSuccessListener { querySnapshot ->
+            .document(code)
+            .get()
+            .addOnSuccessListener { document ->
 
-                Log.d("EGVAPPLOG", querySnapshot.documents.toString())
-
-                if(querySnapshot.documents.size > 0) {
-                    val documents = querySnapshot.documents
-                    val invite = documents[0].toObject(Invite::class.java)
+                if(document.exists()) {
+                    val invite = document.toObject(Invite::class.java)
                     if(invite != null) {
                         startRegisterActivity(invite)
+                    }  else {
+                        makeToast("Código inválido. Insira um código válido!")
+                        btSendInviteCode.revertAnimation()
                     }
-                } else {
-                    makeToast("Código inválido. Insira um código válido!")
-                    btSendInviteCode.revertAnimation()
                 }
             }
             .addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
+                btSendInviteCode.revertAnimation()
             }
     }
 

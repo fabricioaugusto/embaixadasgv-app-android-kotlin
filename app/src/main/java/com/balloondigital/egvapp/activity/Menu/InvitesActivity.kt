@@ -90,7 +90,8 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
                     btSendInvite.revertAnimation()
                 } else {
                     mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
-                        .add(mInvite.toMap())
+                        .document(code.toString())
+                        .set(mInvite.toMap())
                         .addOnSuccessListener {
 
                             etSendNameInvite.setText("")
