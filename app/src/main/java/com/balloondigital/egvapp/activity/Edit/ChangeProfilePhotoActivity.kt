@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.Toast
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
@@ -153,7 +154,10 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
         btSaveChangeProfilePhoto.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/user/profile/$imageName.jpg")
+        val fileName: String = "$imageName.jpg"
+
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.USER_PROFILE}/$fileName")
+        mUser.profile_img_file_name = fileName
 
         val bitmap = (imgChangeProfilePhoto.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
@@ -178,6 +182,7 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                 .document(mUser.id)
                                 .set(mUser.toMap())
                                 .addOnSuccessListener {
+                                    UserService.updateUserDocuments(mDatabase, mUser, mDatabase.batch())
                                     btSaveChangeProfilePhoto.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
                                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))

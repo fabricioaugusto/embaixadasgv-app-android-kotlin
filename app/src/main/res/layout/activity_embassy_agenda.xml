@@ -5,6 +5,38 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".activity.Dashboard.EmbassyAgendaActivity">
+        tools:context=".activity.Dashboard.EmbassyAgendaActivity" android:background="@color/backgroundGreyStrong">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/swipeLayoutFeed" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                               android:layout_height="match_parent">
+            <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+                          android:layout_height="match_parent">
+                <TextView
+                        android:text="Próximos eventos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView22" android:textStyle="bold"
+                        android:textSize="16sp" android:textColor="@color/colorPrimary"
+                        android:layout_marginLeft="16dp" android:layout_marginTop="16dp"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtEmbassyAgendaNoEvent"
+                        android:textColor="@color/colorText"
+                        android:visibility="gone" android:text="No momento não há eventos previstos!"
+                        tools:visibility="visible" android:layout_marginLeft="16dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/eventsRecyclerView"
+                        android:paddingBottom="32dp" android:clipToPadding="false"
+                        android:paddingTop="12dp"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

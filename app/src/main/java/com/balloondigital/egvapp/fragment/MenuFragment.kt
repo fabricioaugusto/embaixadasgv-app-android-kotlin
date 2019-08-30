@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
-
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
@@ -28,7 +27,9 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_menu.*
+import com.balloondigital.egvapp.activity.MainActivity
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,10 +68,8 @@ class MenuFragment : Fragment() {
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
         }
-        mAdapter = MenuListAdapter(mContext, mUser)
 
-        setListView()
-
+        getUserDetails()
         return view
     }
 
@@ -99,6 +98,22 @@ class MenuFragment : Fragment() {
             }
         }
     }
+
+    private fun getUserDetails() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .document(mUser.id)
+            .get()
+            .addOnSuccessListener {
+                documentSnapshot ->
+                val user = documentSnapshot.toObject(User::class.java)
+                if(user != null) {
+                    mUser = user
+                    mAdapter = MenuListAdapter(mContext, mUser)
+                    setListView()
+                }
+            }
+    }
+
 
 
     private fun setListView() {
@@ -150,7 +165,7 @@ class MenuFragment : Fragment() {
                 MenuItens.createBulletin -> startUserProfileActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
-                MenuItens.embassyList -> startUserProfileActivity()
+                MenuItens.embassyList -> startEmbassyListActivity()
                 MenuItens.aboutEmbassy -> startAboutEmbassiesActivity()
                 MenuItens.aboutApp -> startAboutAppActivity()
                 MenuItens.suggestFeatures -> startSuggestsActivity()
@@ -206,6 +221,7 @@ class MenuFragment : Fragment() {
 
     private fun startSetPrivacyActivity() {
         val intent: Intent = Intent(mContext, SetPrivacyActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
@@ -245,6 +261,11 @@ class MenuFragment : Fragment() {
     private fun startEditEmbassyActivity() {
         val intent: Intent = Intent(mContext, EditEmbassyActivity::class.java)
         intent.putExtra("embassyID", mUser.embassy_id)
+        startActivity(intent)
+    }
+
+    private fun startEmbassyListActivity() {
+        val intent: Intent = Intent(mContext, EmbassyListActivity::class.java)
         startActivity(intent)
     }
 

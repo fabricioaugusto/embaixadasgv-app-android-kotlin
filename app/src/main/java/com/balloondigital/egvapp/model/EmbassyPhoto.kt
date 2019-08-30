@@ -12,6 +12,7 @@ data class EmbassyPhoto (
     var date: Timestamp? = null,
     var text: String? = null,
     var picture: String? = null,
+    var picture_file_name: String? = null,
     var thumbnail: String? = null,
     var embassy_id: String? = null
 ): Serializable {
@@ -22,6 +23,7 @@ data class EmbassyPhoto (
             "date" to FieldValue.serverTimestamp(),
             "text" to text,
             "picture" to picture,
+            "picture_file_name" to picture_file_name,
             "thumbnail" to thumbnail,
             "embassy_id" to embassy_id
         )

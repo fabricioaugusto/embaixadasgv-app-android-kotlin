@@ -140,6 +140,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         etEditEmbassyName.setText(mEmbassy.name)
         etEditEmbassyPhone.setText(mEmbassy.phone)
         etEditEmbassyEmail.setText(mEmbassy.email)
+
         val coverImg = mEmbassy.cover_img
 
         if(coverImg !=  null) {
@@ -157,8 +158,8 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
     private fun saveData() {
 
         val name = etEditEmbassyName.text.toString()
-        val email = etEditEmbassyPhone.text.toString()
-        val phone = etEditEmbassyEmail.text.toString()
+        val email = etEditEmbassyEmail.text.toString()
+        val phone = etEditEmbassyPhone.text.toString()
 
         if(name.isEmpty()) {
             makeToast("O campo de Nome da embaixada não pode ficar vazio")
@@ -178,8 +179,15 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
         btEditEmbassySava.startAnimation()
 
-        val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/user/profile/$imageName.jpg")
+        var fileName: String? = mEmbassy.cover_img_file_name
+
+        if(fileName.isNullOrEmpty()) {
+            val imageName = UUID.randomUUID().toString()
+            fileName = "$imageName.jpg"
+        }
+
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EMBASSY_COVER}/$fileName")
+        mEmbassy.cover_img_file_name = fileName
 
         val bitmap = (imgEditEmbassyCover.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()

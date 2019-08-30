@@ -172,6 +172,9 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                                 mLikeIsProcessing = false
                             }
                         }
+                            .addOnFailureListener {
+                                Log.d("EGVAPPLOG", it.message.toString())
+                            }
                     }
                 }
 
@@ -260,6 +263,8 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                         notifyItemRemoved(position)
                         notifyItemRangeChanged(position, mPostList.size)
                         notifyDataSetChanged()
+                    }.addOnFailureListener {
+                        Log.d("EGVAPPLOG", it.message.toString())
                     }
                 }
                 .setNegativeButton("Não", null)

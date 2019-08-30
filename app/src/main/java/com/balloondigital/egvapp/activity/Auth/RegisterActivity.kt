@@ -62,7 +62,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         finish()
     }
 
-    fun registerUser() {
+    private fun registerUser() {
 
         val name = etRegisterName.text.toString()
         val email = etRegisterEmail.text.toString()
@@ -70,56 +70,41 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         val passConfirm = etRegisterPassConfirm.text.toString()
 
         if(validateRegister(name, email, pass, passConfirm)) {
+
+            if(email != mInvite.email_receiver) {
+                makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
+                return
+            }
+
             btRegister.startAnimation()
 
+            mAuth.createUserWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        val user = mAuth.currentUser
 
-            mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
-                .whereEqualTo("email_receiver", mInvite.email_receiver).get()
-                .addOnSuccessListener { querySnapshot ->
-                    if(querySnapshot.documents.size > 0) {
-                        val documents = querySnapshot.documents
-                        val invite = documents[0].toObject(Invite::class.java)
-                        if(invite != null) {
-                            if(invite.invite_code == mInvite.invite_code) {
-
-                                mAuth.createUserWithEmailAndPassword(email, pass)
-                                    .addOnCompleteListener(this) { task ->
-                                        if (task.isSuccessful) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            val user = mAuth.currentUser
-
-                                            if(user != null) {
-                                                saveUser(user.uid, name, email)
-                                            }
-
-                                            btRegister.revertAnimation()
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            btRegister.revertAnimation()
-                                            Log.d("createUserWithEmail", task.exception.toString())
-                                            Toast.makeText(
-                                                this, "Authentication failed.",
-                                                Toast.LENGTH_SHORT
-                                            ).show()
-
-                                        }
-                                    }
-
-                            } else {
-                                makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
-                                btSendInvite.revertAnimation()
-                            }
+                        if(user != null) {
+                            saveUser(user.uid, name, email)
                         }
+
+                        btRegister.revertAnimation()
                     } else {
-                        makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
-                        btSendInvite.revertAnimation()
+                        // If sign in fails, display a message to the user.
+                        btRegister.revertAnimation()
+                        Log.d("createUserWithEmail", task.exception.toString())
+                        Toast.makeText(
+                            this, "Authentication failed.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
                     }
                 }
 
         }
     }
 
-    fun saveUser(id: String, name: String, email: String) {
+    private fun saveUser(id: String, name: String, email: String) {
 
         val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
         val embassy = mInvite.embassy_receiver
@@ -139,8 +124,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                     startCheckAuthActivity()
                 }
 
-        }
-            .addOnFailureListener {
+        }.addOnFailureListener {
 
             }
 

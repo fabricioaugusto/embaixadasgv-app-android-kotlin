@@ -154,8 +154,9 @@ class SendEmbassyPhotoActivity : AppCompatActivity(), View.OnClickListener {
         btEmbassyPhotoPublish.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/embassy/picture/$imageName.jpg")
-        val thumbStoragePath: StorageReference = mStorage.child("images/embassy/thumb/$imageName.jpg")
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EMBASSY_PHOTO}/$fileName")
+        mEmbassyPhoto.picture_file_name = fileName
 
         val bitmap = (imgEmbassyInsertPic.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()

@@ -99,7 +99,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/txtDashboardNoEvent"
                         android:textColor="@color/colorText"
-                        android:visibility="visible" android:text="No momento não há eventos previstos!"/>
+                        android:visibility="gone" android:text="No momento não há eventos previstos!"/>
             </LinearLayout>
             <TextView
                     android:text="Minha Embaixada"

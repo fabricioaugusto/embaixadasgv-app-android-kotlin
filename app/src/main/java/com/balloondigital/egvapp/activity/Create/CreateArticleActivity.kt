@@ -425,7 +425,9 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         btArticlePublish.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
-        val storagePath: StorageReference = mStorage.child("images/post/article/$imageName.jpg")
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.POST_IMG}/$imageName.jpg")
+        mPost.picture_file_name = fileName
 
         val bitmap = (imgArticleInsertCover.drawable as BitmapDrawable).bitmap
         val baos = ByteArrayOutputStream()
