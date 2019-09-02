@@ -3,11 +3,13 @@ package com.balloondigital.egvapp.activity.Menu
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
+import android.widget.Toast
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,6 +18,7 @@ import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
+import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
@@ -28,6 +31,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
 
     private lateinit var mUser: User
     private lateinit var mEmbassy: Embassy
+    private lateinit var mInvite: Invite
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: EmbassyListAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
@@ -217,16 +221,45 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
             .document(mEmbassy.id)
-            .set(mEmbassy)
+            .set(mEmbassy.toMap())
             .addOnSuccessListener {
 
                 mListEmbassy.remove(mEmbassy)
                 mAdapter.notifyDataSetChanged()
 
+                inviteLeader()
+            }
+    }
+
+    private fun inviteLeader() {
+
+
+        val code: Int = (100000..999999).random()
+
+        mInvite = Invite(
+            name_sender = mUser.name,
+            email_sender = mUser.email,
+            name_receiver = mEmbassy.leader?.name.toString(),
+            email_receiver = mEmbassy.email.toString(),
+            embassy_receiver = mEmbassy,
+            isLeader = true,
+            invite_code = code
+        )
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
+            .document(code.toString())
+            .set(mInvite.toMap())
+            .addOnSuccessListener {
+
+                makeToast("Embaixada aprovada!")
                 btEmbassyApprove.doneLoadingAnimation(
                     resources.getColor(R.color.colorGreen),
                     Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                 )
             }
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }

@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.activity_register.*
 import android.util.Log
 import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.model.Invite
+import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_invites.*
 
@@ -87,8 +88,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                         if(user != null) {
                             saveUser(user.uid, name, email)
                         }
-
-                        btRegister.revertAnimation()
                     } else {
                         // If sign in fails, display a message to the user.
                         btRegister.revertAnimation()
@@ -113,6 +112,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         user["id"] = id
         user["name"] = name
         user["email"] = email
+
+        if(mInvite.isLeader) {
+            user["leader"] = true
+        }
+
         if(embassy != null) {
             user["embassy"] = embassy
             user["embassy_id"] = embassy.id
@@ -121,7 +125,24 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         collection.document(id).set(user)
             .addOnSuccessListener {
                 if(mAuth.currentUser != null) {
-                    startCheckAuthActivity()
+                    if(mInvite.isLeader) {
+                        val currentUser = User()
+                        currentUser.name = name
+                        currentUser.id = id
+                        currentUser.email = email
+
+                        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+                            .document(embassy?.id.toString())
+                            .update("leader", currentUser.toBasicMap(),
+                                "status", "active",
+                                "leader_id", currentUser.id)
+                            .addOnSuccessListener {
+                                startCheckAuthActivity()
+                            }
+                    } else {
+                        startCheckAuthActivity()
+                    }
+
                 }
 
         }.addOnFailureListener {

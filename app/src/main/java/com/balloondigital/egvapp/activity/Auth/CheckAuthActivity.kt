@@ -12,6 +12,7 @@ import com.google.android.libraries.places.api.Places
 import android.content.Context
 import android.content.SharedPreferences
 import com.balloondigital.egvapp.activity.Edit.ChooseEmbassyActivity
+import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.api.GoogleAPI
@@ -70,19 +71,14 @@ class CheckAuthActivity : AppCompatActivity() {
 
     fun checkUser() {
 
-        if(mUser.embassy == null) {
-            startChooseEmbassyActivity()
-            finish()
-            return
-        }
-
         if(mUser.description == null) {
             startCompleteRegisterActivity()
-            finish()
+            return
+        } else if(mUser.profile_img == null) {
+            startChooseProfileImg()
             return
         } else {
             startMainActivity()
-            finish()
             return
         }
     }
@@ -91,15 +87,15 @@ class CheckAuthActivity : AppCompatActivity() {
         val intent: Intent = Intent(this, MainActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
+        finish()
     }
 
-    fun startChooseEmbassyActivity() {
-        val intent: Intent = Intent(this, ChooseEmbassyActivity::class.java)
+    fun startChooseProfileImg() {
+        val intent: Intent = Intent(this, ChoosePhotoActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
         finish()
     }
-
 
     fun startCompleteRegisterActivity() {
         val intent: Intent = Intent(this, CompleteRegisterActivity::class.java)
