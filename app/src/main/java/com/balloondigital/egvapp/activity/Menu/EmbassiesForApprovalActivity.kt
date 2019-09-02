@@ -16,6 +16,8 @@ import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
+import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
@@ -24,6 +26,8 @@ import kotlinx.android.synthetic.main.activity_embassies_for_approval.*
 class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryTextListener, View.OnClickListener,
     SearchView.OnCloseListener {
 
+    private lateinit var mUser: User
+    private lateinit var mEmbassy: Embassy
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: EmbassyListAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
@@ -40,6 +44,11 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         supportActionBar!!.title = "Lista das embaixadas"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
+        val bundle: Bundle? = intent.extras
+        if (bundle != null) {
+            mUser = bundle.getSerializable("user") as User
+        }
+
         mDatabase = MyFirebase.database()
         mListEmbassy = mutableListOf()
         mListFiltered = mutableListOf()
@@ -48,7 +57,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         setListeners()
         setRecyclerView()
         getListEmbassy()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -82,7 +90,13 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
 
     override fun onClick(view: View) {
         val id = view.id
+        if(id == R.id.layoutToughtModal) {
+            hideEmbassyInfo()
+        }
 
+        if(id == R.id.btEmbassyApprove) {
+            approveEmbassy()
+        }
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -94,7 +108,8 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     }
 
     private fun setListeners() {
-
+        layoutToughtModal.setOnClickListener(this)
+        btEmbassyApprove.setOnClickListener(this)
     }
 
     private fun searchEmbassy(str: String) {
@@ -118,6 +133,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
                 for (document in documents) {
                     val embassy: Embassy? = document.toObject(Embassy::class.java)
                     if(embassy != null) {
+                        embassy.id = document.id
                         mListEmbassy.add(embassy)
                     }
                 }
@@ -153,11 +169,14 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     }
 
     private fun showEmbassyInfo(embassy: Embassy) {
-        txtApprEmbassyName.text = embassy.name
-        txtApprEmbassyCity.text = "${embassy.city} - ${embassy.state_short}"
-        txtApprEmbassyLeader.text = embassy.leader?.name
-        txtApprEmbassyEmail.text = embassy.email
-        txtApprEmbassyPhone.text = embassy.phone
+
+        mEmbassy = embassy
+
+        txtApprEmbassyName.text = mEmbassy.name
+        txtApprEmbassyCity.text = "${mEmbassy.city} - ${mEmbassy.state_short}"
+        txtApprEmbassyLeader.text = mEmbassy.leader?.name
+        txtApprEmbassyEmail.text = mEmbassy.email
+        txtApprEmbassyPhone.text = mEmbassy.phone
 
         mEmbassyInfoIsHide = false
         layoutToughtPublish.isGone = false
@@ -165,10 +184,49 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         layoutToughtModal.animate().alpha(1.0F)
     }
 
+    private fun hideEmbassyInfo() {
+
+        mEmbassyInfoIsHide = true
+
+        layoutToughtModal.animate().alpha(0.0F).withEndAction {
+            btEmbassyApprove.revertAnimation()
+            layoutToughtPublish.isGone = true
+            layoutToughtModal.isGone = true
+            txtApprEmbassyName.text = ""
+            txtApprEmbassyCity.text = ""
+            txtApprEmbassyLeader.text = ""
+            txtApprEmbassyEmail.text = ""
+            txtApprEmbassyPhone.text = ""
+        }
+    }
+
     private fun startSingleEmbassyActivity(singleEmbassy: Embassy) {
 
         val intent: Intent = Intent(this, SingleEmbassyActivity::class.java)
         intent.putExtra("embassyID", singleEmbassy.id)
         startActivity(intent)
+    }
+
+    private fun approveEmbassy() {
+
+        mEmbassy.status = "approved"
+        mEmbassy.approved_by_id = mUser.id
+        mEmbassy.approved_by_name = mUser.name
+
+        btEmbassyApprove.startAnimation()
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .document(mEmbassy.id)
+            .set(mEmbassy)
+            .addOnSuccessListener {
+
+                mListEmbassy.remove(mEmbassy)
+                mAdapter.notifyDataSetChanged()
+
+                btEmbassyApprove.doneLoadingAnimation(
+                    resources.getColor(R.color.colorGreen),
+                    Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                )
+            }
     }
 }

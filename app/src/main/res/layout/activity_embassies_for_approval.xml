@@ -106,7 +106,7 @@
             <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Aprovar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btPostPublish"
+                    android:layout_height="wrap_content" android:id="@+id/btEmbassyApprove"
                     app:finalCornerAngle="50dp"
                     app:initialCornerAngle="0dp"
                     app:spinning_bar_color="#FFF"

@@ -14,6 +14,9 @@ data class Embassy (
     var cover_img_file_name: String? = null,
     var phone: String? = null,
     var email: String? = null,
+    var status: String? = null,
+    var approved_by_id: String? = null,
+    var approved_by_name: String? = null,
     var leader_id: String = "",
     var leader: User? = null
 ) : Serializable {
@@ -38,6 +41,9 @@ data class Embassy (
             "cover_img_file_name" to cover_img_file_name,
             "phone" to phone,
             "email" to email,
+            "status" to status,
+            "approved_by_id" to approved_by_id,
+            "approved_by_name" to approved_by_name,
             "leader_id" to leader_id,
             "leader" to leader?.toBasicMap()
         )

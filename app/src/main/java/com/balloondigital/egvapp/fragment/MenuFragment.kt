@@ -266,6 +266,7 @@ class MenuFragment : Fragment() {
 
     private fun startEmbassyForApprovalActivity() {
         val intent: Intent = Intent(mContext, EmbassiesForApprovalActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
