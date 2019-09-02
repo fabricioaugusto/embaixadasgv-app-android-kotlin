@@ -161,7 +161,7 @@ class MenuFragment : Fragment() {
                 MenuItens.sendInvites -> startInvitesActivity()
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
-                MenuItens.inviteLeader -> startUserProfileActivity()
+                MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
                 MenuItens.createBulletin -> startUserProfileActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
@@ -261,6 +261,11 @@ class MenuFragment : Fragment() {
     private fun startEditEmbassyActivity() {
         val intent: Intent = Intent(mContext, EditEmbassyActivity::class.java)
         intent.putExtra("embassyID", mUser.embassy_id)
+        startActivity(intent)
+    }
+
+    private fun startEmbassyForApprovalActivity() {
+        val intent: Intent = Intent(mContext, EmbassiesForApprovalActivity::class.java)
         startActivity(intent)
     }
 

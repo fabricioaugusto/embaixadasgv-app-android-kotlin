@@ -1,38 +1,27 @@
 package com.balloondigital.egvapp.activity.Menu
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
 import android.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.algolia.search.saas.Client
-import com.algolia.search.saas.Index
-import com.algolia.search.saas.Query
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
-import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
-import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_embassy_members.*
-import org.json.JSONArray
+import kotlinx.android.synthetic.main.activity_embassies_for_approval.*
 
-class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener, View.OnClickListener,
+class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryTextListener, View.OnClickListener,
     SearchView.OnCloseListener {
 
     private lateinit var mDatabase: FirebaseFirestore
@@ -42,10 +31,11 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
     private lateinit var mSearchView: SearchView
     private lateinit var mListEmbassy: MutableList<Embassy>
     private lateinit var mListFiltered: MutableList<Embassy>
+    private var mEmbassyInfoIsHide = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_embassy_list)
+        setContentView(R.layout.activity_embassies_for_approval)
 
         supportActionBar!!.title = "Lista das embaixadas"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
@@ -57,7 +47,8 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
 
         setListeners()
         setRecyclerView()
-        getListUsers()
+        getListEmbassy()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -116,10 +107,10 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         setSearchRecyclerView(mSearchList.toMutableList())
     }
 
-    private fun getListUsers() {
+    private fun getListEmbassy() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-            .whereEqualTo("status", "active")
+            .whereEqualTo("status", "awaiting")
             .orderBy("state")
             .get()
             .addOnSuccessListener {
@@ -132,6 +123,8 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
                 }
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
             }
     }
 
@@ -146,7 +139,7 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
             .load(R.layout.item_skeleton_user)
             .shimmer(true).show()
 
-        mAdapter.onItemClick = {embassy -> startSingleEmbassyActivity(embassy)}
+        mAdapter.onItemClick = {embassy -> showEmbassyInfo(embassy)}
     }
 
     private fun setSearchRecyclerView(listEmbassy: MutableList<Embassy>) {
@@ -157,6 +150,19 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         mRecyclerView.adapter = mAdapter
 
         mAdapter.onItemClick = {embassy -> startSingleEmbassyActivity(embassy)}
+    }
+
+    private fun showEmbassyInfo(embassy: Embassy) {
+        txtApprEmbassyName.text = embassy.name
+        txtApprEmbassyCity.text = "${embassy.city} - ${embassy.state_short}"
+        txtApprEmbassyLeader.text = embassy.leader?.name
+        txtApprEmbassyEmail.text = embassy.email
+        txtApprEmbassyPhone.text = embassy.phone
+
+        mEmbassyInfoIsHide = false
+        layoutToughtPublish.isGone = false
+        layoutToughtModal.isGone = false
+        layoutToughtModal.animate().alpha(1.0F)
     }
 
     private fun startSingleEmbassyActivity(singleEmbassy: Embassy) {

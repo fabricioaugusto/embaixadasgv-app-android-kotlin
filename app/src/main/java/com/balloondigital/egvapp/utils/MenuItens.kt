@@ -14,7 +14,7 @@ class MenuItens private constructor() {
         const val sendInvites = "Enviar convite"
         const val sentEmbassyPhotos = "Adicionar foto"
         const val editEmbassy = "Editar dados da embaixada"
-        const val inviteLeader = "Enviar convite para líderes"
+        const val embassyForApproval = "Embaixadas para aprovação"
         const val createBulletin = "Novo Informativo"
         const val setPrivacy = "Configurações de privacidade"
         const val policyPrivacy = "Políticas de privacidade"
@@ -108,7 +108,7 @@ class MenuItens private constructor() {
             sentEmbassyPhotos,
             editEmbassy,
             "section",
-            inviteLeader,
+            embassyForApproval,
             createBulletin,
             "section",
             setPrivacy,
