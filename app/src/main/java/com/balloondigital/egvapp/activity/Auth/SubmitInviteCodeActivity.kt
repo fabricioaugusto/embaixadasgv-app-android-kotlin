@@ -61,6 +61,7 @@ class SubmitInviteCodeActivity : AppCompatActivity(), View.OnClickListener {
                 if(document.exists()) {
                     val invite = document.toObject(Invite::class.java)
                     if(invite != null) {
+                        invite.isLeader = document.data?.get("isLeader") as Boolean
                         startRegisterActivity(invite)
                     }  else {
                         makeToast("Código inválido. Insira um código válido!")

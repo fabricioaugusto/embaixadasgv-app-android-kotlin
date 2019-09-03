@@ -118,7 +118,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if(embassy != null) {
-            user["embassy"] = embassy
+            user["embassy"] = embassy.toBasicMap()
             user["embassy_id"] = embassy.id
         }
 
@@ -133,9 +133,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
                         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
                             .document(embassy?.id.toString())
-                            .update("leader", currentUser.toBasicMap(),
-                                "status", "active",
-                                "leader_id", currentUser.id)
+                            .update("leader", currentUser.toBasicMap(), "leader_id", currentUser.id)
                             .addOnSuccessListener {
                                 startCheckAuthActivity()
                             }

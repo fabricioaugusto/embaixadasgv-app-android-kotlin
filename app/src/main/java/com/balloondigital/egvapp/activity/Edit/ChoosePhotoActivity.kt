@@ -34,6 +34,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
+    private var mImageIsLoaded = false
     private val GALLERY_CODE: Int = 200
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -86,6 +87,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
                             imgCPUserProfile.setImageURI(result.uri)
+                            mImageIsLoaded = true
                         }
                     }
                 }
@@ -127,6 +129,11 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun saveUserData() {
 
+        if(!mImageIsLoaded) {
+            makeToast("Selecione uma imagem de sua biblioteca antes de salvar")
+            return
+        }
+
         btCPSavePhoto.startAnimation()
 
         val imageName = UUID.randomUUID().toString()
@@ -157,11 +164,18 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                 .document(mUser.id)
                                 .set(mUser.toMap())
                                 .addOnSuccessListener {
-                                    btCPSavePhoto.doneLoadingAnimation(
-                                        resources.getColor(R.color.colorGreen),
-                                        drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
-                                    )
-                                    startMainActivity()
+
+                                    mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+                                        .document(mUser.embassy_id.toString())
+                                        .update("leader", mUser.toBasicMap(),
+                                            "status", "active")
+                                        .addOnSuccessListener {
+                                            btCPSavePhoto.doneLoadingAnimation(
+                                                resources.getColor(R.color.colorGreen),
+                                                drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                            )
+                                            startMainActivity()
+                                        }
                                 }
                         }
                     })
