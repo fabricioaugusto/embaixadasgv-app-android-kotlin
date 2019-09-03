@@ -24,11 +24,18 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 >
 
+            <TextView
+                    android:text="Preencha os campos abaixo com os dados solicitados para a criação do evento e, caso queira trocar a imagem de capa, toque na imagem abaixo."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/textView32"
+                    android:layout_marginBottom="16dp" android:background="@drawable/bg_screen_tutorial"
+                    android:paddingLeft="12dp" android:paddingRight="12dp" android:paddingTop="8dp"
+                    android:paddingBottom="8dp" android:textColor="@color/colorLink"/>
             <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="230dp" app:srcCompat="@drawable/bg_upload_image"
-                    android:id="@+id/imgEventInsertCover" android:adjustViewBounds="false"
-                    android:scaleType="centerCrop"/>
+                    android:layout_height="wrap_content" app:srcCompat="@drawable/bg_default_cover"
+                    android:id="@+id/imgEventInsertCover"
+            />
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/ic_photo_library_grey_light"

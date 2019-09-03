@@ -410,10 +410,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             return
         }
 
-        if(!mCoverSelected) {
-            makeToast("Voccê precisa escolher uma foto de descrição")
-        }
-
         mEvent.theme = theme
         mEvent.description = description
         mEvent.embassy = mUser.embassy
