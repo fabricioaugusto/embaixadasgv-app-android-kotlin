@@ -241,24 +241,46 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     private fun getEventPlace(data: Intent?) {
 
+
+
         val place = Autocomplete.getPlaceFromIntent(data!!)
         val addressComponents = place.addressComponents
         val ltdlng = place.latLng
 
+        Log.d("EGVAPPLOGCREATEEVENT0", place.toString())
+        Log.d("EGVAPPLOGCREATEEVENT3", place.name.toString())
+        Log.d("EGVAPPLOGCREATEEVENT4", place.latLng.toString())
         mEvent.place = place.name
         mEvent.address = place.address
 
         if(addressComponents != null) {
 
             val stateObj = addressComponents.asList()
-            mEvent.street_number = stateObj[0].name
-            mEvent.street = stateObj[1].name
-            mEvent.neighborhood = stateObj[2].name
-            mEvent.city = stateObj[3].name
-            mEvent.state = stateObj[4].name
-            mEvent.state_short = stateObj[4].shortName
-            mEvent.country = stateObj[5].name
-            mEvent.postal_code = stateObj[6].name
+
+
+            for(component in stateObj) {
+                when(component.types[0]) {
+
+                    "street_number" -> mEvent.street_number = component.name
+                    "route" -> mEvent.street = component.name
+                    "sublocality_level_1" -> mEvent.neighborhood = component.name
+                    "neighborhood" -> mEvent.neighborhood = component.name
+                    "administrative_area_level_2" -> {
+                        if(mEvent.city.isNullOrEmpty()) mEvent.city = component.name
+                    }
+                    "locality" -> mEvent.city = component.name
+                    "administrative_area_level_1" -> {
+                        mEvent.state = component.name
+                        mEvent.state_short = component.shortName
+                    }
+                    "country" -> mEvent.country = component.name
+                    "postal_code" -> mEvent.postal_code = component.name
+                }
+            }
+
+            Log.d("EGVAPPLOGCREATEEVENT1", stateObj.toString())
+            Log.d("EGVAPPLOGCREATEEVENT2", mEvent.toString())
+
         }
 
         if(ltdlng != null) {

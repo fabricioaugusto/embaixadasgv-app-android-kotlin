@@ -10,11 +10,10 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
 import android.util.Log
-import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_invites.*
+import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
@@ -136,6 +135,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             .update("leader", currentUser.toBasicMap(), "leader_id", currentUser.id)
                             .addOnSuccessListener {
                                 startCheckAuthActivity()
+                            }.addOnFailureListener {
+                                Log.d("EGVAPPLOG", it.message.toString())
                             }
                     } else {
                         startCheckAuthActivity()
