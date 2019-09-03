@@ -57,6 +57,7 @@ data class Event(
             "long" to long,
             "moderator_1" to moderator_1?.toBasicMap(),
             "moderator_2" to moderator_2?.toBasicMap(),
+            "embassy_id" to embassy_id,
             "embassy" to embassy?.toBasicMap()
         )
     }

@@ -26,8 +26,6 @@ import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
 import io.github.yavski.fabspeeddial.FabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_post.*
-import kotlinx.android.synthetic.main.activity_create_post.layoutToughtModal
-import kotlinx.android.synthetic.main.activity_create_post.layoutToughtPublish
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -76,6 +74,8 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
+
+        layoutAlertInfo.setOnClickListener(this)
         imgPostInsertPic.setOnClickListener(this)
         btPostInsertPic.setOnClickListener(this)
         btPostPublish.setOnClickListener(this)
@@ -111,7 +111,13 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
         if(id == R.id.btPostPublish) {
             saveUserData()
-        } 
+        }
+
+        if(id == R.id.layoutAlertInfo) {
+            layoutAlertInfo.animate().alpha(0F).withEndAction {
+                layoutAlertInfo.isGone = true
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

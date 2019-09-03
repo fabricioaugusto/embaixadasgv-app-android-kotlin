@@ -86,9 +86,8 @@ class MainActivity : AppCompatActivity() {
         setBottomNavigationView(mNavView)
     }
 
-    override fun onResume() {
-        super.onResume()
-        Log.d("EGVAPPLIFECYCLE", "onResume")
+    override fun onBackPressed() {
+        finish()
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {

@@ -87,13 +87,13 @@
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/swipeLayoutFeed">
+                android:id="@+id/swipeLayoutFeed" android:layout_marginTop="42dp">
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/postsRecyclerView"
-                    android:background="@color/backgroundGreyStrong" android:paddingTop="120dp"
+                    android:background="@color/backgroundGreyStrong"
                     android:paddingBottom="32dp" android:clipToPadding="false"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior" android:paddingTop="68dp">
             </androidx.recyclerview.widget.RecyclerView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>

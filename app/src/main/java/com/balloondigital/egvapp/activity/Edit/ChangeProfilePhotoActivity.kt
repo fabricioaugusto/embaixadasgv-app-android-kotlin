@@ -14,6 +14,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
@@ -129,6 +130,12 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
         if (id == R.id.btChangeProfilePhoto || id == R.id.imgChangeProfilePhoto) {
             startGalleryActivity()
         }
+
+        if(id == R.id.layoutAlertInfo) {
+            layoutAlertInfo.animate().alpha(0F).withEndAction {
+                layoutAlertInfo.isGone = true
+            }
+        }
     }
 
     override fun onBackPressed() {
@@ -144,6 +151,7 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
+        layoutAlertInfo.setOnClickListener(this)
         btSaveChangeProfilePhoto.setOnClickListener(this)
         btChangeProfilePhoto.setOnClickListener(this)
         imgChangeProfilePhoto.setOnClickListener(this)

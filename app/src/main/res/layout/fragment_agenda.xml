@@ -44,7 +44,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/eventsRecyclerView"
                     android:paddingBottom="32dp" android:clipToPadding="false"
-                    android:paddingTop="12dp"
+                    android:paddingTop="72dp"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>

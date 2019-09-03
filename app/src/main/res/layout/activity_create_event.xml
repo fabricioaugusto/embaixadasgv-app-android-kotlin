@@ -14,23 +14,44 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginTop="32dp"
+                android:layout_height="wrap_content" android:id="@+id/linearLayout13"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
+                android:layout_marginLeft="32dp" android:layout_marginStart="32dp" android:layout_marginRight="32dp"
+                android:layout_marginEnd="32dp"
+                android:gravity="right">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:gravity="right" android:layout_marginBottom="24dp"
+                    android:background="@drawable/bg_screen_tutorial" android:id="@+id/layoutAlertInfo">
+                <ImageButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_close_blue"
+                        android:id="@+id/imageButton" android:background="@android:color/transparent"
+                        android:layout_marginTop="6dp" android:layout_marginRight="6dp"/>
+                <TextView
+                        android:text="Preencha os campos com os dados solicitados e, caso queira trocar a foto de capa, toque na imagem abaixo."
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView32"
+                        android:paddingLeft="12dp" android:paddingRight="24dp" android:paddingTop="8dp"
+                        android:paddingBottom="12dp" android:textColor="@color/colorLink"
+                        android:layout_marginTop="-24dp"/>
+            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
                 android:gravity="center" android:id="@+id/linearLayout6" app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintVertical_chainStyle="packed" android:layout_marginBottom="64dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                >
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout13">
 
-            <TextView
-                    android:text="Preencha os campos abaixo com os dados solicitados para a criação do evento e, caso queira trocar a imagem de capa, toque na imagem abaixo."
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/textView32"
-                    android:layout_marginBottom="16dp" android:background="@drawable/bg_screen_tutorial"
-                    android:paddingLeft="12dp" android:paddingRight="12dp" android:paddingTop="8dp"
-                    android:paddingBottom="8dp" android:textColor="@color/colorLink"/>
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/bg_default_cover"

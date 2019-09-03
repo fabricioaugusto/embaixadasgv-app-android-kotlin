@@ -13,6 +13,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.api.MyFirebase
@@ -108,6 +109,12 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         if (id == R.id.btCPChoosePhoto || id == R.id.imgCPUserProfile) {
             startGalleryActivity()
         }
+
+        if(id == R.id.layoutAlertInfo) {
+            layoutAlertInfo.animate().alpha(0F).withEndAction {
+                layoutAlertInfo.isGone = true
+            }
+        }
     }
 
     private fun startGalleryActivity() {
@@ -122,6 +129,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
+        layoutAlertInfo.setOnClickListener(this)
         btCPSavePhoto.setOnClickListener(this)
         btCPChoosePhoto.setOnClickListener(this)
         imgCPUserProfile.setOnClickListener(this)

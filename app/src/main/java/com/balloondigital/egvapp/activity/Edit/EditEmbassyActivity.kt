@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
@@ -115,9 +116,16 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         if(id == R.id.imgEditEmbassyCover) {
             startGalleryActivity()
         }
+
+        if(id == R.id.layoutAlertInfo) {
+            layoutAlertInfo.animate().alpha(0F).withEndAction {
+                layoutAlertInfo.isGone = true
+            }
+        }
     }
 
     private fun setListeners() {
+        layoutAlertInfo.setOnClickListener(this)
         btEditEmbassySava.setOnClickListener(this)
         imgEditEmbassyCover.setOnClickListener(this)
     }

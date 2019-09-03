@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.algolia.search.saas.*
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
@@ -38,6 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
 import kotlinx.android.synthetic.main.activity_create_event.*
+import kotlinx.android.synthetic.main.activity_invites.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -122,6 +125,12 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                 hideModeratorsList()
             }
         }
+
+        if(id == R.id.layoutAlertInfo) {
+            layoutAlertInfo.animate().alpha(0F).withEndAction {
+                layoutAlertInfo.isGone = true
+            }
+        }
     }
 
     override fun onFocusChange(view: View, bool: Boolean) {
@@ -192,6 +201,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         btSaveNewEvent.setOnClickListener(this)
         imgEventInsertCover.setOnClickListener(this)
         layoutModeratorsModal.setOnClickListener(this)
+        layoutAlertInfo.setOnClickListener(this)
         btEventInsertCover.setOnClickListener(this)
         etEventLocation.onFocusChangeListener = this
         etEventModerator1.onFocusChangeListener = this
@@ -240,8 +250,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     }
 
     private fun getEventPlace(data: Intent?) {
-
-
 
         val place = Autocomplete.getPlaceFromIntent(data!!)
         val addressComponents = place.addressComponents
@@ -446,10 +454,15 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                                 .addOnSuccessListener {
                                     documentReference ->
                                     documentReference.update("id", documentReference.id)
+                                    mEvent.id = documentReference.id
                                     btSaveNewEvent.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
                                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                     )
+
+                                    Handler().postDelayed({
+                                        startSingleEventActivity(mEvent)
+                                    }, 500)
                                 }
                         }
                     })
@@ -459,7 +472,17 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     }
 
-    fun makeToast(text: String) {
+    private fun startSingleEventActivity(event: Event) {
+        val intent: Intent = Intent(this, EventProfileActivity::class.java)
+        intent.putExtra("eventId", event.id)
+        intent.putExtra("placeLat", event.lat)
+        intent.putExtra("placeLng", event.long)
+        intent.putExtra("placeName", event.place)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
