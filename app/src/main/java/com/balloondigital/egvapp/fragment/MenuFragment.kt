@@ -193,6 +193,7 @@ class MenuFragment : Fragment() {
         val intent: Intent = Intent(mContext, EditProfileActivity::class.java)
         intent.putExtra("user", mUser)
         startActivityForResult(intent, MENU_REQUEST_CODE)
+        activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
     private fun startChangeProfilePhotoActivity() {

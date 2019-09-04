@@ -181,7 +181,7 @@
                 android:name=".activity.Edit.EditProfileActivity"
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"
-                android:theme="@style/DraggerTheme">
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
                 android:name=".activity.Edit.ChoosePhotoActivity"

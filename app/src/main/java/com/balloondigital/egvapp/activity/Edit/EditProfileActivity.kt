@@ -21,12 +21,10 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import java.util.*
 import com.balloondigital.egvapp.utils.Converters
-import com.github.ppamorim.dragger.DraggerActivity
 
 
-class EditProfileActivity : DraggerActivity(), View.OnClickListener, View.OnFocusChangeListener {
+class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
 
     private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
@@ -70,7 +68,6 @@ class EditProfileActivity : DraggerActivity(), View.OnClickListener, View.OnFocu
 
 
     private fun getUserDetails() {
-
 
         etEditProfleName.setText(mUser.name)
         etEditProfleEmail.setText(mUser.email)
