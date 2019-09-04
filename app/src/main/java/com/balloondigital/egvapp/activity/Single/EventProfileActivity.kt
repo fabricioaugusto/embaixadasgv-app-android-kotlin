@@ -12,7 +12,6 @@ import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
-import com.ethanhua.skeleton.SkeletonScreen
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.firebase.firestore.FirebaseFirestore
