@@ -23,9 +23,10 @@ import io.ghyeok.stickyswitch.widget.StickySwitch
 import kotlinx.android.synthetic.main.activity_edit_profile.*
 import java.util.*
 import com.balloondigital.egvapp.utils.Converters
+import com.github.ppamorim.dragger.DraggerActivity
 
 
-class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
+class EditProfileActivity : DraggerActivity(), View.OnClickListener, View.OnFocusChangeListener {
 
     private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
@@ -38,6 +39,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
+
 
         supportActionBar!!.title = "Editar perfil"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)

@@ -36,9 +36,6 @@ class MenuItens private constructor() {
             editSocialNetwork,
             myEmbassy,
             "section",
-            myEnrolledEvents,
-            myFavoriteEvents,
-            "section",
             setPrivacy,
             policyPrivacy,
             "section",
@@ -52,7 +49,6 @@ class MenuItens private constructor() {
 
         val menuSectionList: List<String> = listOf(
             "Configurações de Perfil",
-            "Eventos",
             "Privacidade",
             "Sobre")
 
@@ -64,9 +60,6 @@ class MenuItens private constructor() {
             changePassword,
             editSocialNetwork,
             myEmbassy,
-            "section",
-            myEnrolledEvents,
-            myFavoriteEvents,
             "section",
             newEvent,
             sendInvites,
@@ -86,7 +79,6 @@ class MenuItens private constructor() {
 
         val menuSectionListLeader: List<String> = listOf(
             "Configurações de Perfil",
-            "Eventos",
             "Líderes",
             "Privacidade",
             "Sobre")
@@ -99,9 +91,6 @@ class MenuItens private constructor() {
             changePassword,
             editSocialNetwork,
             myEmbassy,
-            "section",
-            myEnrolledEvents,
-            myFavoriteEvents,
             "section",
             newEvent,
             sendInvites,
@@ -124,7 +113,6 @@ class MenuItens private constructor() {
 
         val menuSectionListManager: List<String> = listOf(
             "Configurações de Perfil",
-            "Eventos",
             "Líderes",
             "Gestores",
             "Privacidade",
