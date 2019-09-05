@@ -19,6 +19,7 @@ import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.MenuItens
 import com.bumptech.glide.Glide
@@ -35,8 +36,8 @@ class MenuActivity : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: MenuListAdapter
-    private lateinit var mMenuItensList: List<String>
-    private lateinit var mMenuSectionList: List<String>
+    private lateinit var mMenuItensList: List<MenuItem>
+    private lateinit var mMenuSectionList: List<MenuItem>
     private val MENU_REQUEST_CODE: Int = 100
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,14 +81,13 @@ class MenuActivity : AppCompatActivity() {
 
     private fun setListView() {
 
-        mMenuItensList = MenuItens.menuList
-        mMenuSectionList = MenuItens.menuSectionList
+        mMenuItensList = MenuItens.getList()
 
         var sectionIndex = 0
 
         for(item in mMenuItensList) {
-            if(item == "section") {
-                mAdapter.addSectionHeaderItem(mMenuSectionList[sectionIndex])
+            if(item.item_name == "section") {
+                mAdapter.addSectionHeaderItem(mMenuItensList[sectionIndex])
                 sectionIndex += 1
             } else {
                 mAdapter.addItem(item)
@@ -98,9 +98,9 @@ class MenuActivity : AppCompatActivity() {
 
         val listViewListener = AdapterView.OnItemClickListener { adapter, view, pos, posLong ->
 
-            Toast.makeText(this, mMenuItensList[pos], Toast.LENGTH_LONG).show()
+            Toast.makeText(this, mMenuItensList[pos].item_name, Toast.LENGTH_LONG).show()
 
-            when(mMenuItensList[pos]) {
+            when(mMenuItensList[pos].item_name) {
                 MenuItens.profile -> startUserProfileActivity()
                 MenuItens.editProfile -> startEditProfileActivity()
                 MenuItens.changeProfilePhoto -> startChangeProfilePhotoActivity()

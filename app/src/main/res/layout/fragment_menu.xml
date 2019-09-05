@@ -20,7 +20,8 @@
         </androidx.appcompat.widget.Toolbar>
         <ListView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/listViewMenu"/>
+                android:layout_height="match_parent" android:id="@+id/listViewMenu"
+                android:divider="@null"/>
     </LinearLayout>
 
 

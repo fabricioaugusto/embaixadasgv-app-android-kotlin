@@ -7,9 +7,11 @@ import android.widget.BaseAdapter
 import android.view.LayoutInflater
 import java.util.*
 import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.widget.ImageView
 import androidx.core.content.ContextCompat.getSystemService
 import android.widget.TextView
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
@@ -21,7 +23,7 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
     private val TYPE_SEPARATOR = 1
     private val TYPE_PROFILE = 2
     private lateinit var mUser: User
-    private val mData: MutableList<String> = mutableListOf()
+    private val mData: MutableList<MenuItem> = mutableListOf()
     private val sectionHeader: TreeSet<Int> = TreeSet<Int>()
 
     private var mInflater: LayoutInflater? = null
@@ -32,12 +34,12 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
         mUser = user
     }
 
-    fun addItem(item: String) {
+    fun addItem(item: MenuItem) {
         mData.add(item)
         notifyDataSetChanged()
     }
 
-    fun addSectionHeaderItem(item: String) {
+    fun addSectionHeaderItem(item: MenuItem) {
         mData.add(item)
         sectionHeader.add(mData.size - 1)
         notifyDataSetChanged()
@@ -68,6 +70,7 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
                 TYPE_ITEM -> {
                     view = mInflater!!.inflate(R.layout.adapter_menu_section, null)
                     holder.textView = view.findViewById(R.id.text) as TextView
+                    holder.mIcon = view.findViewById(R.id.menu_ic) as ImageView
 
                 }
                 TYPE_SEPARATOR -> {
@@ -93,12 +96,16 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
             holder = view!!.tag as ViewHolder
         }
 
-        holder.textView!!.text = mData[position]
+        if(holder.mIcon != null) {
+            holder.mIcon!!.setImageDrawable(view.context.resources.getDrawable(mData[position].item_icon))
+        }
+
+        holder.textView!!.text = mData[position].item_name
         return view
     }
 
     override fun getItem(position: Int): String {
-        return mData[position]
+        return mData[position].item_name
     }
 
     override fun getItemId(position: Int): Long {
@@ -111,6 +118,7 @@ class MenuListAdapter(context: Context, user: User) : BaseAdapter() {
 
     class ViewHolder {
         var textView: TextView? = null
+        var mIcon: ImageView? = null
         var mProfilePhoto: CircleImageView? = null
         var mProfileName: TextView? = null
     }

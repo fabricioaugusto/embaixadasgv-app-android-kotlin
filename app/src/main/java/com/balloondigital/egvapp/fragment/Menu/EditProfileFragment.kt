@@ -1,16 +1,24 @@
-package com.balloondigital.egvapp.activity.Edit
+package com.balloondigital.egvapp.fragment.Menu
+
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -21,36 +29,58 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
 import io.ghyeok.stickyswitch.widget.StickySwitch
 import kotlinx.android.synthetic.main.activity_edit_profile.*
-import com.balloondigital.egvapp.utils.Converters
 
+// TODO: Rename parameter arguments, choose names that match
+// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+private const val ARG_PARAM1 = "param1"
+private const val ARG_PARAM2 = "param2"
 
-class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
+/**
+ * A simple [Fragment] subclass.
+ *
+ */
+class EditProfileFragment : Fragment(), View.OnClickListener, View.OnFocusChangeListener {
 
+    private lateinit var mToolbar: Toolbar
+    private lateinit var mContext: Context
     private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mCollections: MyFirebase.COLLECTIONS
     private lateinit var mPlaceFields: List<Place.Field>
     private val AUTOCOMPLETE_REQUEST_CODE = 1
     private lateinit var mPlacesClient: PlacesClient
-    
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_profile)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
+        val view: View = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
-        supportActionBar!!.title = "Editar perfil"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        mContext = view.context
 
-        val bundle: Bundle? = intent.extras
+        val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
         }
 
+        /*mToolbar = view.findViewById(R.id.searchToolbar)
+        mToolbar.title = ""
+
+        if (activity is AppCompatActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        }
+
+        setHasOptionsMenu(true)*/
+
         mDatabase = MyFirebase.database()
         mCollections = MyFirebase.COLLECTIONS
-        mPlacesClient = Places.createClient(this)
+        mPlacesClient = Places.createClient(mContext)
         mPlaceFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
+
+
+        // Inflate the layout for this fragment
+        return view
     }
 
     override fun onResume() {
@@ -63,7 +93,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             android.R.id.home -> {
-                onBackPressed()
+
                 return true
             }
             else -> true
@@ -169,17 +199,10 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             AutocompleteActivityMode.OVERLAY, mPlaceFields
         )
             .setTypeFilter(TypeFilter.CITIES)
-            .build(this)
+            .build(mContext)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
     }
 
-
-    override fun onBackPressed() {
-        val returnIntent = Intent()
-        returnIntent.putExtra("user", mUser)
-        setResult(Activity.RESULT_OK, returnIntent)
-        finish()
-    }
 
     private fun saveUserData() {
 
@@ -236,6 +259,8 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     }
 
     fun makeToast(text: String) {
-        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
     }
+
+
 }

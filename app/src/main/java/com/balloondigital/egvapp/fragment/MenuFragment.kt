@@ -28,7 +28,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.balloondigital.egvapp.activity.MainActivity
-
+import com.balloondigital.egvapp.fragment.Menu.EditProfileFragment
+import com.balloondigital.egvapp.model.MenuItem
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,10 +47,11 @@ class MenuFragment : Fragment() {
     private lateinit var mContext: Context
     private lateinit var mMenuList: ListView
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var mBundle: Bundle
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: MenuListAdapter
-    private lateinit var mMenuItensList: List<String>
-    private lateinit var mMenuSectionList: List<String>
+    private lateinit var mMenuItensList: List<MenuItem>
+    private lateinit var mMenuSectionList: List<MenuItem>
     private val MENU_REQUEST_CODE: Int = 100
 
     override fun onCreateView(
@@ -66,6 +68,7 @@ class MenuFragment : Fragment() {
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
+            mBundle = bundle
             mUser = bundle.getSerializable("user") as User
         }
 
@@ -118,25 +121,24 @@ class MenuFragment : Fragment() {
 
     private fun setListView() {
 
-        mMenuItensList = MenuItens.menuList
-        mMenuSectionList = MenuItens.menuSectionList
+        mMenuItensList = MenuItens.getList()
 
         if(mUser.leader) {
-            mMenuItensList = MenuItens.menuListLeader
-            mMenuSectionList = MenuItens.menuSectionListLeader
+            mMenuItensList = MenuItens.getLeaderList()
         }
 
         if(mUser.manager) {
-            mMenuItensList = MenuItens.menuListManager
-            mMenuSectionList = MenuItens.menuSectionListManager
+            mMenuItensList = MenuItens.getManagerList()
         }
+
+        mMenuSectionList = mMenuItensList.filter { it.type == "section" }
 
         Log.d("EGVAPPLOGMENU", mUser.toString())
 
         var sectionIndex = 0
 
         for(item in mMenuItensList) {
-            if(item == "section") {
+            if(item.type == "section") {
                 mAdapter.addSectionHeaderItem(mMenuSectionList[sectionIndex])
                 sectionIndex += 1
             } else {
@@ -148,7 +150,7 @@ class MenuFragment : Fragment() {
 
         val listViewListener = AdapterView.OnItemClickListener { adapter, view, pos, posLong ->
 
-            when(mMenuItensList[pos]) {
+            when(mMenuItensList[pos].item_name) {
                 MenuItens.profile -> startUserProfileActivity()
                 MenuItens.editProfile -> startEditProfileActivity()
                 MenuItens.changeProfilePhoto -> startChangeProfilePhotoActivity()
@@ -190,10 +192,11 @@ class MenuFragment : Fragment() {
     }
 
     private fun startEditProfileActivity() {
+
         val intent: Intent = Intent(mContext, EditProfileActivity::class.java)
         intent.putExtra("user", mUser)
         startActivityForResult(intent, MENU_REQUEST_CODE)
-        activity?.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+        activity?.overridePendingTransition(0, 0)
     }
 
     private fun startChangeProfilePhotoActivity() {
