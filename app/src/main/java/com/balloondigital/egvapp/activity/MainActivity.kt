@@ -1,41 +1,27 @@
 package com.balloondigital.egvapp.activity
 
 import android.Manifest
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.*
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomnavigation.LabelVisibilityMode
-import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
-import android.view.View
-import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
-import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
-import com.balloondigital.egvapp.activity.Create.CreatePostActivity
-import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
-import com.balloondigital.egvapp.adapter.MenuListAdapter
+import com.balloondigital.egvapp.fragment.BottomNav.*
 import com.balloondigital.egvapp.model.User
-import com.google.android.libraries.places.widget.Autocomplete
-import com.google.android.libraries.places.widget.AutocompleteActivity
-import com.orhanobut.dialogplus.DialogPlus
-import com.orhanobut.dialogplus.DialogPlusBuilder
-import com.orhanobut.dialogplus.OnItemClickListener
+import com.balloondigital.egvapp.utils.CustomViewPager
+
 
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var mViewPager: CustomViewPager
     private lateinit var mUsersFragment: Fragment
     private lateinit var mFeedFragment: Fragment
     private lateinit var mHomeFragment: Fragment
@@ -87,45 +73,88 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        finish()
+
+        val count = supportFragmentManager.backStackEntryCount
+
+        if (count == 0) {
+            super.onBackPressed()
+            //additional code
+        } else {
+            supportFragmentManager.popBackStack()
+        }
+
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
 
         bnv.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
-        openFragment(mDashboardFragment)
+        openFragment(mDashboardFragment,0, "dashboard")
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
 
         when (item.itemId) {
             R.id.navigation_home -> {
-                openFragment(mDashboardFragment)
+                openFragment(mDashboardFragment, 0, "dashboard")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_search -> {
-                openFragment(mUsersFragment)
+                openFragment(mUsersFragment, 1, "search")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_post -> {
-                openFragment(mFeedFragment)
+                openFragment(mFeedFragment, 2, "feed")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_agenda -> {
-                openFragment(mAgendaFragment)
+                openFragment(mAgendaFragment, 3, "agenda")
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_highlights -> {
-                openFragment(mMenuFragment)
+                openFragment(mMenuFragment, 4, "menu")
                 return@OnNavigationItemSelectedListener true
             }
         }
         false
     }
 
-    private fun openFragment(fragment: Fragment) {
-        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.mainViewPager, fragment)
+    private fun openFragment(fragment: Fragment, pos: Int, tag: String) {
+
+
+        val manager = supportFragmentManager
+        val transaction: FragmentTransaction = manager.beginTransaction()
+        if (manager.findFragmentByTag(tag) == null) {
+            transaction.add(R.id.mainViewPager, fragment, tag)
+        }
+
+        val dashboardFragment: Fragment? = manager.findFragmentByTag("dashboard")
+        val searchFragment: Fragment? = manager.findFragmentByTag("search")
+        val feedFragment: Fragment? = manager.findFragmentByTag("feed")
+        val agendaFragment: Fragment? = manager.findFragmentByTag("agenda")
+        val menuFragment: Fragment? = manager.findFragmentByTag("menu")
+
+        if(dashboardFragment != null) {
+            transaction.hide(dashboardFragment)
+        }
+
+        if(searchFragment != null) {
+            transaction.hide(searchFragment)
+        }
+
+        if(feedFragment != null) {
+            transaction.hide(feedFragment)
+        }
+
+        if(agendaFragment != null) {
+            transaction.hide(agendaFragment)
+        }
+
+        if(menuFragment != null) {
+            transaction.hide(menuFragment)
+        }
+
+        transaction.show(fragment)
+
         transaction.addToBackStack(null)
         transaction.commit()
     }
@@ -137,4 +166,5 @@ class MainActivity : AppCompatActivity() {
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
+
 }

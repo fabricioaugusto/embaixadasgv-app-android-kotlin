@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment
+package com.balloondigital.egvapp.fragment.BottomNav.search
 
 
 import android.content.Context
@@ -6,27 +6,27 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import android.widget.ImageView
 import android.widget.SearchView
-import android.widget.SearchView.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.algolia.search.saas.Client
+import com.algolia.search.saas.Index
+import com.algolia.search.saas.Query
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.User
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_users.*
-import org.json.JSONObject
-import com.algolia.search.saas.*
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.firestore.FirebaseFirestore
 import org.json.JSONArray
 
 // TODO: Rename parameter arguments, choose names that match
@@ -38,7 +38,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnClickListener {
+class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView.OnCloseListener, View.OnClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
@@ -57,7 +57,7 @@ class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnC
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_users, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_list_users, container, false)
 
         mImgLogoToolbar = view.findViewById(R.id.imgLogoToolbar)
         mToolbar = view.findViewById(R.id.searchToolbar)
@@ -183,9 +183,15 @@ class UsersFragment : Fragment(), OnQueryTextListener, OnCloseListener, View.OnC
 
     private fun startUserProfileActivity(singleUser: User) {
 
-        val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
-        intent.putExtra("user", singleUser)
-        startActivity(intent)
-    }
+        val bundle = Bundle()
+        bundle.putSerializable("user", singleUser)
 
+        val nextFrag = SingleUserFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.searchViewPager, nextFrag)
+            .addToBackStack(null)
+            .commit()
+    }
 }

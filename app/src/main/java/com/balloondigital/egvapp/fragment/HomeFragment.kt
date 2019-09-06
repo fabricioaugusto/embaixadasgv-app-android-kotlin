@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
 
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.fragment.BottomNav.DashboardFragment
 import com.balloondigital.egvapp.model.User
 import com.ogaclejapan.smarttablayout.SmartTabLayout
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems
-import kotlinx.android.synthetic.main.fragment_home.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

@@ -96,9 +96,9 @@ class MenuItens private constructor() {
 
         const val profile = "profile"
         const val editProfile = "Editar perfil"
-        const val changeProfilePhoto =  "Alerar foto de perfil"
+        const val changeProfilePhoto = "Alerar foto de perfil"
         const val changePassword = "Alterar senha"
-        const val editSocialNetwork = "Minhas redes sociais"
+        const val editSocialNetwork = "Editar redes sociais"
         const val myEmbassy = "Minha embaixada"
         const val myEnrolledEvents = "Meus eventos confirmados"
         const val myFavoriteEvents = "Meus eventos favoritos"
@@ -117,97 +117,5 @@ class MenuItens private constructor() {
         const val rateApp = "Avalie o aplicativo"
         const val sendUsMessage = "Envie-nos uma mensagem"
         const val logout = "Sair"
-
-        val menuList: List<String> = listOf(
-            profile,
-            "section",
-            editProfile,
-            changeProfilePhoto,
-            changePassword,
-            editSocialNetwork,
-            myEmbassy,
-            "section",
-            setPrivacy,
-            policyPrivacy,
-            "section",
-            embassyList,
-            aboutEmbassy,
-            aboutApp,
-            suggestFeatures,
-            rateApp,
-            sendUsMessage,
-            logout)
-
-        val menuSectionList: List<String> = listOf(
-            "Configurações de Perfil",
-            "Privacidade",
-            "Sobre")
-
-        val menuListLeader: List<String> = listOf(
-            profile,
-            "section",
-            editProfile,
-            changeProfilePhoto,
-            changePassword,
-            editSocialNetwork,
-            myEmbassy,
-            "section",
-            newEvent,
-            sendInvites,
-            sentEmbassyPhotos,
-            editEmbassy,
-            "section",
-            setPrivacy,
-            policyPrivacy,
-            "section",
-            embassyList,
-            aboutEmbassy,
-            aboutApp,
-            suggestFeatures,
-            rateApp,
-            sendUsMessage,
-            logout)
-
-        val menuSectionListLeader: List<String> = listOf(
-            "Configurações de Perfil",
-            "Líderes",
-            "Privacidade",
-            "Sobre")
-
-        val menuListManager: List<String> = listOf(
-            profile,
-            "section",
-            editProfile,
-            changeProfilePhoto,
-            changePassword,
-            editSocialNetwork,
-            myEmbassy,
-            "section",
-            newEvent,
-            sendInvites,
-            sentEmbassyPhotos,
-            editEmbassy,
-            "section",
-            embassyForApproval,
-            createBulletin,
-            "section",
-            setPrivacy,
-            policyPrivacy,
-            "section",
-            embassyList,
-            aboutEmbassy,
-            aboutApp,
-            suggestFeatures,
-            rateApp,
-            sendUsMessage,
-            logout)
-
-        val menuSectionListManager: List<String> = listOf(
-            "Configurações de Perfil",
-            "Líderes",
-            "Gestores",
-            "Privacidade",
-            "Sobre")
     }
-
 }

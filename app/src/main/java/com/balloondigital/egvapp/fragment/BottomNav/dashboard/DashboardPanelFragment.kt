@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment
+package com.balloondigital.egvapp.fragment.BottomNav.dashboard
 
 
 import android.content.Context
@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isGone
+
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyAgendaActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
@@ -33,7 +34,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class DashboardFragment : Fragment(), View.OnClickListener {
+class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUser: User
@@ -59,7 +60,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view: View = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_dashboard_panel, container, false)
 
         mAuth = MyFirebase.auth()
         mContext = view.context
@@ -84,6 +85,8 @@ class DashboardFragment : Fragment(), View.OnClickListener {
         }
 
         setListeners()
+
+
         // Inflate the layout for this fragment
         return view
     }
@@ -121,7 +124,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
             .document(userId)
             .get()
             .addOnSuccessListener {
-                documentSnapshot ->
+                    documentSnapshot ->
                 val user = documentSnapshot.toObject(User::class.java)
                 if(user != null) {
                     mUser = user
@@ -141,7 +144,7 @@ class DashboardFragment : Fragment(), View.OnClickListener {
             .limit(1)
             .get()
             .addOnSuccessListener {
-                querySnapshot ->
+                    querySnapshot ->
                 if(querySnapshot.size() > 0) {
                     for(document in querySnapshot) {
                         val event = document.toObject(Event::class.java)

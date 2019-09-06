@@ -1,10 +1,9 @@
-package com.balloondigital.egvapp.fragment
+package com.balloondigital.egvapp.fragment.BottomNav.agenda
 
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,13 +14,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Single.EventProfileActivity
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.EventListAdapter
-import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
-import com.balloondigital.egvapp.model.Post
-import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,7 +31,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class AgendaFragment : Fragment() {
+class ListEventsFragment : Fragment() {
 
     private lateinit var mUser: Context
     private lateinit var mContext: Context
@@ -52,7 +47,9 @@ class AgendaFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_agenda, container, false)
+
+
+        val view: View = inflater.inflate(R.layout.fragment_list_events, container, false)
 
         mDatabase = MyFirebase.database()
         mEventList = mutableListOf()
@@ -108,11 +105,25 @@ class AgendaFragment : Fragment() {
     }
 
     private fun startSingleEventActivity(event: Event) {
-        val intent: Intent = Intent(mContext, EventProfileActivity::class.java)
-        intent.putExtra("eventId", event.id)
-        intent.putExtra("placeLat", event.lat)
-        intent.putExtra("placeLng", event.long)
-        intent.putExtra("placeName", event.place)
-        startActivity(intent)
+
+        val lat = event.lat
+        val long = event.long
+
+        val bundle = Bundle()
+        bundle.putString("eventId", event.id)
+        bundle.putString("placeName", event.place)
+
+        if(lat != null && long != null) {
+            bundle.putDouble("placeLat", lat)
+            bundle.putDouble("placeLng", long)
+        }
+
+        val nextFrag = SingleEventFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.agendaViewPager, nextFrag)
+            .addToBackStack(null)
+            .commit()
     }
 }

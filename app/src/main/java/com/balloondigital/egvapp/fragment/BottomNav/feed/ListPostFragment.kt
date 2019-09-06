@@ -1,4 +1,5 @@
-package com.balloondigital.egvapp.fragment
+package com.balloondigital.egvapp.fragment.BottomNav.feed
+
 
 import android.app.Activity
 import android.content.Context
@@ -6,37 +7,34 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import androidx.fragment.app.Fragment
 import android.widget.Button
-import android.widget.ImageButton
-import android.widget.SearchView
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreatePostActivity
 import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
-import com.balloondigital.egvapp.activity.Menu.MenuActivity
 import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
 import com.balloondigital.egvapp.activity.Single.SinglePostActivity
 import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
-import com.balloondigital.egvapp.model.User
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.balloondigital.egvapp.model.PostLike
+import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
@@ -50,7 +48,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
+class ListPostFragment : Fragment(), View.OnClickListener, OnItemClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
@@ -69,12 +67,13 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
     private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_feed, container, false)
+
+        val view: View = inflater.inflate(R.layout.fragment_list_post, container, false)
 
         mToolbar = view.findViewById(R.id.feedToolbar)
         mToolbar.title = ""
@@ -90,6 +89,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
         mBtFeedHighlight = view.findViewById(R.id.btFeedHighlight)
         mBtFeedEmbassy = view.findViewById(R.id.btFeedEmbassy)
         mBtFeedAll = view.findViewById(R.id.btFeedAll)
+
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
@@ -232,7 +232,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
             .shimmer(true).show()
 
         mAdapter.onItemClick = {
-            post, pos ->
+                post, pos ->
 
             mAdapterPosition = pos
 
@@ -354,7 +354,7 @@ class FeedFragment : Fragment(), View.OnClickListener, OnItemClickListener {
             .whereEqualTo("user_id", mUser.id)
             .get()
             .addOnSuccessListener {
-                querySnapshot ->
+                    querySnapshot ->
                 for(document in querySnapshot.documents) {
                     val postLike = document.toObject(PostLike::class.java)
                     if(postLike != null) {

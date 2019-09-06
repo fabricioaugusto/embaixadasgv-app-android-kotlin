@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment
+package com.balloondigital.egvapp.fragment.BottomNav
 
 
 import android.app.Activity
@@ -27,8 +27,6 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.balloondigital.egvapp.activity.MainActivity
-import com.balloondigital.egvapp.fragment.Menu.EditProfileFragment
 import com.balloondigital.egvapp.model.MenuItem
 
 
