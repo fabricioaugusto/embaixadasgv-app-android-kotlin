@@ -64,7 +64,7 @@ dependencies {
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     implementation 'com.orhanobut:dialogplus:1.11@aar'
     implementation 'com.github.leinardi:FloatingActionButtonSpeedDial:master-SNAPSHOT'
-    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'com.github.yalantis:ucrop:2.2.3-native'
     implementation 'com.ethanhua:skeleton:1.1.2'
     implementation 'io.supercharge:shimmerlayout:2.1.0'
     implementation 'com.ogaclejapan.smarttablayout:library:2.0.0@aar'

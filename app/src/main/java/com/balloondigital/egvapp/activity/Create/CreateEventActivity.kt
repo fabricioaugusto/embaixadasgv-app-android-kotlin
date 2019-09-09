@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -26,6 +27,7 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.CropImages
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
@@ -38,9 +40,8 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.theartofdev.edmodo.cropper.CropImage
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_create_event.*
-import kotlinx.android.synthetic.main.activity_invites.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -167,16 +168,15 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                     GALLERY_CODE -> {
                         if (data != null) {
                             val uri = data.data
-                            CropImage.activity(uri)
-                                .setAspectRatio(3, 2)
-                                .setFixAspectRatio(true)
-                                .start(this)
+                            CropImages.eventCover(this, uri)
                         }
                     }
-                    CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    UCrop.REQUEST_CROP -> {
                         if (data != null) {
-                            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-                            imgEventInsertCover.setImageURI(result.uri)
+                            val resultUri: Uri? = UCrop.getOutput(data)
+                            if(resultUri != null) {
+                                imgEventInsertCover.setImageURI(resultUri)
+                            }
                             mCoverSelected = true
                         }
                     }

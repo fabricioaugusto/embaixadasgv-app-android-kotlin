@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.libraries.places.api.Places
 import android.content.Context
 import android.content.SharedPreferences
+import android.widget.Toast
 import com.balloondigital.egvapp.activity.Edit.ChooseEmbassyActivity
 import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
@@ -59,6 +60,7 @@ class CheckAuthActivity : AppCompatActivity() {
                 if(documentSnapshot != null) {
                     val user = documentSnapshot.toObject(User::class.java)
                     if(user != null) {
+                        makeToast("User não é null")
                         mUser = user
                         checkUser()
                     } else {
@@ -108,5 +110,9 @@ class CheckAuthActivity : AppCompatActivity() {
         val intent: Intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 }

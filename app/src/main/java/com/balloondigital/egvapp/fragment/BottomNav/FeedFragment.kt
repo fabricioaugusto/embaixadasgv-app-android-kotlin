@@ -41,6 +41,4 @@ class FeedFragment : Fragment() {
 
         return view
     }
-
-
 }

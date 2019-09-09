@@ -62,8 +62,15 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
     override fun onClick(view: View) {
 
         when(view.id) {
-            R.id.btUserProfileWa -> openExternalLink(mUser.whatsapp!!)
-            R.id.btUserProfileFb -> openExternalLink("https://facebook.com/${mUser.facebook!!}")
+            R.id.btUserProfileWa -> {
+                mUser.whatsapp?.replace(" ", "")
+                mUser.whatsapp?.replace("+", "")
+                mUser.whatsapp?.replace("(", "")
+                mUser.whatsapp?.replace(")", "")
+                mUser.whatsapp?.replace("-", "")
+                openExternalLink("https://wa.me/${mUser.whatsapp!!}")
+            }
+            R.id.btUserProfileFb -> openExternalLink("https://www.facebook.com/${mUser.facebook!!}")
             R.id.btUserProfileInsta -> openExternalLink("https://www.instagram.com/${mUser.instagram!!}")
             R.id.btUserProfileIn -> openExternalLink("https://www.linkedin.com/in/${mUser.linkedin!!}")
             R.id.btUserProfileTt -> openExternalLink("https://twitter.com/${mUser.twitter!!}")

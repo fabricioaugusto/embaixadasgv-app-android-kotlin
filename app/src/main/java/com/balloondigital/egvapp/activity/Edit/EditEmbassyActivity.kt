@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,13 +19,15 @@ import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.CropImages
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.theartofdev.edmodo.cropper.CropImage
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_edit_embassy.*
+import kotlinx.android.synthetic.main.activity_send_embassy_photo.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
@@ -86,16 +89,15 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val uri = data.data
                             Log.d("GalleryActivity", "Chegou aqui")
-                            CropImage.activity(uri)
-                                .setAspectRatio(1, 1)
-                                .setFixAspectRatio(true)
-                                .start(this)
+                            CropImages.embassyCover(this, uri)
                         }
                     }
-                    CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    UCrop.REQUEST_CROP -> {
                         if (data != null) {
-                            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-                            imgEditEmbassyCover.setImageURI(result.uri)
+                            val resultUri: Uri? = UCrop.getOutput(data)
+                            if(resultUri != null) {
+                                imgEditEmbassyCover.setImageURI(resultUri)
+                            }
                         }
                     }
                 }

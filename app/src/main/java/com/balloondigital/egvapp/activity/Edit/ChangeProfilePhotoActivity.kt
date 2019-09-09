@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -20,12 +21,13 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.CropImages
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
-import com.theartofdev.edmodo.cropper.CropImage
+import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_change_profile_photo.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
@@ -100,16 +102,15 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val uri = data.data
                             Log.d("GalleryActivity", "Chegou aqui")
-                            CropImage.activity(uri)
-                                .setAspectRatio(1, 1)
-                                .setFixAspectRatio(true)
-                                .start(this)
+                            CropImages.profilePicture(this, uri)
                         }
                     }
-                    CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
+                    UCrop.REQUEST_CROP -> {
                         if (data != null) {
-                            val result: CropImage.ActivityResult = CropImage.getActivityResult(data)
-                            imgChangeProfilePhoto.setImageURI(result.uri)
+                            val resultUri: Uri? = UCrop.getOutput(data)
+                            if(resultUri != null) {
+                                imgChangeProfilePhoto.setImageURI(resultUri)
+                            }
                         }
                     }
                 }

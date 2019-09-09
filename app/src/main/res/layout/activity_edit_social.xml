@@ -21,90 +21,140 @@
                 android:focusableInTouchMode="true">
 
 
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialfb"
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/tilEditSocialws"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                    <com.santalu.maskedittext.MaskEditText
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:met_mask="(##) #####-####"
-                            android:hint="Whatsapp" android:id="@+id/etEditSocialws"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutWhatsapp"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_whatsapp"
+                        android:id="@+id/imageView6" android:layout_marginTop="8dp"
+                        android:layout_marginRight="8dp"/>
+                <com.santalu.maskedittext.MaskEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Facebook (Nome de usuário)" android:id="@+id/etEditSocialfb"/>
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialinsta"
+                        app:met_mask="+55 (##) #####-####"
+                        android:hint="+55" android:id="@+id/etEditSocialws" android:layout_marginBottom="8dp"
+                        android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutFacebook"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_facebook"
+                        android:id="@+id/imageView8" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Instagram (Nome de usuário)" android:id="@+id/etEditSocialinsta"/>
-
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialin"
+                        android:hint="usuario"
+                        android:id="@+id/etEditSocialfb"
+                        android:tag="facebook.com/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutInstagram"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_instagram"
+                        android:id="@+id/imageView9" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Linkedin (Nome de usuário)" android:id="@+id/etEditSocialin"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialtt"
+                        android:hint="usuario" android:id="@+id/etEditSocialinsta"
+                        android:tag="instagram.com/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutLinkedin"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_linkedin"
+                        android:id="@+id/imageView10" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Twitter (Nome de usuário)" android:id="@+id/etEditSocialtt"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialbe"
+                        android:hint="usuario" android:id="@+id/etEditSocialin"
+                        android:tag="linkedin.com/in/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutTwitter"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_twitter"
+                        android:id="@+id/imageView11" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Behance (Nome de usuário)" android:id="@+id/etEditSocialbe"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialgit"
+                        android:hint="usuario"
+                        android:id="@+id/etEditSocialtt"
+                        android:tag="twitter.com/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
-
-                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_height="match_parent" android:id="@+id/layoutBehance"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_behance"
+                        android:id="@+id/imageView12" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="GitHub (Nome de usuário)" android:id="@+id/etEditSocialgit"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilEditSocialyt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:paddingTop="16dp">
+                        android:hint="usuario"
+                        android:id="@+id/etEditSocialbe"
+                        android:tag="behance.com/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
 
-            <com.google.android.material.textfield.TextInputEditText
+            <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Youtube" android:id="@+id/etEditSocialyt"/>
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_height="match_parent" android:id="@+id/layoutGithub"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_github"
+                        android:id="@+id/imageView13" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="usuario" android:id="@+id/etEditSocialgit"
+                        android:tag="github.com/" android:layout_marginBottom="12dp" android:layout_weight="1"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/layoutYoutube"
+                    android:layout_marginBottom="6dp">
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" app:srcCompat="@drawable/ic_social_youtube"
+                        android:id="@+id/imageView14" android:adjustViewBounds="true"
+                        android:layout_marginTop="4dp" android:layout_marginRight="8dp"/>
+                <com.balloondigital.egvapp.utils.PrefixEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Youtube" android:id="@+id/etEditSocialyt"
+                        android:tag="youtube.com/channel/" android:layout_marginBottom="12dp"
+                        android:layout_weight="1"/>
+            </LinearLayout>
             <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Salvar"
                     android:layout_width="match_parent"
