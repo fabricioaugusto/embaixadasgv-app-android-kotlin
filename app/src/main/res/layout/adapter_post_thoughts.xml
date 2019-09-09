@@ -4,8 +4,8 @@
               xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:paddingBottom="16dp"
-              android:background="@drawable/bg_card_event" android:layout_marginLeft="12dp"
-              android:layout_marginRight="12dp" android:layout_marginTop="12dp"
+              android:background="@drawable/bg_card_square"
+              android:layout_marginTop="12dp"
               android:paddingTop="16dp">
 
     <LinearLayout

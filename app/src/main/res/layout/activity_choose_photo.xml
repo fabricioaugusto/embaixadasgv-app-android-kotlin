@@ -24,15 +24,13 @@
             android:layout_height="wrap_content" android:id="@+id/linearLayout13"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginLeft="32dp" android:layout_marginStart="32dp" android:layout_marginRight="32dp"
-            android:layout_marginEnd="32dp"
             android:gravity="right" app:layout_constraintTop_toBottomOf="@+id/toolbarCP"
-            android:layout_marginTop="24dp">
+    >
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:gravity="right" android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_screen_tutorial" android:id="@+id/layoutAlertInfo">
+                android:background="@color/colorLink" android:id="@+id/layoutAlertInfo">
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/ic_close_blue"
@@ -43,7 +41,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/textView32"
                     android:paddingLeft="12dp" android:paddingRight="24dp" android:paddingTop="8dp"
-                    android:paddingBottom="12dp" android:textColor="@color/colorLink"
+                    android:paddingBottom="12dp" android:textColor="@color/backgroundGrey"
                     android:layout_marginTop="-24dp"/>
         </LinearLayout>
     </LinearLayout>
@@ -57,7 +55,7 @@
             android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
             android:gravity="center" android:id="@+id/linearLayout6" app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintBottom_toTopOf="@+id/btCPSavePhoto" app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout13">
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout13" android:layout_marginTop="24dp">
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgCPUserProfile"
                 android:layout_width="240dp"

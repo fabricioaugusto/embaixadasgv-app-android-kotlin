@@ -31,8 +31,10 @@ import android.os.Handler
 import android.text.Layout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
+import androidx.core.text.toHtml
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
@@ -205,15 +207,20 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                 }
             }
 
+            val postDate = Converters.dateToString(post.date!!)
+            mTxtAdPostDate.text = "${postDate.date} ${postDate.monthAbr} ${postDate.fullyear} às ${postDate.hours}:${postDate.minutes}"
+
             mButtomLike.setOnLikeListener(likeListener)
-
             mTxtAdPostUserName.text = user.name
-            mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
 
-            if(post.type == "thought") {
-                mTxtAdPostText.movementMethod = LinkMovementMethod.getInstance()
+
+            if(post.type == "note") {
+                mTxtAdPostText.text = KnifeParser.fromHtml(post.text?.replace("<br>", " ")).toString()
             }
 
+            if(post.type == "thought") {
+                mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
+            }
 
             if(!post.title.isNullOrEmpty()) {
                 mTxtAdPostTitle.text = post.title

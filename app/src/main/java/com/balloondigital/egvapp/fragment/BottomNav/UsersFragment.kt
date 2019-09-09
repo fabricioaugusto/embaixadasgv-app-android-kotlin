@@ -28,7 +28,7 @@ class UsersFragment : Fragment() {
 
         val nextFrag = ListUsersFragment()
         activity!!.supportFragmentManager.beginTransaction()
-            .replace(R.id.searchViewPager, nextFrag, "findThisFragment")
+            .replace(R.id.searchViewPager, nextFrag, "rootSearchFragment")
             .addToBackStack(null)
             .commit()
 

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragment.BottomNav.dashboard.EmbassyAgendaFragment" android:background="@color/backgroundGreyStrong">
+
+    <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/embassyEventsToolbar" app:contentInsetStart="0dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true" android:layout_alignParentRight="true"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+        <ImageButton
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_arrow_back_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btBackPress"
+                android:paddingRight="24dp" android:paddingLeft="16dp" android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+        <TextView
+                android:text="Eventos da embaixada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView14"
+                android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
+                tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="64dp"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/swipeLayoutFeed" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/embassyEventsToolbar"
+            app:layout_constraintBottom_toBottomOf="parent" android:background="@color/backgroundGreyStrong"
+    >
+
+        <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
+                                               android:layout_height="match_parent">
+            <LinearLayout android:orientation="vertical" android:layout_width="match_parent"
+                          android:layout_height="match_parent">
+                <TextView
+                        android:text="Próximos eventos"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/textView22" android:textStyle="bold"
+                        android:textSize="16sp" android:textColor="@color/colorPrimary"
+                        android:layout_marginLeft="16dp" android:layout_marginTop="16dp"/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtEmbassyAgendaNoEvent"
+                        android:textColor="@color/colorText"
+                        android:visibility="gone" android:text="No momento não há eventos previstos!"
+                        tools:visibility="visible" android:layout_marginLeft="16dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/eventsRecyclerView"
+                        android:paddingBottom="32dp" android:clipToPadding="false"
+                        android:paddingTop="12dp"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

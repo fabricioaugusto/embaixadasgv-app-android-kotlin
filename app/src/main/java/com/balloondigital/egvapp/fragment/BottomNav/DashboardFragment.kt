@@ -46,7 +46,7 @@ class DashboardFragment : Fragment() {
 
         val nextFrag = DashboardPanelFragment()
         activity!!.supportFragmentManager.beginTransaction()
-            .replace(R.id.dashboardViewPager, nextFrag, "findThisFragment")
+            .replace(R.id.dashboardViewPager, nextFrag, "rootDashboardFragment")
             .addToBackStack(null)
             .commit()
 

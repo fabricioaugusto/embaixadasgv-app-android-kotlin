@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,6 +60,18 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
     private var mAdapterPosition: Int = 0
     private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
+
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val manager = activity!!.supportFragmentManager
+        val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
+        val rootListPost: ListPostFragment = fragment as ListPostFragment
+        Log.d("EGVAPPLOGVISIBLEFRAGS", rootListPost.tag.toString())
+        rootListPost.setFragmentTags("EmbassyPostsFragment", tag!!)
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -146,6 +159,7 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
                 }
                 CREATE_POST_ACTIVITY_CODE -> {
                     getPostLikes()
+                    makeToast("Chegou aqui também")
                 }
             }
 
@@ -181,36 +195,32 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
             mAdapterPosition = pos
 
             if(post.type == "note") {
-                startPostArticleActivity(post)
+                startSinglePost(post)
             }
             if(post.type == "post") {
-                startPostPictureActivity(post)
+                startSinglePost(post)
             }
             if(post.type == "thought") {
-                startPostToughtActivity(post)
+                startSinglePost(post)
             }
         }
     }
 
-    private fun startPostArticleActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SingleArticleActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
-    }
+    private fun startSinglePost(post: Post) {
+        val bundle = Bundle()
 
-    private fun startPostPictureActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SinglePostActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
-    }
+        bundle.putString("post_id", post.id)
+        bundle.putString("frag_tag", this.tag)
+        bundle.putString("frag_name", "EmbassyPostsFragment")
+        bundle.putSerializable("user", mUser)
 
-    private fun startPostToughtActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SingleThoughtActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
+        val nextFrag = SinglePostFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.feedViewPager, nextFrag, "singlePost")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun getEmbassyListPosts() {
@@ -238,6 +248,15 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
             }
+    }
+
+    fun updatePost(post: Post) {
+        mPostList[mAdapterPosition] = post
+        mAdapter.notifyItemChanged(mAdapterPosition)
+    }
+
+    fun updateList() {
+        getPostLikes()
     }
 
     private fun getPostLikes() {
@@ -274,4 +293,7 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
         }
     }
 
+    fun makeToast(text: String) {
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
+    }
 }

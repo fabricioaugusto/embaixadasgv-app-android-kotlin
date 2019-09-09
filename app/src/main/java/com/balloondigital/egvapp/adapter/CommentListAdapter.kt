@@ -13,13 +13,17 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.DateStr
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
 import com.google.android.gms.tasks.Task
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import de.hdodenhof.circleimageview.CircleImageView
 
@@ -70,6 +74,15 @@ class CommentListAdapter(commentList: MutableList<PostComment>, post: Post): Rec
         }
 
         fun bindData(comment: PostComment) {
+
+
+            var commentDate: DateStr = Converters.dateToString(Timestamp.now())
+
+            if(comment.date != null) {
+                commentDate = Converters.dateToString(comment.date!!)
+            }
+
+            mTxtAdCommentDate.text = "${commentDate.date}/${commentDate.month}/${commentDate.fullyear} às ${commentDate.hours}:${commentDate.minutes}"
 
             val user: User = comment.user
             mTxtAdCommentUserName.text = user.name

@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostLike
 import com.balloondigital.egvapp.model.User
@@ -47,7 +49,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class HighlightPostsFragment : Fragment(), OnItemClickListener {
+class HighlightPostsFragment : Fragment() {
 
 
     private lateinit var mDatabase: FirebaseFirestore
@@ -56,12 +58,19 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
-    private lateinit var mAdapterDialog: CreatePostDialogAdapter
-    private lateinit var mCPDialog: DialogPlus
     private lateinit var mPostList: MutableList<Post>
     private var mAdapterPosition: Int = 0
-    private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        Log.d("FRAGLIFECYCLE","Destaques onCreate")
+        val manager = activity!!.supportFragmentManager
+        val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
+        val rootListPost: ListPostFragment = fragment as ListPostFragment
+        Log.d("EGVAPPLOGVISIBLEFRAGS", rootListPost.tag.toString())
+        rootListPost.setFragmentTags("HighlightPostsFragment", tag!!)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +79,7 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
 
         val view: View = inflater.inflate(R.layout.fragment_highlight_posts, container, false)
         // Inflate the layout for this fragment
+
 
         mContext = view.context
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
@@ -80,7 +90,6 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
             Log.d("FirebaseLogFeed", mUser.toString())
         }
 
-        mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
         mDatabase = MyFirebase.database()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
@@ -91,47 +100,8 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
         return view
     }
 
-    override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
-
-        mCPDialog.dismiss()
-
-        if(position == 0) {
-            val intent: Intent = Intent(mContext, CreateToughtActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
-        }
-
-        if(position == 1) {
-            val intent: Intent = Intent(mContext, CreateArticleActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
-        }
-
-        if(position == 2) {
-            val intent: Intent = Intent(mContext, CreatePostActivity::class.java)
-            intent.putExtra("user", mUser)
-            startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_feed_toolbar, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.bar_create_post -> {
-                setCreatePostDialog()
-                return true
-            }
-            else -> true
-        }
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
 
         if (resultCode == Activity.RESULT_OK) {
 
@@ -147,9 +117,6 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
                         }
                     }
                 }
-                CREATE_POST_ACTIVITY_CODE -> {
-                    getPostLikes()
-                }
             }
 
 
@@ -161,6 +128,15 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
             // The user canceled the operation.
         }
 
+    }
+
+    fun updatePost(post: Post) {
+        mPostList[mAdapterPosition] = post
+        mAdapter.notifyItemChanged(mAdapterPosition)
+    }
+
+    fun updateList() {
+        getPostLikes()
     }
 
     private fun setListeners() {
@@ -184,36 +160,33 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
             mAdapterPosition = pos
 
             if(post.type == "note") {
-                startPostArticleActivity(post)
+                startSinglePost(post)
             }
             if(post.type == "post") {
-                startPostPictureActivity(post)
+                startSinglePost(post)
             }
             if(post.type == "thought") {
-                startPostToughtActivity(post)
+                startSinglePost(post)
             }
         }
     }
 
-    private fun startPostArticleActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SingleArticleActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
-    }
 
-    private fun startPostPictureActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SinglePostActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
-    }
+    private fun startSinglePost(post: Post) {
+        val bundle = Bundle()
 
-    private fun startPostToughtActivity(post: Post) {
-        val intent: Intent = Intent(mContext, SingleThoughtActivity::class.java)
-        intent.putExtra("post_id", post.id)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
+        bundle.putString("post_id", post.id)
+        bundle.putString("frag_tag", this.tag)
+        bundle.putString("frag_name", "HighlightPostsFragment")
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = SinglePostFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.feedViewPager, nextFrag, "singlePost")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun getHighlightListPosts() {
@@ -263,16 +236,7 @@ class HighlightPostsFragment : Fragment(), OnItemClickListener {
             }
     }
 
-    private fun setCreatePostDialog() {
-
-        val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(mContext)
-        if(dialogBuilder != null) {
-            dialogBuilder.adapter = mAdapterDialog
-            dialogBuilder.onItemClickListener = this
-            dialogBuilder.setHeader(R.layout.header_dialog)
-            dialogBuilder.setPadding(16, 16, 16, 48)
-            mCPDialog = dialogBuilder.create()
-            mCPDialog.show()
-        }
+    private fun makeToast(text: String) {
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
     }
 }

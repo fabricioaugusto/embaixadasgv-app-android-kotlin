@@ -6,36 +6,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.balloondigital.egvapp.R
 import android.content.Intent
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.util.Log
-import android.view.ContextMenu
-import android.widget.EditText
-import android.view.View.OnLongClickListener
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.view.animation.LinearInterpolator
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isGone
-import androidx.core.view.isVisible
+import com.balloondigital.egvapp.activity.Edit.TextEditorActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.PermissionConfig
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.theartofdev.edmodo.cropper.CropImage
+import io.github.mthli.knife.KnifeParser
 import io.github.mthli.knife.KnifeText
-import io.github.yavski.fabspeeddial.FabSpeedDial
 import kotlinx.android.synthetic.main.activity_create_article.*
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
@@ -43,20 +33,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongClickListener {
+class CreateArticleActivity : AppCompatActivity(), View.OnClickListener{
 
     private lateinit var mPost: Post
     private lateinit var mUser: User
+    private lateinit var mKnifeText: String
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
     private var mCoverIsSet = false
-    private var mFabIsHide = true
-    private var mSetTitleIsHide = true
-    private var mSetCoverIsHide = true
-    private var mPublishPostIsHide = true
     private val GALLERY_CODE: Int = 200
-    private val ANIMATE_DURATION: Long = 300
+    private val KNIFE_TEXT = 500
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -86,165 +73,28 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         mPost.user_id = mUser.id
         mPost.user = mUser
 
+        mKnifeText = ""
+
         setListeners()
     }
 
     private fun setListeners() {
-        bold.setOnClickListener(this)
-        bold.setOnLongClickListener(this)
-        italic.setOnClickListener(this)
-        italic.setOnLongClickListener(this)
-        underline.setOnClickListener(this)
-        underline.setOnLongClickListener(this)
-        strikethrough.setOnClickListener(this)
-        strikethrough.setOnLongClickListener(this)
-        bullet.setOnClickListener(this)
-        bullet.setOnLongClickListener(this)
-        quote.setOnClickListener(this)
-        quote.setOnLongClickListener(this)
-        link.setOnClickListener(this)
-        link.setOnLongClickListener(this)
-        clear.setOnClickListener(this)
-        clear.setOnLongClickListener(this)
-        layoutArticleModal.setOnClickListener(this)
-        btArticleSaveTitle.setOnClickListener(this)
-        btArticleSaveCover.setOnClickListener(this)
         imgArticleInsertCover.setOnClickListener(this)
         btArticlePublish.setOnClickListener(this)
-
-        val fabListener = object : FabSpeedDial.MenuListener {
-            override fun onPrepareMenu(p0: NavigationMenu?): Boolean {
-                return true
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.fabArticleTitle -> {
-                        showSetTitle()
-                        return false
-                    }
-
-                    R.id.fabArticlePicture -> {
-                        showSetCover()
-                        return true
-                    }
-
-                    R.id.fabArticlePublish -> {
-                        showPublishPost()
-                        return false
-                    }
-                }
-
-                return false
-            }
-
-            override fun onMenuClosed() {
-            }
-
-        }
-
-        fabSpeedDial.setMenuListener(fabListener)
-
-    }
-
-    override fun onLongClick(view: View): Boolean {
-        val id = view.id
-
-        if(id == R.id.bold) {
-            return true
-        }
-
-        if(id == R.id.italic) {
-            return true
-        }
-
-        if(id == R.id.underline) {
-            return true
-        }
-
-        if(id == R.id.strikethrough) {
-            return true
-        }
-
-        if(id == R.id.bullet) {
-            return true
-        }
-
-        if(id == R.id.quote) {
-            return true
-        }
-
-        if(id == R.id.link) {
-            return true
-        }
-
-        if(id == R.id.clear) {
-            return true
-        }
-
-        return false
+        txtOpenKinfe.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
 
         val id = view.id
 
-        if(id == R.id.bold) {
-            knife.bold(!knife.contains(KnifeText.FORMAT_BOLD))
-        }
-
-        if(id == R.id.italic) {
-            knife.italic(!knife.contains(KnifeText.FORMAT_ITALIC))
-        }
-
-        if(id == R.id.underline) {
-            knife.underline(!knife.contains(KnifeText.FORMAT_UNDERLINED))
-        }
-
-        if(id == R.id.strikethrough) {
-            knife.strikethrough(!knife.contains(KnifeText.FORMAT_STRIKETHROUGH))
-        }
-
-        if(id == R.id.bullet) {
-            knife.bullet(!knife.contains(KnifeText.FORMAT_BULLET))
-        }
-
-        if(id == R.id.quote) {
-            knife.quote(!knife.contains(KnifeText.FORMAT_QUOTE))
-        }
-
-        if(id == R.id.link) {
-            showLinkDialog()
-        }
-
-        if(id == R.id.clear) {
-            knife.clearFormats()
-        }
-
-        if(id == R.id.layoutArticleModal) {
-            if(!mSetTitleIsHide) {
-                hideSetTitle()
-            }
-
-            if(!mSetCoverIsHide) {
-                hideSetCover()
-            }
-
-            if(!mPublishPostIsHide) {
-                hidePublishPost()
-            }
-        }
-
-        if(id == R.id.btArticleSaveTitle) {
-            hideSetTitle()
-        }
-
-        if(id == R.id.btArticleSaveCover) {
-            hideSetCover()
-        }
 
         if(id == R.id.imgArticleInsertCover) {
             startGalleryActivity()
+        }
+
+        if(id == R.id.txtOpenKinfe) {
+            startTextEditor()
         }
 
         if(id == R.id.btArticlePublish) {
@@ -252,39 +102,19 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         }
     }
 
+    private fun startTextEditor() {
+        val intent = Intent(this, TextEditorActivity::class.java)
+        if(mKnifeText.isNotEmpty()) {
+            intent.putExtra("knifeText", mKnifeText)
+        }
+        startActivityForResult(intent, KNIFE_TEXT)
+    }
+
     private fun startGalleryActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, GALLERY_CODE)
     }
 
-    private fun showLinkDialog() {
-        val start = knife.selectionStart
-        val end = knife.selectionEnd
-
-        val builder = AlertDialog.Builder(this)
-        builder.setCancelable(false)
-
-        val view = layoutInflater.inflate(R.layout.dialog_link, null, false)
-        val editText = view.findViewById(R.id.edit) as EditText
-        builder.setView(view)
-        builder.setTitle(R.string.dialog_title)
-
-        builder.setPositiveButton(R.string.dialog_button_ok, DialogInterface.OnClickListener { dialog, which ->
-            val link = editText.text.toString().trim { it <= ' ' }
-            if (TextUtils.isEmpty(link)) {
-                return@OnClickListener
-            }
-
-            // When KnifeText lose focus, use this method
-            knife.link(link, start, end)
-        })
-
-        builder.setNegativeButton(R.string.dialog_button_cancel, DialogInterface.OnClickListener { dialog, which ->
-            // DO NOTHING HERE
-        })
-
-        builder.create().show()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -310,6 +140,13 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
                             mCoverIsSet = true
                         }
                     }
+                    KNIFE_TEXT -> {
+                        if(data != null) {
+                            mKnifeText = data.getStringExtra("knifeText")
+                            txtOpenKinfe.text = KnifeParser.fromHtml(mKnifeText)
+                            txtOpenKinfe.alpha = 1F
+                        }
+                    }
                 }
 
             } catch (e: Exception) {
@@ -318,15 +155,8 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.knife_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.undo -> knife.undo()
-            R.id.redo -> knife.redo()
             android.R.id.home -> {
                 onBackPressed()
             }
@@ -338,72 +168,10 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener, OnLongC
         return true
     }
 
-    private fun showSetTitle() {
-        mSetTitleIsHide = false
-
-        layoutArticleModal.alpha = 0F
-        layoutArticleModal.isVisible = true
-        layoutArticleSetTitle.isVisible = true
-        layoutArticleModal.animate().apply {
-            duration = ANIMATE_DURATION
-            alpha(1f)
-            setListener(null)
-            start()
-        }
-    }
-
-    private fun hideSetTitle() {
-        mSetTitleIsHide = true
-        layoutArticleModal.animate().alpha(0F).withEndAction {
-            layoutArticleSetTitle.isGone = true
-            layoutArticleModal.isGone = true
-        }.duration = ANIMATE_DURATION
-    }
-
-    private fun showSetCover() {
-        mSetCoverIsHide = false
-        layoutArticleSetPic.isGone = false
-        layoutArticleModal.isGone = false
-        layoutArticleModal.alpha = 0F
-        layoutArticleModal.animate().apply {
-            duration = ANIMATE_DURATION
-            alpha(1f)
-            setListener(null)
-            start()
-        }
-    }
-
-    private fun hideSetCover() {
-        mSetCoverIsHide = true
-        layoutArticleModal.animate().alpha(0F).withEndAction {
-            layoutArticleSetPic.isGone = true
-            layoutArticleModal.isGone = true
-        }.duration = ANIMATE_DURATION
-    }
-
-    private fun showPublishPost() {
-        mPublishPostIsHide = false
-        layoutArticlePublish.isGone = false
-        layoutArticleModal.isGone = false
-        layoutArticleModal.animate().apply {
-            duration = ANIMATE_DURATION
-            alpha(1f)
-            setListener(null)
-            start()
-        }
-    }
-
-    private fun hidePublishPost() {
-        mSetCoverIsHide = true
-        layoutArticleModal.animate().alpha(0F)
-        layoutArticlePublish.isGone = true
-        layoutArticleModal.isGone = true
-    }
-
     private fun saveUserData() {
 
         val title = etArticleTitle.text.toString()
-        val text = knife.toHtml()
+        val text = mKnifeText
 
         if(title.isEmpty() || text.isEmpty()) {
             makeToast("Você deve preencher todos os campos")

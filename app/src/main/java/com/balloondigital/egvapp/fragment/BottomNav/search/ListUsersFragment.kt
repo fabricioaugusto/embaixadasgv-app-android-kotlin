@@ -83,7 +83,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-
+        menu?.clear()
         inflater.inflate(R.menu.menu_users_toolbar, menu)
         val searchItem = menu?.findItem(R.id.bar_search)
         mSearchView = searchItem?.actionView as SearchView
@@ -190,7 +190,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.searchViewPager, nextFrag)
+            .add(R.id.searchViewPager, nextFrag, "singleUser")
             .addToBackStack(null)
             .commit()
     }

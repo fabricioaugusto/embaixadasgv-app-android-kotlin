@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context=".fragment.BottomNav.agenda.SingleEventFragment">
 
+    <androidx.appcompat.widget.Toolbar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/singlePostToolbar"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+        <ImageButton
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_arrow_back_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btBackPress"
+                android:paddingRight="24dp" android:paddingLeft="16dp" android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+        <TextView
+                android:text="Evento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/textView14"
+                android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
+                tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="80dp"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
     <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/backgroundGreyStrong">
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/backgroundGreyStrong"
+            app:layout_constraintTop_toBottomOf="@+id/singlePostToolbar" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="match_parent"
@@ -33,14 +59,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintTop_toTopOf="parent" android:adjustViewBounds="true"/>
-                <ImageButton
-                        android:src="@drawable/ic_arrow_back_grey"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/btSingleEventBack"
-                        app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                        android:background="@drawable/bg_light_button_circle"
-                        android:layout_marginTop="16dp" android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp" android:padding="6dp"/>
                 <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="75dp"
@@ -48,7 +66,8 @@
                         android:gravity="center"
                         android:background="@drawable/bg_white_box" android:paddingTop="6dp"
                         app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:id="@+id/linearLayout10"
+                        android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
+                        android:id="@+id/linearLayout10"
                         app:layout_constraintTop_toTopOf="@+id/linearLayout11"
                         app:layout_constraintBottom_toBottomOf="@+id/linearLayout11">
                     <TextView
@@ -114,10 +133,12 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        app:layout_constraintTop_toBottomOf="@+id/btEnrollEvent" app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/btEnrollEvent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="16dp" android:layout_marginRight="16dp"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp" android:gravity="center_vertical" android:id="@+id/linearLayout3">
+                        android:layout_marginStart="16dp" android:gravity="center_vertical"
+                        android:id="@+id/linearLayout3">
                     <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" android:id="@+id/txtCountEnrolled"
@@ -176,7 +197,8 @@
                         android:layout_marginRight="16dp"
                         app:layout_constraintHorizontal_bias="0.467"
                         android:textColor="@color/colorText"
-                        android:background="@drawable/bg_white_box" android:paddingLeft="16dp" android:paddingRight="16dp"
+                        android:background="@drawable/bg_white_box" android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
                         android:paddingTop="12dp" android:paddingBottom="12dp" android:layout_marginTop="24dp"
                         app:layout_constraintTop_toBottomOf="@+id/linearLayout3" android:textSize="15sp"/>
                 <TextView
@@ -192,7 +214,8 @@
                         android:orientation="vertical"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content" android:layout_marginTop="8dp"
-                        app:layout_constraintTop_toBottomOf="@+id/textView13" app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView13"
+                        app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
                         app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
                         android:layout_marginRight="16dp" android:id="@+id/linearLayout4">
@@ -282,7 +305,8 @@
                         app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="64dp"
                         android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/textView18"
                         app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginLeft="16dp" android:layout_marginStart="16dp" android:layout_marginRight="16dp"
+                        android:layout_marginLeft="16dp" android:layout_marginStart="16dp"
+                        android:layout_marginRight="16dp"
                         android:layout_marginEnd="16dp" android:background="@drawable/bg_white_box">
                     <TextView
                             android:text="The Grand Connaught Rooms"
@@ -316,4 +340,4 @@
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

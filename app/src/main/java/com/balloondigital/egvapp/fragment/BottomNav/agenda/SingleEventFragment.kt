@@ -77,7 +77,7 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         mapFragment!!.getMapAsync(this)
 
         mBtEnrollEvent = view.findViewById(R.id.btEnrollEvent)
-        mBtBack = view.findViewById(R.id.btSingleEventBack)
+        mBtBack = view.findViewById(R.id.btBackPress)
         mDatabase = MyFirebase.database()
         mEnrollmentList = mutableListOf()
         mUserEnrollmentList = mutableListOf()
@@ -113,8 +113,8 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
             }
         }
 
-        if(id == R.id.btSingleEventBack) {
-            activity!!.supportFragmentManager.beginTransaction().remove(this)
+        if(id == R.id.btBackPress) {
+            activity!!.onBackPressed()
         }
     }
 

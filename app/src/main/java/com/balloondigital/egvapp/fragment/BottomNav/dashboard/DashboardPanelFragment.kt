@@ -18,6 +18,7 @@ import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
 import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
@@ -106,7 +107,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
             startEmbassyAgendaActivity()
         }
 
-        if(id == R.id.layoutDashboardEvent) {
+        if(id == R.id.layoutNextEvent) {
             startSingleEventActivity(mEvent)
         }
     }
@@ -179,29 +180,66 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     }
 
     private fun startEmbassyPhotosActivity() {
-        val intent: Intent = Intent(mContext, EmbassyPhotosActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = EmbassyPhotosFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "embassyPhotos")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEmbassyMembersActivity() {
-        val intent: Intent = Intent(mContext, EmbassyMembersActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = EmbassyMembersFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "embassyMembers")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEmbassyAgendaActivity() {
-        val intent: Intent = Intent(mContext, EmbassyAgendaActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = EmbassyAgendaFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "embassyAgenda")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startSingleEventActivity(event: Event) {
-        val intent: Intent = Intent(mContext, EventProfileActivity::class.java)
-        intent.putExtra("eventId", event.id)
-        intent.putExtra("placeLat", event.lat)
-        intent.putExtra("placeLng", event.long)
-        intent.putExtra("placeName", event.place)
-        startActivity(intent)
+        val lat = event.lat
+        val long = event.long
+
+        val bundle = Bundle()
+        bundle.putString("eventId", event.id)
+        bundle.putString("placeName", event.place)
+
+        if(lat != null && long != null) {
+            bundle.putDouble("placeLat", lat)
+            bundle.putDouble("placeLng", long)
+        }
+
+        val nextFrag = SingleEventFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "singleEmbassyEvent")
+            .addToBackStack(null)
+            .commit()
     }
 }

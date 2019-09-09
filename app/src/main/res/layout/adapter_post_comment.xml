@@ -3,13 +3,14 @@
               xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content" android:paddingTop="12dp" android:paddingBottom="12dp"
-              android:background="@drawable/bg_white_box"
+              android:background="@drawable/bg_card_square"
               android:layout_marginTop="@dimen/keyline_1_minus_8dp">
 
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:gravity="center_vertical" android:layout_marginLeft="12dp">
+            android:layout_height="wrap_content" android:gravity="center_vertical"
+            android:layout_marginLeft="12dp" android:layout_gravity="center_vertical">
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgAdCommentUser"
                 android:layout_width="25dp"
@@ -25,7 +26,15 @@
                 android:text="Fabrício Augusto"
                 android:textColor="@color/colorText"
                 android:textSize="14sp"
-                android:layout_weight="1" android:textStyle="bold"/>
+                android:textStyle="bold"/>
+        <TextView
+                android:id="@+id/txtAdCommentDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-  22/08/2018 às 15:23"
+                android:textColor="#964b5358"
+                android:textSize="12sp"
+                android:layout_marginLeft="6dp" android:layout_weight="1"/>
         <ImageButton
                 android:id="@+id/btAdCommentOptions"
                 android:layout_width="wrap_content"
@@ -55,14 +64,5 @@
                 android:textSize="14sp"
         />
     </LinearLayout>
-    <TextView
-            android:id="@+id/txtAdCommentDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="22/08/2018 às 15:23"
-            android:textColor="#964b5358"
-            android:textSize="12sp"
-            android:layout_marginLeft="12dp"/>
 
 </LinearLayout>

@@ -122,7 +122,7 @@ class ListEventsFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.agendaViewPager, nextFrag)
+            .add(R.id.agendaViewPager, nextFrag, "singleEvent")
             .addToBackStack(null)
             .commit()
     }

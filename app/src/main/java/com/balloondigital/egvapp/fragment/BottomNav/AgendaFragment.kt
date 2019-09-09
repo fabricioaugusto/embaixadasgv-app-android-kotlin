@@ -31,7 +31,7 @@ class AgendaFragment : Fragment() {
 
         val nextFrag = ListEventsFragment()
         activity!!.supportFragmentManager.beginTransaction()
-            .replace(R.id.agendaViewPager, nextFrag, "findThisFragment")
+            .replace(R.id.agendaViewPager, nextFrag, "rootAgendaFragment")
             .addToBackStack(null)
             .commit()
 

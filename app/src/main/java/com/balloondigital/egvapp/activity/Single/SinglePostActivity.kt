@@ -21,6 +21,7 @@ import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.gms.tasks.Task
@@ -28,7 +29,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import io.github.mthli.knife.KnifeParser
-import kotlinx.android.synthetic.main.activity_single_post.*
+import kotlinx.android.synthetic.main.fragment_single_post.*
 
 
 class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
@@ -193,6 +194,20 @@ class SinglePostActivity : AppCompatActivity(), View.OnClickListener {
             .load(user.profile_img!!.toUri())
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(imgPostUser)
+
+        when(mPost.type) {
+            "note" -> {
+                txtPostTitle.isGone = false
+                txtPostTitle.text = mPost.title
+            }
+            "thought" -> {
+                txtPostTitle.isGone = true
+            }
+            "post" ->{
+                txtPostTitle.isGone = true
+            }
+        }
+
 
         txtPostUserName.text = user.name
         txtPostText.text = KnifeParser.fromHtml(mPost.text)
