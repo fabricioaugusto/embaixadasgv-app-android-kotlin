@@ -132,6 +132,7 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
             .setTypeFilter(TypeFilter.CITIES)
             .build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        etCRSearchCity.clearFocus()
     }
 
     fun startChoosePhotoActivity() {

@@ -3,11 +3,13 @@ package com.balloondigital.egvapp.fragment.BottomNav.dashboard
 
 import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.AdapterView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
@@ -21,6 +23,7 @@ import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.EmbassyPhoto
 import com.balloondigital.egvapp.model.User
+import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -63,6 +66,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
 
         mToolbar = view.findViewById(R.id.embassyPhotosToolbar)
         mToolbar.title = ""
+
 
         if (activity is AppCompatActivity) {
             (activity as AppCompatActivity).setSupportActionBar(mToolbar)
@@ -175,7 +179,30 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
             startSinglePhotoActivity(mPhotoList[pos])
         }
 
+        val photoLongSelectListener = AdapterView.OnItemLongClickListener {
+                adapterView, view, pos, posLong ->
+
+
+            val alertbox = AlertDialog.Builder(mContext)
+            val photo = mEmbassyPhotoList[pos]
+
+            if(mUser.embassy_id == photo.embassy_id && mUser.leader)   {
+                alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
+                    if(pos == 0) {
+                        val deletePost = MyFirebase.database()
+                            .collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
+                            .document(photo.id).delete()
+                        confirmDialog("Deletar Publicação",
+                            "Tem certeza que deseja remover esta publicação?", deletePost, pos)
+                    }
+                })
+            }
+            alertbox.show()
+            true
+        }
+
         gvEmbassyPhotos.onItemClickListener = photoSelectListener
+        gvEmbassyPhotos.onItemLongClickListener = photoLongSelectListener
     }
 
     private fun startSinglePhotoActivity(photoUrl: String) {
@@ -188,6 +215,24 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
         val intent: Intent = Intent(mContext, SendEmbassyPhotoActivity::class.java)
         intent.putExtra("user", mUser)
         startActivityForResult(intent, 100)
+    }
+
+    private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>, position: Int) {
+        AlertDialog.Builder(mContext)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setTitle(dialogTitle)
+            .setMessage(dialogMessage)
+            .setPositiveButton("Sim") { dialog, which ->
+                task.addOnCompleteListener {
+                    mEmbassyPhotoList.removeAt(position)
+                    mPhotoList.removeAt(position)
+                    mAdapter.notifyDataSetChanged()
+                }.addOnFailureListener {
+                    Log.d("EGVAPPLOG", it.message.toString())
+                }
+            }
+            .setNegativeButton("Não", null)
+            .show()
     }
 
 }

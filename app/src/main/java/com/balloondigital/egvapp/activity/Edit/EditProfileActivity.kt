@@ -171,6 +171,7 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             .setTypeFilter(TypeFilter.CITIES)
             .build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        etEditProfleSearchCity.clearFocus()
     }
 
 

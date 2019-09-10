@@ -247,6 +247,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             AutocompleteActivityMode.OVERLAY, mPlaceFields
         ).build(this)
         startActivityForResult(intent, AUTOCOMPLETE_REQUEST_CODE)
+        etEventLocation.clearFocus()
     }
 
     private fun getEventPlace(data: Intent?) {
@@ -389,7 +390,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         val datetext = etEventDate.text.toString()
         val timettext = etEventTime.text.toString()
 
-
         if(theme.isEmpty()) {
             makeToast("O campo 'Tema' precia ser preenchido")
             return
@@ -469,7 +469,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                 }
             }
         }
-
     }
 
     private fun startSingleEventActivity(event: Event) {
