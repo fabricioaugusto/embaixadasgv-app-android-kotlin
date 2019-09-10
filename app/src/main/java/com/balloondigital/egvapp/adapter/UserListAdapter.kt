@@ -51,10 +51,10 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
 
             mTextViewName.text = user.name
 
-            if (user.status.isNullOrEmpty()){
+            if (user.occupation.isNullOrEmpty()){
                 mTextViewEmail.text = "Eu sou GV!"
             } else {
-                mTextViewEmail.text = user.status
+                mTextViewEmail.text = user.occupation
             }
 
             if(user.profile_img != null) {

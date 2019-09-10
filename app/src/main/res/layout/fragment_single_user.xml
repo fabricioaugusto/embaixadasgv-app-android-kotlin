@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragment.BottomNav.search.SingleUserFragment">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   tools:context=".fragment.BottomNav.search.SingleUserFragment">
+    <androidx.appcompat.widget.Toolbar
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:theme="?attr/actionBarTheme"
+            android:minHeight="?attr/actionBarSize" android:id="@+id/singlePostToolbar"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+        <ImageButton
+                android:background="@android:color/transparent"
+                app:srcCompat="@drawable/ic_arrow_back_white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/btBackPress"
+                android:paddingRight="24dp" android:paddingLeft="16dp" android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/txtSingleUserToolbar"
+                android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
+                tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="80dp" tools:text="Usuário"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context=".activity.Single.UserProfileActivity" android:background="@color/backgroundGrey">
+            android:layout_height="0dp"
+            tools:context=".activity.Single.UserProfileActivity" android:background="@color/backgroundGrey"
+            app:layout_constraintTop_toBottomOf="@+id/singlePostToolbar" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                      android:orientation="vertical" >
+                      android:orientation="vertical">
 
             <ProgressBar
                     style="?android:attr/progressBarStyle"
@@ -43,7 +68,8 @@
                         android:layout_height="160dp"
                         android:src="@drawable/avatar"
                         app:civ_border_width="5dp"
-                        app:civ_border_color="#FFF" android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
+                        app:civ_border_color="#FFF" android:layout_marginEnd="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginRight="8dp" android:layout_marginStart="8dp"
                         app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
                         app:layout_constraintHorizontal_bias="0.497"
@@ -67,7 +93,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginEnd="32dp" android:layout_marginRight="32dp" android:layout_marginBottom="8dp"
+                        android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
+                        android:layout_marginBottom="8dp"
                         app:layout_constraintBottom_toBottomOf="parent">
                     <LinearLayout
                             android:orientation="horizontal"
@@ -139,7 +166,8 @@
                         <TextView
                                 android:text="Em breve"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:id="@+id/textView9" android:layout_weight="1"
+                                android:layout_height="wrap_content" android:id="@+id/textView9"
+                                android:layout_weight="1"
                                 android:textStyle="bold" android:textColor="@color/colorLink"
                                 android:layout_marginLeft="4dp"
                                 android:textSize="14sp"/>
@@ -212,7 +240,8 @@
                         <TextView
                                 android:text="Sobre Mim"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content" android:id="@+id/textView10" android:textSize="16sp"
+                                android:layout_height="wrap_content" android:id="@+id/textView10"
+                                android:textSize="16sp"
                                 android:textColor="@color/colorText" android:textStyle="bold"/>
                         <TextView
                                 android:text="Nutritional supplementation has become a must in our society today. With the abundance of processed and nutrient-deficient foods, our bodies require extra support for optimum health.  We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
@@ -226,4 +255,4 @@
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

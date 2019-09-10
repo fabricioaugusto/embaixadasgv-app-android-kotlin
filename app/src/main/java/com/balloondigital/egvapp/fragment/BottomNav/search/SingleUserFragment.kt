@@ -17,7 +17,7 @@ import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.User
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.fragment_single_user.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,13 +51,13 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
         return view
     }
 
-
-    override fun onStart() {
-        super.onStart()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         getUserDetails()
         setListeners()
     }
+
 
     override fun onClick(view: View) {
 
@@ -77,6 +77,7 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
             R.id.btUserProfileYt -> openExternalLink(mUser.youtube!!)
             R.id.btUserProfileGit -> openExternalLink("https://github.com/${mUser.github!!}")
             R.id.btUserProfileBh -> openExternalLink("https://www.behance.net/${mUser.behance!!}")
+            R.id.btBackPress -> activity!!.onBackPressed()
         }
     }
 
@@ -91,6 +92,7 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
         btUserProfileBh.setOnClickListener(this)
         btUserProfileTt.setOnClickListener(this)
         btUserProfileYt.setOnClickListener(this)
+        btBackPress.setOnClickListener(this)
     }
 
     private fun getUserDetails() {
@@ -115,6 +117,7 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
                     txtUserProfileCity.text = city
                     txtUserProfileBiography.text = mUser.description
                     txtUserProfileEmbassy.text = mUser.embassy.name
+                    txtSingleUserToolbar.text = mUser.name
 
                     getSocialData()
                 }

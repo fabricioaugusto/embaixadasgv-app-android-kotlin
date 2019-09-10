@@ -123,7 +123,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_feed_toolbar, menu)
         return super.onCreateOptionsMenu(menu, inflater)
     }

@@ -206,7 +206,13 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         txtEventTheme.text = mEvent.theme
         txtEventDescription.text = mEvent.description
         txtModeratorName1.text = mEvent.moderator_1?.name
-        txtModeratorProfession1.text = "Eu sou GV"
+
+        if(mEvent.moderator_1?.occupation != null) {
+            txtModeratorProfession1.text = mEvent.moderator_1?.occupation
+        } else {
+            txtModeratorProfession1.text = "Eu sou GV!"
+        }
+
         txtEventPlace.text = mEvent.place
         txtEventAddress.text = mEvent.address
         txtEventEmassy.text = "${mEvent.embassy!!.name} - ${mEvent.city}, ${mEvent.state_short}"

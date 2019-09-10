@@ -66,7 +66,7 @@ data class User(
             "leader" to leader,
             "manager" to manager,
             "embassy_id" to embassy_id,
-            "embassy" to embassy?.toBasicMap()
+            "embassy" to embassy.toBasicMap()
         )
     }
     @Exclude
@@ -76,6 +76,7 @@ data class User(
             "name" to name,
             "profile_img" to profile_img,
             "embassy_id" to embassy_id,
+            "occupation" to occupation,
             "verified" to verified
         )
     }

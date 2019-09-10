@@ -93,7 +93,7 @@ class MenuItens private constructor() {
 
         const val profile = "profile"
         const val editProfile = "Editar perfil"
-        const val changeProfilePhoto = "Alerar foto de perfil"
+        const val changeProfilePhoto = "Alterar foto de perfil"
         const val changePassword = "Alterar senha"
         const val editSocialNetwork = "Editar redes sociais"
         const val myEmbassy = "Minha embaixada"

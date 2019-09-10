@@ -82,10 +82,10 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         return view
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-        menu?.clear()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.menu_users_toolbar, menu)
-        val searchItem = menu?.findItem(R.id.bar_search)
+        val searchItem = menu.findItem(R.id.bar_search)
         mSearchView = searchItem?.actionView as SearchView
         mSearchView.setOnQueryTextListener(this)
         mSearchView.setOnCloseListener(this)

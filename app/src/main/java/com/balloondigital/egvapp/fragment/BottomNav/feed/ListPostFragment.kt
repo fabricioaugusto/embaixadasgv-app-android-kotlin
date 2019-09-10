@@ -119,8 +119,8 @@ class ListPostFragment : Fragment(), OnItemClickListener {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater) {
-        menu?.clear()
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
         inflater.inflate(R.menu.menu_feed_toolbar, menu)
         return super.onCreateOptionsMenu(menu, inflater)
     }

@@ -222,6 +222,10 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                 mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
             }
 
+            if(post.type == "post") {
+                mTxtAdPostText.text = KnifeParser.fromHtml(post.text)
+            }
+
             if(!post.title.isNullOrEmpty()) {
                 mTxtAdPostTitle.text = post.title
             }

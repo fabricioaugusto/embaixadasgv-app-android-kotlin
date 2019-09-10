@@ -23,7 +23,7 @@
         <TextView
                 android:text="Evento"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textView14"
+                android:layout_height="wrap_content" android:id="@+id/txtSingleUserToolbar"
                 android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
                 tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="80dp"/>
 

@@ -14,6 +14,7 @@ import com.balloondigital.egvapp.model.EmbassyPhoto
 import com.bumptech.glide.Glide
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_my_embassy.*
+import kotlinx.android.synthetic.main.fragment_single_event.*
 
 class SingleEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -95,6 +96,12 @@ class SingleEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         txtEmbassyName.text = mEmbassy.name
         txtEmbassyCity.text = "${mEmbassy.city} - ${mEmbassy.state_short}"
         txtLeaderName.text = mEmbassy.leader?.name
+
+        if(mEmbassy.leader?.occupation != null) {
+            txtLeaderProfession.text = mEmbassy.leader?.occupation
+        } else {
+            txtLeaderProfession.text = "Eu sou GV!"
+        }
 
         if(mEmbassy.cover_img != null) {
             Glide.with(this)
