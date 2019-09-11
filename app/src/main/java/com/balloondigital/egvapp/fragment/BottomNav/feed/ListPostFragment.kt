@@ -158,7 +158,7 @@ class ListPostFragment : Fragment(), OnItemClickListener {
         }
     }
 
-    private fun setCreatePostDialog() {
+    fun setCreatePostDialog() {
 
         val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(mContext)
         if(dialogBuilder != null) {
@@ -190,8 +190,6 @@ class ListPostFragment : Fragment(), OnItemClickListener {
             val rootAllListPost: AllPostsFragment = allPostsfragment as AllPostsFragment
             rootAllListPost.updateList()
         }
-
-
     }
 
     fun setFragmentTags(fragmentName: String, tag: String) {

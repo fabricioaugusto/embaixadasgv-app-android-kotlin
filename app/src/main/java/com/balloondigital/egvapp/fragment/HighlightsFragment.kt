@@ -114,7 +114,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList, mUser)
+        mAdapter = PostListAdapter(mPostList, mUser, activity!!)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 

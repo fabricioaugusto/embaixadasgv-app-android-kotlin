@@ -25,6 +25,7 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.CommentListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
@@ -119,9 +120,14 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             mNavBar.isGone = false
             activity!!.onBackPressed()
         }
+
+        if(id == R.id.txtLikeCount) {
+            startLikesUsersList()
+        }
     }
 
     private fun setListeners() {
+        txtLikeCount.setOnClickListener(this)
         btPostSendComment.setOnClickListener(this)
         btPostOptions.setOnClickListener(this)
         btBackPress.setOnClickListener(this)
@@ -321,6 +327,21 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             }
     }
 
+
+    private fun startLikesUsersList() {
+
+        val bundle = Bundle()
+        bundle.putString("type", "post_likes")
+        bundle.putString("obj_id", mPostID)
+
+        val nextFrag = UsersListFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.feedViewPager, nextFrag, "likeUsersListFTag")
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun updatePostInList() {
 

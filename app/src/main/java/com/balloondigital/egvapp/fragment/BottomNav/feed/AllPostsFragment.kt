@@ -66,7 +66,8 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         val manager = activity!!.supportFragmentManager
         val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
         val rootListPost: ListPostFragment = fragment as ListPostFragment
-        Log.d("EGVAPPLOGVISIBLEFRAGS", rootListPost.tag.toString())
+        Log.d("EGVAPPLOGVISIBLEFRAGS", this.tag.toString())
+        Log.d("EGVAPPLOGVISIBLEFRAGS", R.id.viewpager.toString())
         rootListPost.setFragmentTags("AllPostsFragment", tag!!)
 
     }
@@ -178,7 +179,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList, mUser)
+        mAdapter = PostListAdapter(mPostList, mUser, activity!!)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
@@ -243,6 +244,30 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
                 mSkeletonScreen.hide()
                 mSwipeLayoutFeed.isRefreshing = false
             }
+    }
+
+    fun updateLikes(post: Post, postLike: PostLike, action: String) {
+        if(mPostList.any { p -> p.id == post.id }) {
+
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+
+            if(action == "like") {
+                if(!mUser.post_likes.contains(postLike)) {
+                    mUser.post_likes.add(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.notifyItemChanged(pos)
+            }
+
+            if(action == "unlike") {
+                if(mUser.post_likes.contains(postLike)) {
+                    mUser.post_likes.remove(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.notifyItemChanged(pos)
+            }
+        }
     }
 
     fun updatePost(post: Post) {

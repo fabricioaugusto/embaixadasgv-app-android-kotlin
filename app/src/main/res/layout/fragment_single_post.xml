@@ -103,6 +103,13 @@
                         android:textColor="@color/colorText" android:textSize="16sp" android:clickable="false"
                         android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
                         tools:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "/>
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtLikeCount"
+                        android:layout_marginLeft="16dp" android:layout_marginRight="16dp" android:textSize="16sp"
+                        tools:text="2 pessoas curtiram" android:textStyle="bold" android:layout_marginTop="8dp"
+                        android:paddingTop="8dp" android:paddingBottom="8dp" android:textColor="@color/colorLink"
+                        android:clickable="true"/>
             </LinearLayout>
             <TextView
                     android:text="Nenhum comentário nesta publicação. Seja o primeiro!"

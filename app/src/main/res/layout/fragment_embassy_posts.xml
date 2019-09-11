@@ -11,7 +11,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="center" android:id="@+id/layoutEmptyPost"
-            android:visibility="gone">
+            android:visibility="visible">
         <ImageView
                 app:srcCompat="@drawable/ic_empty_posts"
                 android:layout_width="match_parent"
@@ -31,7 +31,7 @@
         <Button
                 android:text="Seja o primeiro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/button3" android:layout_marginRight="48dp"
+                android:layout_height="wrap_content" android:id="@+id/btWriteFirstPost" android:layout_marginRight="48dp"
                 android:layout_marginLeft="48dp" android:layout_marginTop="24dp"
                 android:background="@color/colorAccent" android:textColor="@color/backgroundGrey"/>
     </LinearLayout>

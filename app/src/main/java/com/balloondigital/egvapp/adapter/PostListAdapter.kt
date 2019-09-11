@@ -1,5 +1,6 @@
 package com.balloondigital.egvapp.adapter
 
+import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -33,18 +34,24 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.core.text.toHtml
 import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
+import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
+import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
+import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
 
-class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {
+class PostListAdapter(postList: MutableList<Post>, user: User, activity: FragmentActivity): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {
 
     private val mPostList: MutableList<Post> = postList
     private val mUser: User = user
+    private val mActivity = activity
     private lateinit var mContext: Context
     var onItemClick: ((post: Post, position: Int) -> Unit)? = null
     private val THOUGHT: Int = 0
@@ -167,10 +174,10 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
 
                         mLikesCollection.add(postLike.toMap()).addOnSuccessListener {
                             postLike.id = it.id
-                            mPostList[position].post_likes = numLikes
+                            post.post_likes = numLikes
+                            updatePosts(post, postLike, position, "like")
                             it.update("id", it.id).addOnSuccessListener {
                                 mPostCollection.document(post.id).update("post_likes", post.post_likes)
-                                mListLikes.add(postLike)
                                 mLikeIsProcessing = false
                             }
                         }
@@ -192,14 +199,15 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                             mListLikes.remove(list[0])
                             val numLikes = post.post_likes-1
 
-                            mPostList[position].post_likes = numLikes
-                            notifyItemChanged(position)
-
                             mLikesCollection.document(list[0].id).delete()
                                 .addOnSuccessListener {
                                     mPostCollection.document(post.id).update("post_likes", numLikes)
                                     post.post_likes = numLikes
+                                    updatePosts(post, list[0], position, "unlike")
                                     mLikeIsProcessing = false
+                                }
+                                .addOnFailureListener {
+                                    Log.d("EGVAPPLOGFAIL", it.message.toString())
                                 }
                         }
 
@@ -261,6 +269,25 @@ class PostListAdapter(postList: MutableList<Post>, user: User): RecyclerView.Ada
                 }
                 alertbox.show()
             })
+        }
+
+        private fun updatePosts(post: Post, postLike: PostLike, pos: Int, action: String) {
+
+            val fragTagPrefix = "android:switcher:${R.id.viewpager}"
+
+            val manager = mActivity.supportFragmentManager
+            val embassyPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:1")
+            val allPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:2")
+
+            if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
+                val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment
+                rootEmbassyListPost.updateLikes(post, postLike, action)
+            }
+
+            if(allPostsfragment != null && allPostsfragment.isVisible) {
+                val rootAllListPost: AllPostsFragment = allPostsfragment as AllPostsFragment
+                rootAllListPost.updateLikes(post, postLike, action)
+            }
         }
 
         private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>, position: Int) {

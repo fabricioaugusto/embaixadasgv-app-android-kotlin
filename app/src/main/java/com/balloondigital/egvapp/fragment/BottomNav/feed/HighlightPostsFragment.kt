@@ -68,7 +68,7 @@ class HighlightPostsFragment : Fragment() {
         val manager = activity!!.supportFragmentManager
         val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
         val rootListPost: ListPostFragment = fragment as ListPostFragment
-        Log.d("EGVAPPLOGVISIBLEFRAGS", rootListPost.tag.toString())
+        Log.d("EGVAPPLOGVISIBLEFRAGS", this.tag.toString())
         rootListPost.setFragmentTags("HighlightPostsFragment", tag!!)
     }
 
@@ -145,7 +145,7 @@ class HighlightPostsFragment : Fragment() {
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList, mUser)
+        mAdapter = PostListAdapter(mPostList, mUser, activity!!)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 

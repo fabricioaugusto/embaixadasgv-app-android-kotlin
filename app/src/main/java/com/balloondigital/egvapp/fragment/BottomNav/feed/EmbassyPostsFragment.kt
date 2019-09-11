@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
@@ -47,12 +48,14 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class EmbassyPostsFragment : Fragment(), OnItemClickListener {
+class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListener {
+
 
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mRootListPost: ListPostFragment
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mAdapterDialog: CreatePostDialogAdapter
@@ -68,9 +71,8 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
 
         val manager = activity!!.supportFragmentManager
         val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
-        val rootListPost: ListPostFragment = fragment as ListPostFragment
-        Log.d("EGVAPPLOGVISIBLEFRAGS", rootListPost.tag.toString())
-        rootListPost.setFragmentTags("EmbassyPostsFragment", tag!!)
+        mRootListPost = fragment as ListPostFragment
+        mRootListPost.setFragmentTags("EmbassyPostsFragment", tag!!)
 
     }
 
@@ -94,7 +96,6 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
         mDatabase = MyFirebase.database()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
-
         // Inflate the layout for this fragment
         return view
     }
@@ -126,6 +127,13 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
             val intent: Intent = Intent(mContext, CreatePostActivity::class.java)
             intent.putExtra("user", mUser)
             startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
+        }
+    }
+
+    override fun onClick(view: View) {
+        val id = view.id
+        if(id == R.id.btWriteFirstPost) {
+            mRootListPost.setCreatePostDialog()
         }
     }
 
@@ -181,13 +189,15 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
 
     private fun setListeners() {
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getPostLikes() })
+        btWriteFirstPost.setOnClickListener(this)
     }
 
     private fun setRecyclerView() {
 
-        mAdapter = PostListAdapter(mPostList, mUser)
+        mAdapter = PostListAdapter(mPostList, mUser, activity!!)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mRecyclerView.itemAnimator = null
 
         mSkeletonScreen = Skeleton.bind(mRecyclerView)
             .adapter(mAdapter)
@@ -264,6 +274,31 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
     fun updatePost(post: Post) {
         mPostList[mAdapterPosition] = post
         mAdapter.notifyItemChanged(mAdapterPosition)
+    }
+
+    fun updateLikes(post: Post, postLike: PostLike, action: String) {
+
+        if(mPostList.any { p -> p.id == post.id }) {
+
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+
+            if(action == "like") {
+                if(!mUser.post_likes.contains(postLike)) {
+                    mUser.post_likes.add(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.notifyItemChanged(pos)
+            }
+
+            if(action == "unlike") {
+                if(mUser.post_likes.contains(postLike)) {
+                    mUser.post_likes.remove(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.notifyItemChanged(pos)
+            }
+        }
     }
 
     fun updateList() {
