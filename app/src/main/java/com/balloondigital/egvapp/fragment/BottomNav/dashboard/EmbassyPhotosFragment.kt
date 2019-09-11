@@ -31,7 +31,11 @@ import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
 import kotlinx.android.synthetic.main.activity_embassy_photos.*
+import kotlinx.android.synthetic.main.activity_embassy_photos.gvEmbassyPhotos
+import kotlinx.android.synthetic.main.activity_embassy_photos.swipeLayoutEmbassyPhotos
+import kotlinx.android.synthetic.main.fragment_embassy_photos.*
 import kotlinx.android.synthetic.main.fragment_single_post.*
+import kotlinx.android.synthetic.main.fragment_single_post.btBackPress
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -161,12 +165,17 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
             .get()
             .addOnSuccessListener {
                     querySnapshot ->
-                for(document in querySnapshot.documents) {
-                    val embassyPhoto = document.toObject(EmbassyPhoto::class.java)
-                    if(embassyPhoto != null) {
-                        mPhotoList.add(embassyPhoto.picture.toString())
-                        mEmbassyPhotoList.add(embassyPhoto)
+                if(querySnapshot.size() > 0) {
+                    for(document in querySnapshot.documents) {
+                        val embassyPhoto = document.toObject(EmbassyPhoto::class.java)
+                        if(embassyPhoto != null) {
+                            mPhotoList.add(embassyPhoto.picture.toString())
+                            mEmbassyPhotoList.add(embassyPhoto)
+                        }
                     }
+                    layoutEmptyPost.isGone = true
+                } else {
+                    layoutEmptyPost.isGone = false
                 }
                 mAdapter = GridPhotosAdapter(mContext, R.layout.adapter_grid_photo, mPhotoList)
                 mAdapter.hasStableIds()

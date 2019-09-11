@@ -36,6 +36,7 @@ import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
+import kotlinx.android.synthetic.main.fragment_embassy_posts.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,11 +95,15 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
-        getPostLikes()
-        setListeners()
-
         // Inflate the layout for this fragment
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        getPostLikes()
+        setListeners()
     }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
@@ -229,17 +234,23 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener {
             .whereEqualTo("user_verified", false)
             .whereEqualTo("embassy_id", mUser.embassy_id)
             .orderBy("date", Query.Direction.DESCENDING)
-            .get().addOnSuccessListener { documentSnapshot ->
+            .get().addOnSuccessListener { querySnapshot ->
 
                 mPostList.clear()
 
-                if(documentSnapshot != null) {
-                    for(document in documentSnapshot.documents) {
-                        val post: Post? = document.toObject(Post::class.java)
-                        if(post != null) {
-                            mPostList.add(post)
+                if(querySnapshot != null) {
+                    if(querySnapshot.size() > 0) {
+                        for(document in querySnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
                         }
+                        layoutEmptyPost.isGone = true
+                    } else {
+                        layoutEmptyPost.isGone = false
                     }
+
                 }
 
                 mAdapter.notifyDataSetChanged()

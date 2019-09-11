@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -21,6 +22,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.fragment_list_events.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,10 +61,13 @@ class ListEventsFragment : Fragment() {
 
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getEventList() })
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         getEventList()
         setRecyclerView(mEventList)
-
-        return view
     }
 
     private fun getEventList() {
@@ -73,12 +78,18 @@ class ListEventsFragment : Fragment() {
                 mEventList.clear()
 
                 if(documentSnapshot != null) {
-                    for(document in documentSnapshot) {
-                        val event: Event? = document.toObject(Event::class.java)
-                        if(event != null) {
-                            mEventList.add(event)
+                    if(documentSnapshot.size() > 0) {
+                        for(document in documentSnapshot) {
+                            val event: Event? = document.toObject(Event::class.java)
+                            if(event != null) {
+                                mEventList.add(event)
+                            }
                         }
+                        layoutEmptyEvents.isGone = true
+                    } else {
+                        layoutEmptyEvents.isGone = false
                     }
+
                 }
 
                 mAdapter.notifyDataSetChanged()

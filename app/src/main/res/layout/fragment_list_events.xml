@@ -37,6 +37,29 @@
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
                   android:orientation="vertical" android:background="@color/backgroundGreyStrong">
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:gravity="center" android:id="@+id/layoutEmptyEvents"
+                android:visibility="gone">
+            <ImageView
+                    app:srcCompat="@drawable/ic_empty_events"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" android:id="@+id/imageView15"/>
+            <TextView
+                    android:text="Que pena... :/"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/textView7" android:gravity="center_horizontal"
+                    android:textColor="@color/colorText" android:textStyle="bold" android:layout_marginTop="8dp"
+                    android:textSize="20sp"/>
+            <TextView
+                    android:text="Não foi encontrado nenhum evento das embaixadas. Que tal você e o seu líder bolarem algo interessante? "
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/textView11"
+                    android:gravity="center_horizontal" android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp"
+                    android:textColor="@color/colorSubText" android:layout_marginTop="@dimen/keyline_1_minus_8dp"/>
+        </LinearLayout>
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
