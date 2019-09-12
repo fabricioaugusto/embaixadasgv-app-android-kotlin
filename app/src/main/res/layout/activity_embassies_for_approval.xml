@@ -24,8 +24,8 @@
             android:layout_alignParentTop="true" android:paddingTop="32dp" android:paddingBottom="32dp"
             android:paddingRight="24dp" android:paddingLeft="24dp" android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true" android:background="@color/backgroundModal"
-            android:gravity="center" android:clickable="true" android:visibility="gone"
-            android:id="@+id/layoutToughtModal" android:focusable="true" android:alpha="0"
+            android:gravity="center" android:clickable="true" android:visibility="visible"
+            android:id="@+id/layoutToughtModal" android:focusable="true" android:alpha="1"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content" android:background="@color/backgroundGrey"
                 android:paddingLeft="24dp" android:paddingRight="24dp" android:paddingTop="32dp"
                 android:paddingBottom="32dp" android:id="@+id/layoutToughtPublish" android:clickable="true"
-                android:visibility="gone" android:focusable="true" android:gravity="center_horizontal">
+                android:visibility="visible" android:focusable="true" android:gravity="center_horizontal">
             <TextView
                     android:text="Embaixada Geralçao de Valor"
                     android:layout_width="match_parent"
@@ -112,6 +112,17 @@
                     app:spinning_bar_color="#FFF"
                     app:spinning_bar_padding="6dp"
                     android:background="@drawable/bg_circular_progressbar"
+                    android:textColor="@color/backgroundGrey"
+                    android:layout_marginTop="16dp"/>
+            <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                    android:text="Liberar para a lista"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/btEmbassyRelease"
+                    app:finalCornerAngle="50dp"
+                    app:initialCornerAngle="0dp"
+                    app:spinning_bar_color="#FFF"
+                    app:spinning_bar_padding="6dp"
+                    android:background="@drawable/bg_circular_progressbar_blue"
                     android:textColor="@color/backgroundGrey"
                     android:layout_marginTop="16dp"/>
         </LinearLayout>

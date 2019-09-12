@@ -101,6 +101,10 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         if(id == R.id.btEmbassyApprove) {
             approveEmbassy()
         }
+
+        if(id == R.id.btEmbassyRelease) {
+            releaseEmbassy()
+        }
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -114,6 +118,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     private fun setListeners() {
         layoutToughtModal.setOnClickListener(this)
         btEmbassyApprove.setOnClickListener(this)
+        btEmbassyRelease.setOnClickListener(this)
     }
 
     private fun searchEmbassy(str: String) {
@@ -174,6 +179,10 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
 
     private fun showEmbassyInfo(embassy: Embassy) {
 
+        if(mEmbassy.status == "released") {
+            btEmbassyRelease.isGone = true
+        }
+
         mEmbassy = embassy
 
         txtApprEmbassyName.text = mEmbassy.name
@@ -228,6 +237,24 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
                 mAdapter.notifyDataSetChanged()
 
                 inviteLeader()
+            }
+    }
+
+    private fun releaseEmbassy() {
+
+        mEmbassy.status = "released"
+
+        btEmbassyRelease.startAnimation()
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .document(mEmbassy.id)
+            .set(mEmbassy.toMap())
+            .addOnSuccessListener {
+                makeToast("Embaixada liberada!")
+                btEmbassyRelease.doneLoadingAnimation(
+                    resources.getColor(R.color.colorGreen),
+                    Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                )
             }
     }
 
