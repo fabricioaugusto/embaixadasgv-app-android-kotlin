@@ -12,6 +12,7 @@ import android.widget.ImageButton
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.feed.UsersListFragment
 import com.balloondigital.egvapp.model.Enrollment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -43,6 +44,7 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
     private lateinit var mUser: User
     private lateinit var mEvent: Event
     private lateinit var mEventId: String
+    private var mRootView: Int = 0
     private lateinit var mCurrentUser: FirebaseUser
     private lateinit var mUserEnrollment: Enrollment
     private lateinit var mEnrollmentList: MutableList<Enrollment>
@@ -71,6 +73,7 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
             mPlaceLat = bundle.getDouble("placeLat", -33.852)
             mPlaceLng = bundle.getDouble("placeLng",151.211)
             mPlaceName = bundle.getString("placeName","defaultPlace")
+            mRootView = bundle.getInt("rootViewer")
         }
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
@@ -82,14 +85,18 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         mEnrollmentList = mutableListOf()
         mUserEnrollmentList = mutableListOf()
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         if(MyFirebase.auth().currentUser != null) {
             mCurrentUser = MyFirebase.auth().currentUser!!
             getCurrentUserDetails(mCurrentUser.uid)
         }
 
         setListeners()
-
-        return view
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -116,9 +123,14 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         if(id == R.id.btBackPress) {
             activity!!.onBackPressed()
         }
+
+        if(id == R.id.txtCountEnrolled) {
+            startEnrollmentUserList()
+        }
     }
 
     private fun setListeners() {
+        txtCountEnrolled.setOnClickListener(this)
         mBtEnrollEvent.setOnClickListener(this)
         mBtBack.setOnClickListener(this)
     }
@@ -326,5 +338,21 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
             }
 
         }
+    }
+
+    private fun startEnrollmentUserList() {
+
+        val bundle = Bundle()
+        bundle.putString("type", "enrollments")
+        bundle.putString("obj_id", mEventId)
+        bundle.putInt("rootViewer", mRootView)
+
+        val nextFrag = UsersListFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(mRootView, nextFrag, "$mRootView:enrollmentUsers")
+            .addToBackStack(null)
+            .commit()
     }
 }

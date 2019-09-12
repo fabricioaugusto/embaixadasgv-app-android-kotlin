@@ -461,24 +461,20 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                                     )
 
                                     Handler().postDelayed({
-                                        startSingleEventActivity(mEvent)
-                                    }, 500)
+                                        val returnIntent = Intent()
+                                        returnIntent.putExtra("eventId", mEvent.id)
+                                        returnIntent.putExtra("placeName", mEvent.place)
+                                        returnIntent.putExtra("placeLat", mEvent.lat)
+                                        returnIntent.putExtra("placeLng", mEvent.long)
+                                        setResult(Activity.RESULT_OK, returnIntent)
+                                        finish()
+                                    }, 100)
                                 }
                         }
                     })
                 }
             }
         }
-    }
-
-    private fun startSingleEventActivity(event: Event) {
-        val intent: Intent = Intent(this, EventProfileActivity::class.java)
-        intent.putExtra("eventId", event.id)
-        intent.putExtra("placeLat", event.lat)
-        intent.putExtra("placeLng", event.long)
-        intent.putExtra("placeName", event.place)
-        startActivity(intent)
-        finish()
     }
 
     private fun makeToast(text: String) {

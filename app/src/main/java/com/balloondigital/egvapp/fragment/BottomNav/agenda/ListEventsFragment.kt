@@ -2,7 +2,6 @@ package com.balloondigital.egvapp.fragment.BottomNav.agenda
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.EventListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
@@ -123,6 +121,7 @@ class ListEventsFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("eventId", event.id)
         bundle.putString("placeName", event.place)
+        bundle.putInt("rootViewer", R.id.agendaViewPager)
 
         if(lat != null && long != null) {
             bundle.putDouble("placeLat", lat)
@@ -133,7 +132,7 @@ class ListEventsFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.agendaViewPager, nextFrag, "singleEvent")
+            .add(R.id.agendaViewPager, nextFrag, "${R.id.agendaViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
     }

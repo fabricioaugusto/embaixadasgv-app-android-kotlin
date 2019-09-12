@@ -67,6 +67,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
                         if(data != null) {
                             mKnifeText = data.getStringExtra("knifeText")
                             txtOpenKinfe.text = KnifeParser.fromHtml(mKnifeText)
+                            txtOpenKinfe.textSize = 24F
                             txtOpenKinfe.alpha = 1F
                         }
                     }

@@ -126,6 +126,11 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mNavBar.isGone = false
+    }
+
     private fun setListeners() {
         txtLikeCount.setOnClickListener(this)
         btPostSendComment.setOnClickListener(this)
@@ -267,14 +272,23 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             "post" -> {
                 txtPostTitle.isGone = true
             }
-            "thoght" -> {
+            "thought" -> {
                 txtPostTitle.isGone = true
                 imgPostUser.isGone = true
+                txtPostText.textSize = 24F
             }
         }
 
         val postDate = Converters.dateToString(mPost.date!!)
         txtPostDate.text = "${postDate.date} ${postDate.monthAbr} ${postDate.fullyear} às ${postDate.hours}:${postDate.minutes}"
+
+        if(mPost.post_likes > 0) {
+            if(mPost.post_likes == 1) {
+                txtLikeCount.text = "1 curtida"
+            } else {
+                txtLikeCount.text = "${mPost.post_likes} curtidas"
+            }
+        }
 
         val user: User = mPost.user
 
@@ -333,12 +347,13 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putString("type", "post_likes")
         bundle.putString("obj_id", mPostID)
+        bundle.putInt("rootViewer", R.id.feedViewPager)
 
         val nextFrag = UsersListFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.feedViewPager, nextFrag, "likeUsersListFTag")
+            .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:likeUsers")
             .addToBackStack(null)
             .commit()
     }
