@@ -79,42 +79,47 @@ class MainActivity : AppCompatActivity() {
         val transaction: FragmentTransaction = manager.beginTransaction()
         val singlePost: Fragment? = manager.findFragmentByTag("singlePost")
         val singleUserPost: Fragment? = manager.findFragmentByTag("singlePostUser")
-        val singleEvent: Fragment? = manager.findFragmentByTag("singleEvent")
-        val singleEmbassyEvent: Fragment? = manager.findFragmentByTag("singleEmbassyEvent")
+        val singleEvent: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:singleEvent")
+        val singleEmbassyEvent: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleEvent")
         val embassyMembers: Fragment? = manager.findFragmentByTag("embassyMembers")
         val embassyAgenda: Fragment? = manager.findFragmentByTag("embassyAgenda")
         val embassyPhotos: Fragment? = manager.findFragmentByTag("embassyPhotos")
+        val usersEnrollments: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:enrollmentUsers")
+        val usersEmbassyEnrollments: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:enrollmentUsers")
+        val usersLikes: Fragment? = manager.findFragmentByTag("${R.id.feedViewPager}:likeUsers")
         val singleUser: Fragment? = manager.findFragmentByTag("singleUser")
         val singleEmbassyUser: Fragment? = manager.findFragmentByTag("singleEmbassyUser")
+        val singleLikeUser: Fragment? = manager.findFragmentByTag("${R.id.feedViewPager}:singleUser")
+        val singleEnrollmentUser: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:singleUser")
+        val singleMenuUser: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleUser")
 
         if(mTabSelected == 0) {
 
-            if (singleEmbassyEvent != null && singleEmbassyEvent.isVisible) {
-                makeToast("embassyPhotos is Visible")
-                transaction.remove(singleEmbassyEvent).commit()
-                return
-            }
-
             if (singleEmbassyUser != null && singleEmbassyUser.isVisible) {
-                makeToast("embassyPhotos is Visible")
                 transaction.remove(singleEmbassyUser).commit()
                 return
             }
 
+            if (usersEmbassyEnrollments != null && usersEmbassyEnrollments.isVisible) {
+                transaction.remove(usersEmbassyEnrollments).commit()
+                return
+            }
+
+            if (singleEmbassyEvent != null && singleEmbassyEvent.isVisible) {
+                transaction.remove(singleEmbassyEvent).commit()
+                return
+            }
 
             if (embassyMembers != null && embassyMembers.isVisible) {
-                makeToast("embassyMembers is Visible")
                 transaction.remove(embassyMembers).commit()
                 return
             }
 
             if (embassyAgenda != null && embassyAgenda.isVisible) {
-                makeToast("embassyAgenda is Visible")
                 transaction.remove(embassyAgenda).commit()
                 return
             }
             if (embassyPhotos != null && embassyPhotos.isVisible) {
-                makeToast("embassyPhotos is Visible")
                 transaction.remove(embassyPhotos).commit()
                 return
             }
@@ -122,33 +127,84 @@ class MainActivity : AppCompatActivity() {
 
         if(mTabSelected == 1) {
             if (singleUser != null && singleUser.isVisible) {
-                makeToast("singleUser is Visible")
                 transaction.remove(singleUser).commit()
                 return
             }
         }
 
         if(mTabSelected == 2) {
-            if (singlePost != null && singlePost.isVisible) {
-                makeToast("singlePost is Visible")
-                transaction.remove(singlePost).commit()
+
+            if (singleLikeUser != null && singleLikeUser.isVisible) {
+                transaction.remove(singleLikeUser).commit()
                 return
             }
+
             if (singleUserPost != null && singleUserPost.isVisible) {
-                makeToast("singleUserPost is Visible")
                 transaction.remove(singleUserPost).commit()
                 return
             }
+
+            if (usersLikes != null && usersLikes.isVisible) {
+                transaction.remove(usersLikes).commit()
+                return
+            }
+
+            if (singlePost != null && singlePost.isVisible) {
+                transaction.remove(singlePost).commit()
+                return
+            }
+
         }
 
         if(mTabSelected == 3) {
+            if (singleEnrollmentUser != null && singleEnrollmentUser.isVisible) {
+                transaction.remove(singleEnrollmentUser).commit()
+                return
+            }
+
+            if (usersEnrollments != null && usersEnrollments.isVisible) {
+                transaction.remove(usersEnrollments).commit()
+                return
+            }
+
             if (singleEvent != null && singleEvent.isVisible) {
-                makeToast("singleEvent is Visible")
                 transaction.remove(singleEvent).commit()
                 return
             }
         }
 
+        if(mTabSelected == 4) {
+
+            val usersEventEnrollments: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:enrollmentUsers")
+            val singleMenuEvent: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEvent")
+            val singleEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEmbassy")
+            val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
+
+            if (singleMenuUser != null && singleMenuUser.isVisible) {
+                transaction.remove(singleMenuUser).commit()
+                return
+            }
+
+            if (singleEmbassy != null && singleEmbassy.isVisible) {
+                transaction.remove(singleEmbassy).commit()
+                return
+            }
+
+            if (usersEventEnrollments != null && usersEventEnrollments.isVisible) {
+                transaction.remove(usersEventEnrollments).commit()
+                return
+            }
+
+            if (singleMenuEvent != null && singleMenuEvent.isVisible) {
+                transaction.remove(singleMenuEvent).commit()
+                return
+            }
+
+            if (listEmbassy != null && listEmbassy.isVisible) {
+                transaction.remove(listEmbassy).commit()
+                return
+            }
+        }
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {

@@ -143,6 +143,7 @@ class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putString("eventId", event.id)
         bundle.putString("placeName", event.place)
+        bundle.putInt("rootViewer", R.id.dashboardViewPager)
 
         if(lat != null && long != null) {
             bundle.putDouble("placeLat", lat)
@@ -153,7 +154,7 @@ class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "singleEmbassyEvent")
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
     }

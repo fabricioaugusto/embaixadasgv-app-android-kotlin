@@ -50,6 +50,7 @@ class UsersListFragment : Fragment(), View.OnClickListener {
     private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mListUsers: MutableList<User>
+    private var mRootView: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,6 +64,7 @@ class UsersListFragment : Fragment(), View.OnClickListener {
         if (bundle != null) {
             mObjID = bundle.getString("obj_id", "defaultId")
             mType = bundle.getString("type", "defaultType")
+            mRootView = bundle.getInt("rootViewer")
         }
 
         mDatabase = MyFirebase.database()
@@ -149,7 +151,7 @@ class UsersListFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.feedViewPager, nextFrag, "singleLikeUserFtag")
+            .add(mRootView, nextFrag, "$mRootView:singleUser")
             .addToBackStack(null)
             .commit()
     }
