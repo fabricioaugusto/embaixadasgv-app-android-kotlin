@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -32,6 +32,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/txtAdEmbassyCity"
                     android:textColor="@color/colorSubText"/>
+            <TextView
+                    android:text="Na lista pública"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtAdEmbassyInList"
+                    android:drawableLeft="@drawable/ic_check_circle_green" android:textStyle="bold"
+                    android:textColor="@color/colorGreen" android:drawablePadding="2dp" android:visibility="gone"
+                    tools:visibility="visible"/>
         </LinearLayout>
 
     </LinearLayout>
