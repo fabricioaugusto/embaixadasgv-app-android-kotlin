@@ -290,6 +290,25 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
             }
         }
 
+        private fun removePosts(post: Post) {
+
+            val fragTagPrefix = "android:switcher:${R.id.viewpager}"
+
+            val manager = mActivity.supportFragmentManager
+            val embassyPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:1")
+            val allPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:2")
+
+            if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
+                val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment
+                rootEmbassyListPost.removePost(post)
+            }
+
+            if(allPostsfragment != null && allPostsfragment.isVisible) {
+                val rootAllListPost: AllPostsFragment = allPostsfragment as AllPostsFragment
+                rootAllListPost.removePost(post)
+            }
+        }
+
         private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>, position: Int) {
             AlertDialog.Builder(context)
                 .setIcon(android.R.drawable.ic_dialog_alert)
@@ -297,10 +316,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
                 .setMessage(dialogMessage)
                 .setPositiveButton("Sim") { dialog, which ->
                     task.addOnCompleteListener {
-                        mPostList.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeChanged(position, mPostList.size)
-                        notifyDataSetChanged()
+                        removePosts(mPostList[position])
                     }.addOnFailureListener {
                         Log.d("EGVAPPLOG", it.message.toString())
                     }

@@ -172,7 +172,6 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
                 }
                 CREATE_POST_ACTIVITY_CODE -> {
                     getPostLikes()
-                    makeToast("Chegou aqui também")
                 }
             }
 
@@ -272,8 +271,14 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     }
 
     fun updatePost(post: Post) {
-        mPostList[mAdapterPosition] = post
-        mAdapter.notifyItemChanged(mAdapterPosition)
+
+        if(mPostList.any { p -> p.id == post.id }) {
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+            mPostList[pos] = post
+            mAdapter.notifyItemChanged(pos)
+        }
+
     }
 
     fun updateLikes(post: Post, postLike: PostLike, action: String) {
@@ -298,6 +303,20 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
                 mPostList[pos] = post
                 mAdapter.notifyItemChanged(pos)
             }
+        }
+    }
+
+    fun removePost(post: Post) {
+
+        if(mPostList.any { p -> p.id == post.id }) {
+
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+
+            mPostList.removeAt(pos)
+            mAdapter.notifyItemRemoved(pos)
+            mAdapter.notifyItemRangeChanged(pos, mPostList.size)
+            mAdapter.notifyDataSetChanged()
         }
     }
 

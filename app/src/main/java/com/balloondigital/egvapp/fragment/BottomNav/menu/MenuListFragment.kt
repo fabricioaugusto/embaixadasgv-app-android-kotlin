@@ -15,6 +15,7 @@ import android.widget.ListView
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
+import com.balloondigital.egvapp.activity.Create.CreateBulletinActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
 import com.balloondigital.egvapp.activity.Edit.*
 import com.balloondigital.egvapp.activity.Menu.*
@@ -177,7 +178,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
-                MenuItens.createBulletin -> startUserProfileActivity()
+                MenuItens.createBulletin -> startCreateBulletinActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startEmbassyListActivity()
@@ -316,6 +317,12 @@ class MenuListFragment : Fragment() {
 
     private fun startEmbassyForApprovalActivity() {
         val intent: Intent = Intent(mContext, EmbassiesForApprovalActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+    }
+
+    private fun startCreateBulletinActivity() {
+        val intent: Intent = Intent(mContext, CreateBulletinActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
     }

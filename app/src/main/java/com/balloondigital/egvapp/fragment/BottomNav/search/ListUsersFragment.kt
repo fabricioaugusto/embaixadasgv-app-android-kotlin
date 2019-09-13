@@ -96,9 +96,9 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.bar_search -> {
-                return true
+                true
             }
-            else -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

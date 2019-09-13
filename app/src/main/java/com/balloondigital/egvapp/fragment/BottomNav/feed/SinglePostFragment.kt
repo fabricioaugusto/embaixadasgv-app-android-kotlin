@@ -31,7 +31,10 @@ import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseUser
@@ -153,8 +156,6 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             .document(mPostID)
             .addSnapshotListener {
                 snapshot, e ->
-
-                makeToast("Post Foi para o listener")
 
                 if (e != null) {
                     return@addSnapshotListener
@@ -292,9 +293,13 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
         val user: User = mPost.user
 
+        val requestOptions: RequestOptions = RequestOptions()
+        val options = requestOptions.transforms(CenterCrop(), RoundedCorners(60))
+
         Glide.with(this)
             .load(user.profile_img!!.toUri())
             .transition(DrawableTransitionOptions.withCrossFade())
+            .apply(options)
             .into(imgPostUser)
 
         txtPostUserName.text = user.name
@@ -360,25 +365,27 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
     private fun updatePostInList() {
 
-        if(mFragName == "HighlightPostsFragment") {
-            val manager = activity!!.supportFragmentManager
-            val fragment: Fragment? = manager.findFragmentByTag(mTag)
-            val rootListPost: HighlightPostsFragment = fragment as HighlightPostsFragment
-            rootListPost.updatePost(mPost)
+
+        val fragTagPrefix = "android:switcher:${R.id.viewpager}"
+
+        val manager = activity!!.supportFragmentManager
+        val highLightPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:0")
+        val embassyPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:1")
+        val allPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:2")
+
+        if(highLightPostsfragment != null && highLightPostsfragment.isVisible) {
+            val rootHighlightListPosts: HighlightPostsFragment = highLightPostsfragment as HighlightPostsFragment
+            rootHighlightListPosts.updatePost(mPost)
         }
 
-        if(mFragName == "EmbassyPostsFragment") {
-            val manager = activity!!.supportFragmentManager
-            val fragment: Fragment? = manager.findFragmentByTag(mTag)
-            val rootListPost: EmbassyPostsFragment = fragment as EmbassyPostsFragment
-            rootListPost.updatePost(mPost)
+        if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
+            val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment
+            rootEmbassyListPost.updatePost(mPost)
         }
 
-        if(mFragName == "AllPostsFragment") {
-            val manager = activity!!.supportFragmentManager
-            val fragment: Fragment? = manager.findFragmentByTag(mTag)
-            val rootListPost: AllPostsFragment = fragment as AllPostsFragment
-            rootListPost.updatePost(mPost)
+        if(allPostsfragment != null && allPostsfragment.isVisible) {
+            val rootAllListPost: AllPostsFragment = allPostsfragment as AllPostsFragment
+            rootAllListPost.updatePost(mPost)
         }
 
     }

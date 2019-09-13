@@ -33,7 +33,7 @@ class ResetPasswordActivity : AppCompatActivity(), View.OnClickListener {
             startLoginActivity()
         }
 
-        if(id == R.id.btSendInvite) {
+        if(id == R.id.btSendEmailResetPass) {
             sendResetEmail()
         }
     }

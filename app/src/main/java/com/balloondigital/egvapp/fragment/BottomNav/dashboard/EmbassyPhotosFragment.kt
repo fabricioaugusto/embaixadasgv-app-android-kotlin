@@ -119,6 +119,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
                     mEmbassyPhoto = data.getSerializableExtra("embassyPhoto") as EmbassyPhoto
                     mPhotoList.add(0, mEmbassyPhoto.picture.toString())
                     mEmbassyPhotoList.add(0, mEmbassyPhoto)
+                    layoutEmptyPost.isGone = true
                     mAdapter.notifyDataSetChanged()
                 }
 
@@ -143,9 +144,9 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
         return when(item.itemId) {
             R.id.bar_add_picture -> {
                 startSendEmbassyPhotosActivity()
-                return false
+                true
             }
-            else -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -159,6 +160,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
     private fun setGridView() {
 
         mPhotoList.clear()
+        mEmbassyPhotoList.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
             .whereEqualTo("embassy_id", mUser.embassy_id)
@@ -233,9 +235,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
             .setMessage(dialogMessage)
             .setPositiveButton("Sim") { dialog, which ->
                 task.addOnCompleteListener {
-                    mEmbassyPhotoList.removeAt(position)
-                    mPhotoList.removeAt(position)
-                    mAdapter.notifyDataSetChanged()
+                    setGridView()
                 }.addOnFailureListener {
                     Log.d("EGVAPPLOG", it.message.toString())
                 }

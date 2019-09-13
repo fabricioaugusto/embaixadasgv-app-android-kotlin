@@ -131,8 +131,14 @@ class HighlightPostsFragment : Fragment() {
     }
 
     fun updatePost(post: Post) {
-        mPostList[mAdapterPosition] = post
-        mAdapter.notifyItemChanged(mAdapterPosition)
+
+        if(mPostList.any { p -> p.id == post.id }) {
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+            mPostList[pos] = post
+            mAdapter.notifyItemChanged(pos)
+        }
+
     }
 
     fun updateList() {

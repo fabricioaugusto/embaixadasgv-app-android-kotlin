@@ -129,9 +129,9 @@ class ListPostFragment : Fragment(), OnItemClickListener {
         return when(item.itemId) {
             R.id.bar_create_post -> {
                 setCreatePostDialog()
-                return false
+                true
             }
-            else -> true
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

@@ -45,7 +45,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:gravity="center" android:id="@+id/layoutEmptyPost"
-                android:visibility="visible">
+                android:visibility="gone">
             <ImageView
                     app:srcCompat="@drawable/ic_empty_gallery"
                     android:layout_width="match_parent"

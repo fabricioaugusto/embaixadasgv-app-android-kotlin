@@ -11,12 +11,15 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.libraries.places.api.Places
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.widget.Toast
+import cn.pedant.SweetAlert.SweetAlertDialog
 import com.balloondigital.egvapp.activity.Edit.ChooseEmbassyActivity
 import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.api.GoogleAPI
+import com.balloondigital.egvapp.utils.AppStatus
 
 
 class CheckAuthActivity : AppCompatActivity() {
@@ -39,17 +42,26 @@ class CheckAuthActivity : AppCompatActivity() {
         mDatabase = MyFirebase.database()
         mAuth = MyFirebase.auth()
 
-        val currentUser = mAuth.currentUser
-        if (currentUser != null) {
-            val uid = currentUser.uid
-            if(uid != null) {
-                getCurrentUser(currentUser.uid)
+        if(AppStatus.isConnected(this)) {
+            val currentUser = mAuth.currentUser
+            if (currentUser != null) {
+                val uid = currentUser.uid
+                if(uid != null) {
+                    getCurrentUser(currentUser.uid)
+                } else {
+                    startLoginActivity()
+                }
             } else {
                 startLoginActivity()
             }
         } else {
-            startLoginActivity()
+            SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Desconectado!")
+                .setContentText("Parece que o seu dispositivo está offline ou com problemas na conexão!")
+                .show()
+            return
         }
+
     }
 
     fun getCurrentUser(uid: String) {
@@ -60,7 +72,6 @@ class CheckAuthActivity : AppCompatActivity() {
                 if(documentSnapshot != null) {
                     val user = documentSnapshot.toObject(User::class.java)
                     if(user != null) {
-                        makeToast("User não é null")
                         mUser = user
                         checkUser()
                     } else {
