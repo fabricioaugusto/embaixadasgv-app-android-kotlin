@@ -40,6 +40,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     private lateinit var mListEmbassy: MutableList<Embassy>
     private lateinit var mListFiltered: MutableList<Embassy>
     private var mEmbassyInfoIsHide = true
+    private var mPosition: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -133,11 +134,11 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
 
     private fun getListEmbassy() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-            .whereEqualTo("status", "awaiting")
-            .orderBy("state")
-            .get()
-            .addOnSuccessListener {
+        val embassyRef = mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+
+        embassyRef.whereEqualTo("status", "awaiting")
+            .orderBy("state").get()
+            .addOnSuccessListener { it ->
                 val documents = it.documents
                 for (document in documents) {
                     val embassy: Embassy? = document.toObject(Embassy::class.java)
@@ -146,8 +147,20 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
                         mListEmbassy.add(embassy)
                     }
                 }
-                mAdapter.notifyDataSetChanged()
-                mSkeletonScreen.hide()
+                embassyRef.whereEqualTo("status", "released")
+                    .orderBy("state").get()
+                    .addOnSuccessListener { querySnapshot ->
+                        val documents2 = querySnapshot.documents
+                        for (document in documents2) {
+                            val embassy: Embassy? = document.toObject(Embassy::class.java)
+                            if(embassy != null) {
+                                embassy.id = document.id
+                                mListEmbassy.add(embassy)
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged()
+                        mSkeletonScreen.hide()
+                    }
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
             }
@@ -164,7 +177,11 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
             .load(R.layout.item_skeleton_user)
             .shimmer(true).show()
 
-        mAdapter.onItemClick = {embassy -> showEmbassyInfo(embassy)}
+        mAdapter.onItemClick = {
+                embassy, pos ->
+            mPosition = pos
+            showEmbassyInfo(embassy)
+        }
     }
 
     private fun setSearchRecyclerView(listEmbassy: MutableList<Embassy>) {
@@ -174,16 +191,18 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         mRecyclerView.adapter = mAdapter
 
-        mAdapter.onItemClick = {embassy -> startSingleEmbassyActivity(embassy)}
+        mAdapter.onItemClick = {
+                embassy, pos ->
+            mPosition = pos
+            showEmbassyInfo(embassy)
+        }
     }
 
     private fun showEmbassyInfo(embassy: Embassy) {
 
-        if(mEmbassy.status == "released") {
-            btEmbassyRelease.isGone = true
-        }
-
         mEmbassy = embassy
+
+        btEmbassyRelease.isGone = mEmbassy.status == "released"
 
         txtApprEmbassyName.text = mEmbassy.name
         txtApprEmbassyCity.text = "${mEmbassy.city} - ${mEmbassy.state_short}"
@@ -210,6 +229,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
             txtApprEmbassyLeader.text = ""
             txtApprEmbassyEmail.text = ""
             txtApprEmbassyPhone.text = ""
+            btEmbassyRelease.revertAnimation()
         }
     }
 
@@ -251,6 +271,10 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
             .set(mEmbassy.toMap())
             .addOnSuccessListener {
                 makeToast("Embaixada liberada!")
+
+                mListEmbassy[mPosition].status = "released"
+                mAdapter.notifyDataSetChanged()
+
                 btEmbassyRelease.doneLoadingAnimation(
                     resources.getColor(R.color.colorGreen),
                     Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))

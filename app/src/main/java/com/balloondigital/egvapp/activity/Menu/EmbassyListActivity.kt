@@ -146,7 +146,7 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
             .load(R.layout.item_skeleton_user)
             .shimmer(true).show()
 
-        mAdapter.onItemClick = {embassy -> startSingleEmbassyActivity(embassy)}
+        mAdapter.onItemClick = {embassy, pos -> startSingleEmbassyActivity(embassy)}
     }
 
     private fun setSearchRecyclerView(listEmbassy: MutableList<Embassy>) {
@@ -156,7 +156,7 @@ class EmbassyListActivity : AppCompatActivity(), SearchView.OnQueryTextListener,
         mRecyclerView.layoutManager = LinearLayoutManager(this)
         mRecyclerView.adapter = mAdapter
 
-        mAdapter.onItemClick = {embassy -> startSingleEmbassyActivity(embassy)}
+        mAdapter.onItemClick = {embassy, pos -> startSingleEmbassyActivity(embassy)}
     }
 
     private fun startSingleEmbassyActivity(singleEmbassy: Embassy) {
