@@ -9,12 +9,8 @@ import com.balloondigital.egvapp.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.android.libraries.places.api.Places
-import android.content.Context
-import android.content.SharedPreferences
-import android.util.Log
 import android.widget.Toast
 import cn.pedant.SweetAlert.SweetAlertDialog
-import com.balloondigital.egvapp.activity.Edit.ChooseEmbassyActivity
 import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity

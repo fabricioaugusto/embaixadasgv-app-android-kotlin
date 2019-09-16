@@ -17,6 +17,7 @@ import android.widget.ScrollView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.isGone
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.algolia.search.saas.*
@@ -24,6 +25,11 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
+import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
+import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
+import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
+import com.balloondigital.egvapp.fragment.BottomNav.feed.HighlightPostsFragment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
@@ -161,6 +167,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (resultCode == Activity.RESULT_OK) {
             try {
@@ -459,7 +466,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                                         resources.getColor(R.color.colorGreen),
                                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                     )
-
                                     Handler().postDelayed({
                                         val returnIntent = Intent()
                                         returnIntent.putExtra("eventId", mEvent.id)
@@ -476,6 +482,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             }
         }
     }
+
 
     private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isGone
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyAgendaActivity
@@ -55,6 +56,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mBtDashboardMembers: Button
     private lateinit var mBtDashboardPhotos: Button
     private lateinit var mBtDashboardEvents: Button
+    private lateinit var mBtDashboardCloud: Button
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,6 +69,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mContext = view.context
         mDatabase = MyFirebase.database()
         mColletions = MyFirebase.COLLECTIONS
+        mBtDashboardCloud = view.findViewById(R.id.btDashboardCloud)
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
         mBtDashboardEvents = view.findViewById(R.id.btDashboardEvents)
@@ -87,7 +90,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
         setListeners()
 
-
+        Log.d("EGVAPPLOGAGENDA", tag.toString())
         // Inflate the layout for this fragment
         return view
     }
@@ -110,6 +113,13 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         if(id == R.id.layoutNextEvent) {
             startSingleEventActivity(mEvent)
         }
+
+        if(id == R.id.btDashboardCloud) {
+            SweetAlertDialog(mContext, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Em breve!")
+                .setContentText("Este recurso será disponibilizado nas próximas atualizações, aguarde! :)")
+                .show()
+        }
     }
 
 
@@ -117,6 +127,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mBtDashboardMembers.setOnClickListener(this)
         mBtDashboardPhotos.setOnClickListener(this)
         mBtDashboardEvents.setOnClickListener(this)
+        mBtDashboardCloud.setOnClickListener(this)
         mLayoutNextEvent.setOnClickListener(this)
     }
 
@@ -238,8 +249,13 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "singleEmbassyEvent")
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
+    }
+
+    fun refreshEvent() {
+        Log.d("EGVAPPLOGAGENDA", "atualizou dashboard")
+        getNextEvent()
     }
 }

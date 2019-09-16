@@ -32,7 +32,7 @@ class MenuFragment : Fragment() {
         if (bundle != null) {
             nextFrag.arguments = bundle
             activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.menuViewPager, nextFrag, "rootMenuFragment")
+                .add(R.id.menuViewPager, nextFrag, "rootMenuFragment")
                 .addToBackStack(null)
                 .commit()
         }

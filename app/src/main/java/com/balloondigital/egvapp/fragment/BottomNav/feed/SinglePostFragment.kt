@@ -129,8 +129,8 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
         mNavBar.isGone = false
     }
 

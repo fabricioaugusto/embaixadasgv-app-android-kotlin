@@ -23,7 +23,9 @@ import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
 import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
 import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.MenuItem
@@ -87,7 +89,6 @@ class MenuListFragment : Fragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-
             if (resultCode == Activity.RESULT_OK) {
                 if (requestCode == MENU_REQUEST_CODE) {
                     if(data != null) {
@@ -97,12 +98,15 @@ class MenuListFragment : Fragment() {
                     }
                 } else if(requestCode == CREATE_EVENT_REQUEST_CODE) {
                     if(data != null) {
+
                         val eventId = data.getStringExtra("eventId")
                         val placeName = data.getStringExtra("placeName")
                         val placeLat = data.getDoubleExtra("placeLat", 0.0)
                         val placeLng = data.getDoubleExtra("placeLng", 0.0)
 
+                        updateEventLists()
                         startSingleEventActivity(eventId!!, placeName!!, placeLat, placeLng)
+
                     }
                 }
 
@@ -192,6 +196,25 @@ class MenuListFragment : Fragment() {
         }
 
         mMenuList.onItemClickListener = listViewListener
+    }
+
+    private fun updateEventLists() {
+
+        val manager = activity!!.supportFragmentManager
+        val eventListfragment: Fragment? = manager.findFragmentByTag("rootAgendaFragment")
+        val dashboardPanelfragment: Fragment? = manager.findFragmentByTag("rootDashboardFragment")
+
+        if(eventListfragment != null && eventListfragment.isVisible) {
+            Log.d("EGVAPPLOGAGENDA", "eventListfragment ativo")
+            val eventList: ListEventsFragment = eventListfragment as ListEventsFragment
+            eventList.refreshEvenList()
+        }
+
+        if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
+            Log.d("EGVAPPLOGAGENDA", "dashboardPanelfragment ativo")
+            val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment
+            dashboardPanel.refreshEvent()
+        }
     }
 
     private fun startCheckAuthActivity() {
@@ -368,7 +391,4 @@ class MenuListFragment : Fragment() {
         startCheckAuthActivity()
         activity?.finish()
     }
-
-
-
 }

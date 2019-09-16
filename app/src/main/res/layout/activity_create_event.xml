@@ -57,7 +57,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/bg_default_cover"
                     android:id="@+id/imgEventInsertCover"
-            />
+                    android:adjustViewBounds="true"/>
             <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" app:srcCompat="@drawable/ic_photo_library_grey_light"

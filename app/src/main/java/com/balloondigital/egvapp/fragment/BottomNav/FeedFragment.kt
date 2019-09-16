@@ -34,7 +34,7 @@ class FeedFragment : Fragment() {
         if (bundle != null) {
             nextFrag.arguments = bundle
             activity!!.supportFragmentManager.beginTransaction()
-                .replace(R.id.feedViewPager, nextFrag, "rootFeedFragment")
+                .add(R.id.feedViewPager, nextFrag, "rootFeedFragment")
                 .addToBackStack(null)
                 .commit()
         }

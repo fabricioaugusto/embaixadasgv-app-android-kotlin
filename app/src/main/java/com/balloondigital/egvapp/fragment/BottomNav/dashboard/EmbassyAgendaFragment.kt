@@ -95,7 +95,7 @@ class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
             .whereEqualTo("embassy_id", mUser.embassy_id)
             .whereGreaterThan("date", timestamp)
-            .orderBy("date", Query.Direction.DESCENDING)
+            .orderBy("date", Query.Direction.ASCENDING)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mEventList.clear()
