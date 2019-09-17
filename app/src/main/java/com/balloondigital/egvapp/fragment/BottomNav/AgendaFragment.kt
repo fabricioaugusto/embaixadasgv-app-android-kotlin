@@ -30,10 +30,14 @@ class AgendaFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_agenda, container, false)
 
         val nextFrag = ListEventsFragment()
-        activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.agendaViewPager, nextFrag, "rootAgendaFragment")
-            .addToBackStack(null)
-            .commit()
+        val manager = activity!!.supportFragmentManager
+
+        if(manager.findFragmentByTag("rootAgendaFragment") == null) {
+            manager.beginTransaction()
+                .add(R.id.agendaViewPager, nextFrag, "rootAgendaFragment")
+                .addToBackStack(null)
+                .commit()
+        }
 
         return view
     }

@@ -27,10 +27,14 @@ class UsersFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_users, container, false)
 
         val nextFrag = ListUsersFragment()
-        activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.searchViewPager, nextFrag, "rootSearchFragment")
-            .addToBackStack(null)
-            .commit()
+        val manager = activity!!.supportFragmentManager
+
+        if(manager.findFragmentByTag("rootSearchFragment") == null) {
+            manager.beginTransaction()
+                .add(R.id.searchViewPager, nextFrag, "rootSearchFragment")
+                .addToBackStack(null)
+                .commit()
+        }
 
         return view
     }

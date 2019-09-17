@@ -1,10 +1,13 @@
 package com.balloondigital.egvapp.activity
 
 import android.Manifest
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.AttributeSet
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.FragmentTransaction
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.fragment.*
@@ -35,6 +38,46 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
+
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        Log.d("EGVAPPLIFECYCLE", "onAttachedToWindow")
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        Log.d("EGVAPPLIFECYCLE", "onDetachedFromWindow")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("EGVAPPLIFECYCLE", "onDestroy")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("EGVAPPLIFECYCLE", "onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("EGVAPPLIFECYCLE", "onStop")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("EGVAPPLIFECYCLE", "onResume")
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("EGVAPPLIFECYCLE", "onRestart")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("EGVAPPLIFECYCLE", "onStart")
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -210,7 +253,13 @@ class MainActivity : AppCompatActivity() {
     private fun setBottomNavigationView(bnv: BottomNavigationView) {
 
         bnv.labelVisibilityMode = LabelVisibilityMode.LABEL_VISIBILITY_LABELED
-        openFragment(mDashboardFragment,0, "dashboard")
+
+        val manager = supportFragmentManager
+        val dashboardFragment: Fragment? = manager.findFragmentByTag("dashboard")
+
+        if(dashboardFragment == null) {
+            openFragment(mDashboardFragment,0, "dashboard")
+        }
     }
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
@@ -246,9 +295,6 @@ class MainActivity : AppCompatActivity() {
 
         val manager = supportFragmentManager
         val transaction: FragmentTransaction = manager.beginTransaction()
-        if (manager.findFragmentByTag(tag) == null) {
-            transaction.add(R.id.mainViewPager, fragment, tag)
-        }
 
         val dashboardFragment: Fragment? = manager.findFragmentByTag("dashboard")
         val searchFragment: Fragment? = manager.findFragmentByTag("search")
@@ -276,7 +322,15 @@ class MainActivity : AppCompatActivity() {
             transaction.hide(menuFragment)
         }
 
-        transaction.show(fragment)
+        val currentFragment = manager.findFragmentByTag(tag)
+        Log.d("EGVAPPMANAGEFRAGMENT", "$tag ${currentFragment.toString()}")
+
+        if (currentFragment == null) {
+            Log.d("EGVAPPMANAGEFRAGMENT", "adicionou")
+            transaction.add(R.id.mainViewPager, fragment, tag)
+        } else {
+            transaction.show(currentFragment)
+        }
 
         transaction.addToBackStack(null)
         transaction.commit()

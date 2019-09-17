@@ -45,10 +45,14 @@ class DashboardFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
         val nextFrag = DashboardPanelFragment()
-        activity!!.supportFragmentManager.beginTransaction()
+        val manager = activity!!.supportFragmentManager
+
+        if(manager.findFragmentByTag("rootDashboardFragment") == null) {
+            manager.beginTransaction()
             .add(R.id.dashboardViewPager, nextFrag, "rootDashboardFragment")
             .addToBackStack(null)
             .commit()
+        }
 
         // Inflate the layout for this fragment
         return view
