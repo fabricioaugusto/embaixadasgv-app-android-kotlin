@@ -182,7 +182,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
-                MenuItens.createBulletin -> startCreateBulletinActivity()
+                MenuItens.createBulletin -> startManageBulletinsActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startEmbassyListActivity()
@@ -353,10 +353,19 @@ class MenuListFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startCreateBulletinActivity() {
-        val intent: Intent = Intent(mContext, CreateBulletinActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
+    private fun startManageBulletinsActivity() {
+
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ManageBulletinFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageBulletins")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEmbassyListActivity() {

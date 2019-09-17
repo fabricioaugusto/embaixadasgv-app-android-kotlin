@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isGone
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.balloondigital.egvapp.R
@@ -18,13 +20,18 @@ import com.balloondigital.egvapp.activity.Dashboard.EmbassyAgendaActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
 import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
 import com.balloondigital.egvapp.activity.Single.EventProfileActivity
+import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
+import com.balloondigital.egvapp.model.Bulletin
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
+import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -44,6 +51,10 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
+    private lateinit var mAdapter: BulletinManagerListAdapter
+    private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
+    private lateinit var mBulletinList: MutableList<Bulletin>
     private lateinit var mLayoutNextEvent: LinearLayout
     private lateinit var mTxtMonthAbrDashboard: TextView
     private lateinit var mTxtDashboardDate: TextView
@@ -69,6 +80,8 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mContext = view.context
         mDatabase = MyFirebase.database()
         mColletions = MyFirebase.COLLECTIONS
+        mBulletinList = mutableListOf()
+        mRecyclerView = view.findViewById(R.id.rvBulletinList)
         mBtDashboardCloud = view.findViewById(R.id.btDashboardCloud)
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
@@ -93,6 +106,13 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         Log.d("EGVAPPLOGAGENDA", tag.toString())
         // Inflate the layout for this fragment
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setRecyclerView()
+        getBulletinList()
     }
 
     override fun onClick(view: View) {
@@ -190,6 +210,48 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mRootView.isGone = false
     }
 
+    private fun getBulletinList() {
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
+            .orderBy("date", Query.Direction.ASCENDING)
+            .limit(3)
+            .get().addOnSuccessListener { documentSnapshot ->
+
+                mBulletinList.clear()
+
+                if(documentSnapshot != null) {
+                    if(documentSnapshot.size() > 0) {
+                        for(document in documentSnapshot) {
+                            val bulletin: Bulletin? = document.toObject(Bulletin::class.java)
+                            if(bulletin != null) {
+                                mBulletinList.add(bulletin)
+                            }
+                        }
+                    }
+                }
+
+                mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
+            }
+    }
+
+
+    private fun setRecyclerView() {
+
+        mAdapter = BulletinManagerListAdapter(mBulletinList)
+        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+
+        mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_event)
+            .shimmer(true).show()
+
+        mAdapter.onItemClick = {
+                bulletin ->
+
+        }
+    }
+
     private fun startEmbassyPhotosActivity() {
 
         val bundle = Bundle()
@@ -255,7 +317,10 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     }
 
     fun refreshEvent() {
-        Log.d("EGVAPPLOGAGENDA", "atualizou dashboard")
         getNextEvent()
+    }
+
+    fun refreshBulletin() {
+        getBulletinList()
     }
 }

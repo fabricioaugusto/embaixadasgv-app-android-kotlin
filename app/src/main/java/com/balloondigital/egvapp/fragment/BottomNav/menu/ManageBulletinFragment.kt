@@ -83,7 +83,7 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
         mDatabase = MyFirebase.database()
         mBulletinList = mutableListOf()
         mContext = view.context
-        mRecyclerView = view.findViewById(R.id.rvManagerEvents)
+        mRecyclerView = view.findViewById(R.id.rvManagerBulletins)
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
 
         val menuList: List<MenuItem> = listOf(
@@ -262,7 +262,7 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
 
         if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
             val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment
-            dashboardPanel.refreshEvent()
+            dashboardPanel.refreshBulletin()
         }
     }
 
