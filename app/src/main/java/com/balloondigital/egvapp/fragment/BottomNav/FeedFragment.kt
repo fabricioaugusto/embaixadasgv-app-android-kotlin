@@ -29,15 +29,19 @@ class FeedFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_feed, container, false)
 
         val nextFrag = ListPostFragment()
+        val manager = activity!!.supportFragmentManager
 
-        val bundle: Bundle? = arguments
-        if (bundle != null) {
-            nextFrag.arguments = bundle
-            activity!!.supportFragmentManager.beginTransaction()
-                .add(R.id.feedViewPager, nextFrag, "rootFeedFragment")
-                .addToBackStack(null)
-                .commit()
+        if(manager.findFragmentByTag("rootFeedFragment") == null) {
+            val bundle: Bundle? = arguments
+            if (bundle != null) {
+                nextFrag.arguments = bundle
+                manager.beginTransaction()
+                    .add(R.id.feedViewPager, nextFrag, "rootFeedFragment")
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
+
 
         return view
     }

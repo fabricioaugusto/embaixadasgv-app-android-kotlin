@@ -27,15 +27,19 @@ class MenuFragment : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_menu, container, false)
 
         val nextFrag = MenuListFragment()
-        val bundle: Bundle? = arguments
+        val manager = activity!!.supportFragmentManager
 
-        if (bundle != null) {
-            nextFrag.arguments = bundle
-            activity!!.supportFragmentManager.beginTransaction()
-                .add(R.id.menuViewPager, nextFrag, "rootMenuFragment")
-                .addToBackStack(null)
-                .commit()
+        if(manager.findFragmentByTag("rootMenuFragment") == null) {
+            val bundle: Bundle? = arguments
+            if (bundle != null) {
+                nextFrag.arguments = bundle
+                manager.beginTransaction()
+                    .add(R.id.menuViewPager, nextFrag, "rootMenuFragment")
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
+
 
         return view
     }
