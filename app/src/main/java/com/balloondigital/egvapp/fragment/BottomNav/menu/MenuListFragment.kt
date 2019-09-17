@@ -177,7 +177,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.myEmbassy -> startMyEmbassyActivity()
                 MenuItens.myEnrolledEvents -> startEnrolledEventsActivity()
                 MenuItens.myFavoriteEvents -> startFavoriteEventsActivity()
-                MenuItens.newEvent -> startCreateEventsActivity()
+                MenuItens.newEvent -> startManageEventsActivity()
                 MenuItens.sendInvites -> startInvitesActivity()
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
@@ -314,10 +314,19 @@ class MenuListFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun startCreateEventsActivity() {
-        val intent: Intent = Intent(mContext, CreateEventActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, CREATE_EVENT_REQUEST_CODE)
+    private fun startManageEventsActivity() {
+
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ManageEventsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageEvents")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startInvitesActivity() {

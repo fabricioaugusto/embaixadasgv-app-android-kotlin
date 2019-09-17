@@ -8,33 +8,27 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
-import com.balloondigital.egvapp.activity.Create.CreatePostActivity
-import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.activity.Edit.EditEventActivity
-import com.balloondigital.egvapp.adapter.*
+import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
+import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
 import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
-import com.balloondigital.egvapp.model.*
+import com.balloondigital.egvapp.model.Bulletin
 import com.balloondigital.egvapp.model.MenuItem
+import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
@@ -42,7 +36,6 @@ import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
-import kotlinx.android.synthetic.main.fragment_list_events.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,17 +46,17 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ManageEventsFragment : Fragment(), OnItemClickListener {
+class ManageBulletinFragment : Fragment(), OnItemClickListener {
+
 
     private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
-    private lateinit var mCurrentEvent: Event
+    private lateinit var mCurrentBulletin: Bulletin
     private lateinit var mDatabase: FirebaseFirestore
-    private lateinit var mEmbassyID: String
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
-    private lateinit var mEventList: MutableList<Event>
-    private lateinit var mAdapter: EventManagerListAdapter
+    private lateinit var mBulletinList: MutableList<Bulletin>
+    private lateinit var mAdapter: BulletinManagerListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
@@ -74,16 +67,11 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
         // Inflate the layout for this fragment
-        val view: View = inflater.inflate(R.layout.fragment_manage_events, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_manage_bulletin, container, false)
 
-        val bundle: Bundle? = arguments
-        if (bundle != null) {
-            mEmbassyID = bundle.getString("embassyID", "")
-            mUser = bundle.getSerializable("user") as User
-        }
-
-        mToolbar = view.findViewById(R.id.managerEventToolbar)
+        mToolbar = view.findViewById(R.id.managerBulletinToolbar)
         mToolbar.title = ""
 
         if (activity is AppCompatActivity) {
@@ -93,7 +81,7 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
         setHasOptionsMenu(true)
 
         mDatabase = MyFirebase.database()
-        mEventList = mutableListOf()
+        mBulletinList = mutableListOf()
         mContext = view.context
         mRecyclerView = view.findViewById(R.id.rvManagerEvents)
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
@@ -106,15 +94,15 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
 
         mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 3, menuList)
 
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getEventList() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getBulletinList() })
 
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        getEventList()
-        setRecyclerView(mEventList)
+        getBulletinList()
+        setRecyclerView()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -126,7 +114,7 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when(item.itemId) {
             R.id.bar_create_event -> {
-                startCreateEventActivity()
+                startCreateBulletinActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -138,11 +126,11 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
         mCPDialog.dismiss()
 
         if(position == 0) {
-            startSingleEventActivity()
+            startSingleBulletinActivity()
         }
 
         if(position == 1) {
-            startEditEventActivity()
+            startEditBulletinActivity()
         }
 
         if(position == 2) {
@@ -154,10 +142,10 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
 
         if (resultCode == Activity.RESULT_OK) {
 
-             if(requestCode == EVENT_REQUEST_CODE) {
+            if(requestCode == EVENT_REQUEST_CODE) {
                 if(data != null) {
-                    getEventList()
-                    updateEventLists()
+                    getBulletinList()
+                    updateBulletinLists()
                 }
             }
 
@@ -171,21 +159,20 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
 
     }
 
-    private fun getEventList() {
+    private fun getBulletinList() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
-            .whereEqualTo("embassy_id", mEmbassyID)
+        mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
             .orderBy("date", Query.Direction.ASCENDING)
             .get().addOnSuccessListener { documentSnapshot ->
 
-                mEventList.clear()
+                mBulletinList.clear()
 
                 if(documentSnapshot != null) {
                     if(documentSnapshot.size() > 0) {
                         for(document in documentSnapshot) {
-                            val event: Event? = document.toObject(Event::class.java)
-                            if(event != null) {
-                                mEventList.add(event)
+                            val bulletin: Bulletin? = document.toObject(Bulletin::class.java)
+                            if(bulletin != null) {
+                                mBulletinList.add(bulletin)
                             }
                         }
                     }
@@ -198,9 +185,9 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
     }
 
 
-    private fun setRecyclerView(events: MutableList<Event>) {
+    private fun setRecyclerView() {
 
-        mAdapter = EventManagerListAdapter(events)
+        mAdapter = BulletinManagerListAdapter(mBulletinList)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
         mSkeletonScreen = Skeleton.bind(mRecyclerView)
@@ -209,45 +196,31 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
             .shimmer(true).show()
 
         mAdapter.onItemClick = {
-                event ->
-            mCurrentEvent = event
+                bulletin ->
+            mCurrentBulletin = bulletin
             setManageItemsDialog()
         }
     }
 
-    private fun startSingleEventActivity() {
-
-        val lat = mCurrentEvent.lat
-        val long = mCurrentEvent.long
-
-        val bundle = Bundle()
-        bundle.putString("eventId", mCurrentEvent.id)
-        bundle.putString("placeName", mCurrentEvent.place)
-        bundle.putInt("rootViewer", R.id.agendaViewPager)
-
-        if(lat != null && long != null) {
-            bundle.putDouble("placeLat", lat)
-            bundle.putDouble("placeLng", long)
-        }
+    private fun startSingleBulletinActivity() {
 
         val nextFrag = SingleEventFragment()
-        nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEvent")
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleBulletin")
             .addToBackStack(null)
             .commit()
     }
 
-    private fun startCreateEventActivity() {
+    private fun startCreateBulletinActivity() {
         val intent: Intent = Intent(mContext, CreateEventActivity::class.java)
         intent.putExtra("user", mUser)
         startActivityForResult(intent, EVENT_REQUEST_CODE)
     }
 
-    private fun startEditEventActivity() {
+    private fun startEditBulletinActivity() {
         val intent: Intent = Intent(mContext, EditEventActivity::class.java)
-        intent.putExtra("eventID", mCurrentEvent.id)
+        intent.putExtra("eventID", mCurrentBulletin.id)
         startActivityForResult(intent, EVENT_REQUEST_CODE)
     }
 
@@ -267,31 +240,25 @@ class ManageEventsFragment : Fragment(), OnItemClickListener {
     private fun confirmDeleteDialog() {
         AlertDialog.Builder(mContext)
             .setIcon(R.drawable.ic_warning_yellow)
-            .setTitle("Excluir evento")
-            .setMessage("Tem certeza que deseja excluir este evento?")
+            .setTitle("Excluir informativo")
+            .setMessage("Tem certeza que deseja excluir este informativo?")
             .setPositiveButton("Sim") { dialog, which ->
-                mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
-                    .document(mCurrentEvent.id)
+                mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
+                    .document(mCurrentBulletin.id)
                     .delete()
                     .addOnCompleteListener {
-                        getEventList()
-                        updateEventLists()
+                        getBulletinList()
+                        updateBulletinLists()
                     }
             }
             .setNegativeButton("Não", null)
             .show()
     }
 
-    private fun updateEventLists() {
+    private fun updateBulletinLists() {
 
         val manager = activity!!.supportFragmentManager
-        val eventListfragment: Fragment? = manager.findFragmentByTag("rootAgendaFragment")
         val dashboardPanelfragment: Fragment? = manager.findFragmentByTag("rootDashboardFragment")
-
-        if(eventListfragment != null && eventListfragment.isVisible) {
-            val eventList: ListEventsFragment = eventListfragment as ListEventsFragment
-            eventList.refreshEvenList()
-        }
 
         if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
             val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment

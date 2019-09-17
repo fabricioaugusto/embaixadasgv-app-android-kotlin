@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.activity.Create
+package com.balloondigital.egvapp.activity.Edit
 
 import android.Manifest
 import android.app.Activity
@@ -17,24 +17,18 @@ import android.widget.ScrollView
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.algolia.search.saas.*
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.HighlightPostsFragment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.CropImages
 import com.balloondigital.egvapp.utils.PermissionConfig
+import com.bumptech.glide.Glide
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.gms.tasks.OnCompleteListener
@@ -47,16 +41,16 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
 import com.yalantis.ucrop.UCrop
-import kotlinx.android.synthetic.main.activity_create_event.*
+import kotlinx.android.synthetic.main.activity_edit_event.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.lang.Exception
 import java.util.*
 
-class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
+class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
 
-    private lateinit var mUser: User
+    private lateinit var mEventId: String
     private lateinit var mEvent: Event
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
@@ -84,8 +78,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_create_event)
-
+        setContentView(R.layout.activity_edit_event)
         supportActionBar!!.title = "Eventos inscritos"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -93,11 +86,9 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
         val bundle: Bundle? = intent.extras
         if(bundle != null) {
-            mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLog", mUser.toString())
+            mEventId = bundle.getString("eventID", "id")
         }
 
-        mEvent = Event()
         mListUsers = mutableListOf()
         mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mDatabase = MyFirebase.database()
@@ -112,6 +103,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
         mIndex = mClient.getIndex("users")
 
+        getEvent()
         getListUsers()
         setRecyclerView()
         setListeners()
@@ -232,7 +224,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     private fun showModeratorsList() {
         mModeratorsListIsHide = false
-        scrollViewCreateEvent.fullScroll(ScrollView.FOCUS_UP)
+        scrollViewEditEvent.fullScroll(ScrollView.FOCUS_UP)
         layoutModeratorsList.isGone = false
         layoutModeratorsModal.isGone = false
         layoutModeratorsModal.animate().alpha(1.0F).duration = 300
@@ -390,12 +382,47 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         }
     }
 
+    private fun getEvent() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
+            .document(mEventId)
+            .get()
+            .addOnSuccessListener {
+                documentSnapshot ->
+                val event = documentSnapshot.toObject(Event::class.java)
+                if(event != null) {
+                    mEvent = event
+                    bindData()
+                }
+            }
+    }
+
+    private fun bindData() {
+
+        if(mEvent.cover_img != null) {
+            Glide.with(this)
+                .load(mEvent.cover_img)
+                .into(imgEventInsertCover)
+        }
+
+        etEventTheme.setText(mEvent.theme)
+        etEventDescription.setText(mEvent.description)
+        etEventLocation.setText(mEvent.place)
+        etEventModerator1.setText(mEvent.moderator_1?.name)
+    }
+
     private fun saveUserData() {
 
         val theme = etEventTheme.text.toString()
         val description = etEventDescription.text.toString()
-        val datetext = etEventDate.text.toString()
-        val timettext = etEventTime.text.toString()
+        val place = etEventLocation.text.toString()
+        val moderator = etEventModerator1.text.toString()
+
+        if(theme != mEvent.theme && description != mEvent.description
+            && place != mEvent.place && moderator != mEvent.moderator_1?.name && mCoverSelected) {
+
+            makeToast("Nenhuma alteração realizada")
+            return
+        }
 
         if(theme.isEmpty()) {
             makeToast("O campo 'Tema' precia ser preenchido")
@@ -417,28 +444,18 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             return
         }
 
-        if(datetext.isNotEmpty() && timettext.isNotEmpty()) {
-            val date = Converters.stringToDate("$datetext $timettext")
-            mEvent.date = com.google.firebase.Timestamp(date)
-        } else {
-            makeToast("A data e horário precisam ser preenchidos")
-            return
-        }
 
         mEvent.theme = theme
         mEvent.description = description
-        mEvent.embassy = mUser.embassy
-        mEvent.embassy_id = mUser.embassy.id
 
         btSaveNewEvent.startAnimation()
 
         if(!mCoverSelected) {
             mDatabase.collection(mCollections.EVENTS)
-                .add(mEvent.toMap())
+                .document(mEventId)
+                .set(mEvent.toMap())
                 .addOnSuccessListener {
                         documentReference ->
-                    documentReference.update("id", documentReference.id)
-                    mEvent.id = documentReference.id
                     btSaveNewEvent.doneLoadingAnimation(
                         resources.getColor(R.color.colorGreen),
                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
@@ -481,11 +498,10 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                         if (uri != null) {
                             mEvent.cover_img = uri.toString()
                             mDatabase.collection(mCollections.EVENTS)
-                                .add(mEvent.toMap())
+                                .document(mEventId)
+                                .set(mEvent.toMap())
                                 .addOnSuccessListener {
-                                    documentReference ->
-                                    documentReference.update("id", documentReference.id)
-                                    mEvent.id = documentReference.id
+                                        documentReference ->
                                     btSaveNewEvent.doneLoadingAnimation(
                                         resources.getColor(R.color.colorGreen),
                                         Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))

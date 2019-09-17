@@ -22,9 +22,9 @@ class MenuItens private constructor() {
             list.add(MenuItem("Mais Opções", "section"))
             list.add(MenuItem(embassyList, "item", R.drawable.ic_menu_list_embassy))
             list.add(MenuItem(aboutEmbassy, "item", R.drawable.ic_my_embassy))
-            list.add(MenuItem(suggestFeatures, "item", R.drawable.ic_date_blue))
+            list.add(MenuItem(suggestFeatures, "item", R.drawable.ic_menu_suggestions))
             list.add(MenuItem(rateApp, "item", R.drawable.ic_menu_rate_app))
-            list.add(MenuItem(sendUsMessage, "item", R.drawable.ic_menu_suggestions))
+            list.add(MenuItem(sendUsMessage, "item", R.drawable.ic_menu_send_message))
             list.add(MenuItem(logout, "item", R.drawable.ic_menu_logout))
 
             return list
@@ -42,7 +42,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(editSocialNetwork, "item", R.drawable.ic_menu_edit_social))
             list.add(MenuItem(myEmbassy, "item", R.drawable.ic_menu_myembassy))
             list.add(MenuItem("Líderes", "section"))
-            list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_create_event))
+            list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
             list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
@@ -51,9 +51,9 @@ class MenuItens private constructor() {
             list.add(MenuItem("Mais Opções", "section"))
             list.add(MenuItem(embassyList, "item", R.drawable.ic_menu_list_embassy))
             list.add(MenuItem(aboutEmbassy, "item", R.drawable.ic_my_embassy))
-            list.add(MenuItem(suggestFeatures, "item", R.drawable.ic_date_blue))
+            list.add(MenuItem(suggestFeatures, "item", R.drawable.ic_menu_suggestions))
             list.add(MenuItem(rateApp, "item", R.drawable.ic_menu_rate_app))
-            list.add(MenuItem(sendUsMessage, "item", R.drawable.ic_menu_suggestions))
+            list.add(MenuItem(sendUsMessage, "item", R.drawable.ic_menu_send_message))
             list.add(MenuItem(logout, "item", R.drawable.ic_menu_logout))
 
             return list
@@ -70,7 +70,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(editSocialNetwork, "item", R.drawable.ic_menu_edit_social))
             list.add(MenuItem(myEmbassy, "item", R.drawable.ic_menu_myembassy))
             list.add(MenuItem("Líderes", "section"))
-            list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_create_event))
+            list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
             list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))

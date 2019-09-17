@@ -199,9 +199,11 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
 
         val eventDate = Converters.dateToString(mEvent.date!!)
 
-        Glide.with(this)
-            .load(mEvent.cover_img)
-            .into(imgEventCover)
+        if(mEvent.cover_img != null) {
+            Glide.with(this)
+                .load(mEvent.cover_img)
+                .into(imgEventCover)
+        }
 
         Glide.with(this)
             .load(mEvent.moderator_1?.profile_img)
