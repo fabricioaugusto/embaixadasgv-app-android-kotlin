@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.feed
+package com.balloondigital.egvapp.fragment.feed
 
 
 import android.app.Activity
@@ -12,16 +12,12 @@ import androidx.fragment.app.Fragment
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.SimpleItemAnimator
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreatePostActivity
 import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
-import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
-import com.balloondigital.egvapp.activity.Single.SinglePostActivity
-import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
 import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase

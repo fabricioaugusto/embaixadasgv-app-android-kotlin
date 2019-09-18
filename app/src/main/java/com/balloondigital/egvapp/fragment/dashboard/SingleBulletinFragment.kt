@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.dashboard
+package com.balloondigital.egvapp.fragment.dashboard
 
 
 import android.os.Bundle
@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isGone
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase

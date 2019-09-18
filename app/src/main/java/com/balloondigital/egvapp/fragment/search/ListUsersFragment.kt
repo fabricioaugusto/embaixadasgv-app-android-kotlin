@@ -1,8 +1,7 @@
-package com.balloondigital.egvapp.fragment.BottomNav.search
+package com.balloondigital.egvapp.fragment.search
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -19,10 +18,8 @@ import com.algolia.search.saas.Index
 import com.algolia.search.saas.Query
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton

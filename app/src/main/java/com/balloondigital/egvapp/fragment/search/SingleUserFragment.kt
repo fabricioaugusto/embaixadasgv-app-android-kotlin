@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.search
+package com.balloondigital.egvapp.fragment.search
 
 
 import android.content.Intent

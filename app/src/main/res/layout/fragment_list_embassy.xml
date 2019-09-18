@@ -5,7 +5,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragment.BottomNav.menu.ListEmbassyFragment" android:background="@color/backgroundGreyStrong">
+        tools:context=".fragment.menu.ListEmbassyFragment" android:background="@color/backgroundGreyStrong">
 
     <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"

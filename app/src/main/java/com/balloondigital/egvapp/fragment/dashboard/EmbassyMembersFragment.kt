@@ -1,7 +1,6 @@
-package com.balloondigital.egvapp.fragment.BottomNav.dashboard
+package com.balloondigital.egvapp.fragment.dashboard
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,10 +16,9 @@ import com.algolia.search.saas.Client
 import com.algolia.search.saas.Index
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton

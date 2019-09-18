@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.fragment.BottomNav.menu.MenuListFragment
+import com.balloondigital.egvapp.fragment.menu.MenuListFragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

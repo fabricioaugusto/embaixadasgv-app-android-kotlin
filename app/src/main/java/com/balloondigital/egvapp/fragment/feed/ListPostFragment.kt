@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.feed
+package com.balloondigital.egvapp.fragment.feed
 
 
 import android.app.Activity

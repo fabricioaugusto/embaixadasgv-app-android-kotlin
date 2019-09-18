@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.dashboard
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.app.Activity
@@ -10,10 +10,10 @@ import android.util.Log
 import android.view.*
 import android.widget.AdapterView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
-import androidx.fragment.app.Fragment
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
@@ -30,12 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
-import kotlinx.android.synthetic.main.activity_embassy_photos.*
-import kotlinx.android.synthetic.main.activity_embassy_photos.gvEmbassyPhotos
-import kotlinx.android.synthetic.main.activity_embassy_photos.swipeLayoutEmbassyPhotos
-import kotlinx.android.synthetic.main.fragment_embassy_photos.*
-import kotlinx.android.synthetic.main.fragment_single_post.*
-import kotlinx.android.synthetic.main.fragment_single_post.btBackPress
+import kotlinx.android.synthetic.main.fragment_manage_photos.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,8 +41,9 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
+class ManagePhotosFragment : Fragment(), View.OnClickListener {
 
+    private lateinit var mEmbassyID: String
     private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
@@ -61,11 +57,13 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_embassy_photos, container, false)
+        // Inflate the layout for this fragment
 
+        val view: View =  inflater.inflate(R.layout.fragment_manage_photos, container, false)
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
+            mEmbassyID = bundle.getString("embassyID", "")
         }
 
         mToolbar = view.findViewById(R.id.embassyPhotosToolbar)
@@ -163,7 +161,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
         mEmbassyPhotoList.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
-            .whereEqualTo("embassy_id", mUser.embassy_id)
+            .whereEqualTo("embassy_id", mEmbassyID)
             .get()
             .addOnSuccessListener {
                     querySnapshot ->
@@ -197,7 +195,7 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
             val alertbox = AlertDialog.Builder(mContext)
             val photo = mEmbassyPhotoList[pos]
 
-            if(mUser.embassy_id == photo.embassy_id && mUser.leader)   {
+            if(mEmbassyID == photo.embassy_id && mUser.leader)   {
                 alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
                     if(pos == 0) {
                         val deletePost = MyFirebase.database()

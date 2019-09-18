@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.agenda
+package com.balloondigital.egvapp.fragment.agenda
 
 
 import android.content.Context

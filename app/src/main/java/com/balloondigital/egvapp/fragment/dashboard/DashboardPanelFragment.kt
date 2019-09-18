@@ -1,8 +1,7 @@
-package com.balloondigital.egvapp.fragment.BottomNav.dashboard
+package com.balloondigital.egvapp.fragment.dashboard
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -17,13 +16,9 @@ import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Dashboard.EmbassyAgendaActivity
-import com.balloondigital.egvapp.activity.Dashboard.EmbassyMembersActivity
-import com.balloondigital.egvapp.activity.Dashboard.EmbassyPhotosActivity
-import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Bulletin
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -256,6 +251,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private fun startEmbassyPhotosActivity() {
 
         val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
         bundle.putSerializable("user", mUser)
 
         val nextFrag = EmbassyPhotosFragment()
@@ -270,6 +266,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private fun startEmbassyMembersActivity() {
 
         val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
         bundle.putSerializable("user", mUser)
 
         val nextFrag = EmbassyMembersFragment()
@@ -284,7 +281,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private fun startEmbassyAgendaActivity() {
 
         val bundle = Bundle()
-        bundle.putSerializable("user", mUser)
+        bundle.putString("embassyID", mUser.embassy_id)
 
         val nextFrag = EmbassyAgendaFragment()
         nextFrag.arguments = bundle
@@ -302,6 +299,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putString("eventId", event.id)
         bundle.putString("placeName", event.place)
+        bundle.putInt("rootViewer", R.id.dashboardViewPager)
 
         if(lat != null && long != null) {
             bundle.putDouble("placeLat", lat)

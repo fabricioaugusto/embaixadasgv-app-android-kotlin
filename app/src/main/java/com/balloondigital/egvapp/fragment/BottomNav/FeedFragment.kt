@@ -1,11 +1,10 @@
 package com.balloondigital.egvapp.fragment.BottomNav
 
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.fragment.BottomNav.feed.ListPostFragment
+import com.balloondigital.egvapp.fragment.feed.ListPostFragment
 import com.balloondigital.egvapp.model.User
 
 // TODO: Rename parameter arguments, choose names that match

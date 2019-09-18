@@ -38,47 +38,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mAdapter: CreatePostDialogAdapter
     private val permissions : List<String> = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
 
-
-    override fun onAttachedToWindow() {
-        super.onAttachedToWindow()
-        Log.d("EGVAPPLIFECYCLE", "onAttachedToWindow")
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        Log.d("EGVAPPLIFECYCLE", "onDetachedFromWindow")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("EGVAPPLIFECYCLE", "onDestroy")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("EGVAPPLIFECYCLE", "onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("EGVAPPLIFECYCLE", "onStop")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("EGVAPPLIFECYCLE", "onResume")
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("EGVAPPLIFECYCLE", "onRestart")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("EGVAPPLIFECYCLE", "onStart")
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -138,7 +97,13 @@ class MainActivity : AppCompatActivity() {
 
         if(mTabSelected == 0) {
 
+            val singleDashboardUser: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleUser")
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleBulletin")
+
+            if (singleDashboardUser != null && singleDashboardUser.isVisible) {
+                transaction.remove(singleDashboardUser).commit()
+                return
+            }
 
             if (singleEmbassyUser != null && singleEmbassyUser.isVisible) {
                 transaction.remove(singleEmbassyUser).commit()
@@ -229,6 +194,7 @@ class MainActivity : AppCompatActivity() {
             val singleMenuEvent: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEvent")
             val singleEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEmbassy")
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleBulletin")
+            val embassyAgendaMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyAgenda")
             val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
             val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
             val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
@@ -243,11 +209,6 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
-            if (singleEmbassy != null && singleEmbassy.isVisible) {
-                transaction.remove(singleEmbassy).commit()
-                return
-            }
-
             if (usersEventEnrollments != null && usersEventEnrollments.isVisible) {
                 transaction.remove(usersEventEnrollments).commit()
                 return
@@ -255,6 +216,16 @@ class MainActivity : AppCompatActivity() {
 
             if (singleMenuEvent != null && singleMenuEvent.isVisible) {
                 transaction.remove(singleMenuEvent).commit()
+                return
+            }
+
+            if (embassyAgendaMenu != null && embassyAgendaMenu.isVisible) {
+                transaction.remove(embassyAgendaMenu).commit()
+                return
+            }
+
+            if (singleEmbassy != null && singleEmbassy.isVisible) {
+                transaction.remove(singleEmbassy).commit()
                 return
             }
 

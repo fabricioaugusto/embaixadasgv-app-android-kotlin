@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.menu
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.app.Activity
@@ -15,19 +15,15 @@ import android.widget.ListView
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
-import com.balloondigital.egvapp.activity.Create.CreateBulletinActivity
-import com.balloondigital.egvapp.activity.Create.CreateEventActivity
 import com.balloondigital.egvapp.activity.Edit.*
 import com.balloondigital.egvapp.activity.Menu.*
-import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.adapter.MenuListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
-import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
-import com.balloondigital.egvapp.model.Event
+import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
+import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.dashboard.DashboardPanelFragment
+import com.balloondigital.egvapp.fragment.dashboard.EmbassyPhotosFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.MenuItens
@@ -336,9 +332,17 @@ class MenuListFragment : Fragment() {
     }
 
     private fun startSendEmbassyPhotosActivity() {
-        val intent: Intent = Intent(mContext, SendEmbassyPhotoActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivity(intent)
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ManagePhotosFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:managePhotos")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEditEmbassyActivity() {

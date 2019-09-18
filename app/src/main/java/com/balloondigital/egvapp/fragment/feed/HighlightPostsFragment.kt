@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.feed
+package com.balloondigital.egvapp.fragment.feed
 
 
 import android.app.Activity
@@ -8,25 +8,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
-import android.widget.Button
 import android.widget.Toast
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
-import com.balloondigital.egvapp.activity.Create.CreatePostActivity
-import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
-import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
-import com.balloondigital.egvapp.activity.Single.SinglePostActivity
-import com.balloondigital.egvapp.activity.Single.SingleThoughtActivity
-import com.balloondigital.egvapp.adapter.CreatePostDialogAdapter
 import com.balloondigital.egvapp.adapter.PostListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostLike
 import com.balloondigital.egvapp.model.User
@@ -36,9 +26,6 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
-import com.orhanobut.dialogplus.DialogPlus
-import com.orhanobut.dialogplus.DialogPlusBuilder
-import com.orhanobut.dialogplus.OnItemClickListener
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

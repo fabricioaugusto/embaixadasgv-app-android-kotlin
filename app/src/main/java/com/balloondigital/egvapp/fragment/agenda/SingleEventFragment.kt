@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.agenda
+package com.balloondigital.egvapp.fragment.agenda
 
 
 import android.content.Context
@@ -12,8 +12,8 @@ import android.widget.ImageButton
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.feed.UsersListFragment
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
+import com.balloondigital.egvapp.fragment.feed.UsersListFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Enrollment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -369,6 +369,7 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
     private fun startUserProfileActivity() {
 
         if(mEvent.moderator_1 != null) {
+
             val bundle = Bundle()
             bundle.putSerializable("user", mEvent.moderator_1)
 

@@ -43,8 +43,8 @@ class MenuItens private constructor() {
             list.add(MenuItem(myEmbassy, "item", R.drawable.ic_menu_myembassy))
             list.add(MenuItem("Líderes", "section"))
             list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
-            list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
+            list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
             list.add(MenuItem("Privacidade", "section"))
             list.add(MenuItem(setPrivacy, "item", R.drawable.ic_menu_policy_privacy))
@@ -71,8 +71,8 @@ class MenuItens private constructor() {
             list.add(MenuItem(myEmbassy, "item", R.drawable.ic_menu_myembassy))
             list.add(MenuItem("Líderes", "section"))
             list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
-            list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
+            list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
             list.add(MenuItem("Gestores", "section"))
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
@@ -100,8 +100,8 @@ class MenuItens private constructor() {
         const val myEnrolledEvents = "Meus eventos confirmados"
         const val myFavoriteEvents = "Meus eventos favoritos"
         const val newEvent = "Gerenciar eventos"
-        const val sendInvites = "Enviar convite"
-        const val sentEmbassyPhotos = "Adicionar foto"
+        const val sendInvites = "Convidar Membros"
+        const val sentEmbassyPhotos = "Gerenciar fotos"
         const val editEmbassy = "Editar dados da embaixada"
         const val embassyForApproval = "Embaixadas para aprovação"
         const val createBulletin = "Gerenciar Informativos"

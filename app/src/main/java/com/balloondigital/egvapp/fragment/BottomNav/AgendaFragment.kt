@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
+import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
 
 
 // TODO: Rename parameter arguments, choose names that match

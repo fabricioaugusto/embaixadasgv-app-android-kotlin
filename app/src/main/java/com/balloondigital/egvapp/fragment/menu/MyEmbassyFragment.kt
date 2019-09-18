@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.menu
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.content.Context
@@ -13,6 +13,8 @@ import android.view.ViewGroup
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.dashboard.EmbassyAgendaFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.EmbassyPhoto
 import com.bumptech.glide.Glide
@@ -78,7 +80,11 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         }
 
         if(id == R.id.btEmbassyAgenda) {
+            startEmbassyAgendaActivity()
+        }
 
+        if(id == R.id.layoutLeaderProfile) {
+            startSingleUserActivity()
         }
 
         if(id == R.id.btBackPress) {
@@ -87,6 +93,8 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
     }
 
     private fun setListeners() {
+
+        layoutLeaderProfile.setOnClickListener(this)
         btEmbassyPhone.setOnClickListener(this)
         btEmbassyEmail.setOnClickListener(this)
         btEmbassyAgenda.setOnClickListener(this)
@@ -144,6 +152,34 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
                 mAdapter.hasStableIds()
                 gridEmbassyPhotos.adapter = mAdapter
             }
+    }
+
+    private fun startEmbassyAgendaActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("embassyID", mEmbassyID)
+
+        val nextFrag = EmbassyAgendaFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:embassyAgenda")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startSingleUserActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mEmbassy.leader)
+
+        val nextFrag = SingleUserFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleUser")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun openExternalLink(url: String) {

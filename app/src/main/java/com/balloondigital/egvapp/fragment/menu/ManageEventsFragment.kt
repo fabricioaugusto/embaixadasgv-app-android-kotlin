@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.menu
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.app.Activity
@@ -12,29 +12,22 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreateEventActivity
-import com.balloondigital.egvapp.activity.Create.CreatePostActivity
-import com.balloondigital.egvapp.activity.Create.CreateToughtActivity
 import com.balloondigital.egvapp.activity.Edit.EditEventActivity
 import com.balloondigital.egvapp.adapter.*
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.ListEventsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
-import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
+import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
+import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.dashboard.DashboardPanelFragment
 import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.model.MenuItem
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
-import com.google.android.gms.tasks.Task
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore

@@ -1,13 +1,11 @@
-package com.balloondigital.egvapp.fragment.BottomNav.dashboard
+package com.balloondigital.egvapp.fragment.dashboard
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
@@ -16,10 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.EventProfileActivity
 import com.balloondigital.egvapp.adapter.EventListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
@@ -40,6 +37,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
 
+    private lateinit var mEmbassyID: String
     private lateinit var mContext: Context
     private lateinit var mUser: User
     private lateinit var mDatabase: FirebaseFirestore
@@ -57,7 +55,7 @@ class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
+            mEmbassyID = bundle.getString("embassyID", "id")
         }
 
         mContext = view.context
@@ -93,7 +91,7 @@ class EmbassyAgendaFragment : Fragment(), View.OnClickListener {
         val timestamp = com.google.firebase.Timestamp(today)
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
-            .whereEqualTo("embassy_id", mUser.embassy_id)
+            .whereEqualTo("embassy_id", mEmbassyID)
             .whereGreaterThan("date", timestamp)
             .orderBy("date", Query.Direction.ASCENDING)
             .get().addOnSuccessListener { documentSnapshot ->

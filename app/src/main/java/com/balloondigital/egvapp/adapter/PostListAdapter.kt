@@ -1,6 +1,5 @@
 package com.balloondigital.egvapp.adapter
 
-import android.app.Activity
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,11 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.model.Post
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
-import de.hdodenhof.circleimageview.CircleImageView
 import io.github.mthli.knife.KnifeParser
-import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.widget.ImageButton
 import androidx.core.net.toUri
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.model.PostLike
 import com.balloondigital.egvapp.model.User
 import com.google.firebase.firestore.CollectionReference
@@ -27,26 +23,20 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.like.LikeButton
 import com.like.OnLikeListener
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.text.Layout
 import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
-import androidx.core.text.toHtml
 import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import com.balloondigital.egvapp.activity.Single.UserProfileActivity
-import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
+import com.balloondigital.egvapp.fragment.feed.AllPostsFragment
+import com.balloondigital.egvapp.fragment.feed.EmbassyPostsFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
-import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
 
 class PostListAdapter(postList: MutableList<Post>, user: User, activity: FragmentActivity): RecyclerView.Adapter<PostListAdapter.PostViewHolder>() {

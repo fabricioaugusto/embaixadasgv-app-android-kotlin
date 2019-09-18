@@ -1,10 +1,8 @@
-package com.balloondigital.egvapp.fragment.BottomNav.feed
+package com.balloondigital.egvapp.fragment.feed
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -13,11 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.net.toUri
 import androidx.core.view.isGone
-import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,8 +21,7 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.CommentListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
@@ -39,9 +34,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.fragment_single_post.*

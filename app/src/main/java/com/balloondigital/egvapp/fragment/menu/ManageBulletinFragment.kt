@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.menu
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.app.Activity
@@ -22,8 +22,8 @@ import com.balloondigital.egvapp.activity.Edit.EditBulletinActivity
 import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.fragment.BottomNav.dashboard.SingleBulletinFragment
+import com.balloondigital.egvapp.fragment.dashboard.DashboardPanelFragment
+import com.balloondigital.egvapp.fragment.dashboard.SingleBulletinFragment
 import com.balloondigital.egvapp.model.Bulletin
 import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User

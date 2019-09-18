@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp.fragment.BottomNav.feed
+package com.balloondigital.egvapp.fragment.feed
 
 
 import android.content.Context
@@ -15,7 +15,7 @@ import com.algolia.search.saas.Index
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
+import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Enrollment
 import com.balloondigital.egvapp.model.PostLike
 import com.balloondigital.egvapp.model.User

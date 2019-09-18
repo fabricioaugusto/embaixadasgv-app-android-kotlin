@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.fragment.BottomNav.search.ListUsersFragment
+import com.balloondigital.egvapp.fragment.search.ListUsersFragment
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER

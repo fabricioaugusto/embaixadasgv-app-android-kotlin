@@ -4,7 +4,7 @@
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   tools:context=".fragment.BottomNav.menu.MyEmbassyFragment">
+                                                   tools:context=".fragment.menu.MyEmbassyFragment">
 
     <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
@@ -120,7 +120,7 @@
                     <LinearLayout
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
+                            android:layout_height="match_parent" android:id="@+id/layoutLeaderProfile">
                         <de.hdodenhof.circleimageview.CircleImageView
                                 android:id="@+id/imgEmbassyLeader"
                                 android:layout_width="70dp"

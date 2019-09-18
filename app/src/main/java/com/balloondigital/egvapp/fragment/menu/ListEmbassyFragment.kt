@@ -1,8 +1,7 @@
-package com.balloondigital.egvapp.fragment.BottomNav.menu
+package com.balloondigital.egvapp.fragment.menu
 
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Single.SingleEmbassyActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
