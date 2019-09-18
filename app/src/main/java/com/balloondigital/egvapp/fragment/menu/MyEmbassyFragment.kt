@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.dashboard.EmbassyAgendaFragment
+import com.balloondigital.egvapp.fragment.dashboard.EmbassyPhotosFragment
 import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.EmbassyPhoto
@@ -99,6 +101,13 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         btEmbassyEmail.setOnClickListener(this)
         btEmbassyAgenda.setOnClickListener(this)
         btBackPress.setOnClickListener(this)
+
+        val photoSelectListener = AdapterView.OnItemClickListener{
+                adapter, view, pos, posLong ->
+            startEmbassyPhotoActivity()
+        }
+
+        gridEmbassyPhotos.onItemClickListener = photoSelectListener
     }
 
     private fun getEmbassyDetails() {
@@ -152,6 +161,21 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
                 mAdapter.hasStableIds()
                 gridEmbassyPhotos.adapter = mAdapter
             }
+    }
+
+
+    private fun startEmbassyPhotoActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("embassyID", mEmbassyID)
+
+        val nextFrag = EmbassyPhotosFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:embassyPhotos")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEmbassyAgendaActivity() {

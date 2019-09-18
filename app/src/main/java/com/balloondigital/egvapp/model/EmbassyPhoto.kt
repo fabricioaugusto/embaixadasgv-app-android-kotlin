@@ -11,7 +11,7 @@ data class EmbassyPhoto (
     var id: String = "",
     var date: Timestamp? = null,
     var text: String? = null,
-    var picture: String? = null,
+    var picture: String = "",
     var picture_file_name: String? = null,
     var thumbnail: String? = null,
     var embassy_id: String? = null

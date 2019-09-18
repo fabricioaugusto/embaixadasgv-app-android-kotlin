@@ -43,7 +43,9 @@
                     android:text="Gin Festival London 2017"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/txtAdEventTheme"
-                    android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
+                    android:ellipsize="end" android:maxLines="2"
+                    android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"
+                    android:paddingRight="8dp"/>
         </LinearLayout>
         <ImageView
                 android:layout_width="80dp"

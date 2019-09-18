@@ -17,15 +17,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/linearLayout13"
                     app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="16dp"
-                    android:layout_marginLeft="32dp" android:layout_marginStart="32dp" android:layout_marginRight="32dp"
-                    android:layout_marginEnd="32dp"
+                    app:layout_constraintEnd_toEndOf="parent"
                     android:gravity="right">
                 <LinearLayout
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:gravity="right" android:layout_marginBottom="24dp"
-                        android:background="@drawable/bg_screen_tutorial" android:id="@+id/layoutAlertInfo">
+                        android:background="@color/colorLink" android:id="@+id/layoutAlertInfo">
                     <ImageButton
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" app:srcCompat="@drawable/ic_close_blue"
@@ -36,7 +34,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/textView32"
                             android:paddingLeft="12dp" android:paddingRight="24dp" android:paddingTop="8dp"
-                            android:paddingBottom="12dp" android:textColor="@color/colorLink"
+                            android:paddingBottom="12dp" android:textColor="@color/backgroundGrey"
                             android:layout_marginTop="-24dp"/>
                 </LinearLayout>
             </LinearLayout>
@@ -76,63 +74,18 @@
                             android:hint="Descrição da foto" android:textColor="@color/colorText"
                             android:id="@+id/etPostDescription"/>
                 </com.google.android.material.textfield.TextInputLayout>
+                <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                        android:text="Publicar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/btPostPublish"
+                        app:finalCornerAngle="50dp"
+                        app:initialCornerAngle="0dp"
+                        app:spinning_bar_color="#FFF"
+                        app:spinning_bar_padding="6dp"
+                        android:background="@drawable/bg_circular_progressbar"
+                        android:textColor="@color/backgroundGrey"
+                        android:layout_marginTop="16dp"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/layoutFab"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true" android:layout_marginBottom="16dp" android:gravity="center_horizontal">
-        <io.github.yavski.fabspeeddial.FabSpeedDial
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|end"
-                app:fabGravity="bottom_end"
-                app:fabMenu="@menu/fab_create_thought_menu"
-                app:miniFabBackgroundTint="@android:color/white"
-                app:miniFabDrawableTint="@color/colorLink"
-                app:miniFabTitleTextColor="@color/colorText" android:id="@+id/fabSpeedDial">
-        </io.github.yavski.fabspeeddial.FabSpeedDial>
-    </LinearLayout>
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true" android:paddingTop="32dp" android:paddingBottom="32dp"
-            android:paddingRight="24dp" android:paddingLeft="24dp" android:layout_alignParentEnd="true"
-            android:layout_alignParentStart="true" android:background="@color/backgroundModal"
-            android:gravity="center" android:clickable="true" android:visibility="gone"
-            android:id="@+id/layoutToughtModal" android:focusable="true" android:alpha="0">
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:background="@color/backgroundGrey"
-                android:paddingLeft="24dp" android:paddingRight="24dp" android:paddingTop="32dp"
-                android:paddingBottom="32dp" android:id="@+id/layoutToughtPublish" android:clickable="true"
-                android:visibility="gone" android:focusable="true" android:gravity="center_horizontal">
-            <TextView
-                    android:text="Tem certeza que deseja publicar esta foto?"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/textView28"
-                    android:textColor="@color/colorText"/>
-            <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-                    android:text="Publicar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btPostPublish"
-                    app:finalCornerAngle="50dp"
-                    app:initialCornerAngle="0dp"
-                    app:spinning_bar_color="#FFF"
-                    app:spinning_bar_padding="6dp"
-                    android:background="@drawable/bg_circular_progressbar"
-                    android:textColor="@color/backgroundGrey"
-                    android:layout_marginTop="16dp"/>
-        </LinearLayout>
-    </LinearLayout>
 </RelativeLayout>

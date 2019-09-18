@@ -4,6 +4,7 @@ package com.balloondigital.egvapp.fragment.feed
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -268,6 +269,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         when(mPost.type) {
             "note" -> {
                 txtPostTitle.text = mPost.title
+                txtPostText.movementMethod = LinkMovementMethod.getInstance()
             }
             "post" -> {
                 txtPostTitle.isGone = true

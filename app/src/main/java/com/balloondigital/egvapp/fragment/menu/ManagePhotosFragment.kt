@@ -20,6 +20,7 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Menu.SendEmbassyPhotoActivity
 import com.balloondigital.egvapp.activity.Single.SinglePhotoActivity
 import com.balloondigital.egvapp.adapter.GridPhotosAdapter
+import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.EmbassyPhoto
 import com.balloondigital.egvapp.model.User
@@ -30,6 +31,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache
 import com.nostra13.universalimageloader.core.ImageLoader
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration
+import com.orhanobut.dialogplus.DialogPlus
+import com.orhanobut.dialogplus.DialogPlusBuilder
+import com.orhanobut.dialogplus.OnItemClickListener
 import kotlinx.android.synthetic.main.fragment_manage_photos.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -41,15 +45,18 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ManagePhotosFragment : Fragment(), View.OnClickListener {
+class ManagePhotosFragment : Fragment(), OnItemClickListener, View.OnClickListener {
 
     private lateinit var mEmbassyID: String
     private lateinit var mUser: User
+    private lateinit var mCurrentPhoto: EmbassyPhoto
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: GridPhotosAdapter
     private lateinit var mPhotoList: MutableList<String>
+    private lateinit var mCPDialog: DialogPlus
+    private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mEmbassyPhoto: EmbassyPhoto
     private lateinit var mEmbassyPhotoList: MutableList<EmbassyPhoto>
 
@@ -82,6 +89,13 @@ class ManagePhotosFragment : Fragment(), View.OnClickListener {
 
         mPhotoList = mutableListOf()
         mEmbassyPhotoList = mutableListOf()
+
+        val menuList: List<com.balloondigital.egvapp.model.MenuItem> = listOf(
+            com.balloondigital.egvapp.model.MenuItem("Visualizar", "item", R.drawable.ic_visibility_black),
+            com.balloondigital.egvapp.model.MenuItem("Excluir", "item", R.drawable.ic_delete_black)
+        )
+
+        mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 2, menuList)
 
         val config: ImageLoaderConfiguration = ImageLoaderConfiguration
             .Builder(mContext)
@@ -148,6 +162,23 @@ class ManagePhotosFragment : Fragment(), View.OnClickListener {
         }
     }
 
+    override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
+
+        mCPDialog.dismiss()
+
+        if(position == 0) {
+            startSinglePhotoActivity(mCurrentPhoto.picture)
+        }
+
+        if(position == 1) {
+
+            if(mEmbassyID == mCurrentPhoto.embassy_id && mUser.leader)   {
+                confirmDialog("Deletar Foto",
+                    "Tem certeza que deseja remover esta foto?")
+            }
+        }
+    }
+
     override fun onClick(view: View) {
         val id = view.id
         if(id == R.id.btBackPress) {
@@ -185,33 +216,11 @@ class ManagePhotosFragment : Fragment(), View.OnClickListener {
 
         val photoSelectListener = AdapterView.OnItemClickListener{
                 adapter, view, pos, posLong ->
-            startSinglePhotoActivity(mPhotoList[pos])
-        }
-
-        val photoLongSelectListener = AdapterView.OnItemLongClickListener {
-                adapterView, view, pos, posLong ->
-
-
-            val alertbox = AlertDialog.Builder(mContext)
-            val photo = mEmbassyPhotoList[pos]
-
-            if(mEmbassyID == photo.embassy_id && mUser.leader)   {
-                alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
-                    if(pos == 0) {
-                        val deletePost = MyFirebase.database()
-                            .collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
-                            .document(photo.id).delete()
-                        confirmDialog("Deletar Publicação",
-                            "Tem certeza que deseja remover esta publicação?", deletePost, pos)
-                    }
-                })
-            }
-            alertbox.show()
-            true
+            mCurrentPhoto = mEmbassyPhotoList[pos]
+            setManageItemsDialog()
         }
 
         gvEmbassyPhotos.onItemClickListener = photoSelectListener
-        gvEmbassyPhotos.onItemLongClickListener = photoLongSelectListener
     }
 
     private fun startSinglePhotoActivity(photoUrl: String) {
@@ -226,13 +235,29 @@ class ManagePhotosFragment : Fragment(), View.OnClickListener {
         startActivityForResult(intent, 100)
     }
 
-    private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>, position: Int) {
+    private fun setManageItemsDialog() {
+
+        val dialogBuilder: DialogPlusBuilder? = DialogPlus.newDialog(mContext)
+        if(dialogBuilder != null) {
+            dialogBuilder.adapter = mAdapterDialog
+            dialogBuilder.onItemClickListener = this
+            dialogBuilder.setPadding(16, 32, 16, 32)
+            dialogBuilder.setGravity(Gravity.CENTER)
+            mCPDialog = dialogBuilder.create()
+            mCPDialog.show()
+        }
+    }
+
+    private fun confirmDialog(dialogTitle: String, dialogMessage: String) {
         AlertDialog.Builder(mContext)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setTitle(dialogTitle)
             .setMessage(dialogMessage)
             .setPositiveButton("Sim") { dialog, which ->
-                task.addOnCompleteListener {
+                MyFirebase.database()
+                    .collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
+                    .document(mCurrentPhoto.id).delete()
+                    .addOnCompleteListener {
                     setGridView()
                 }.addOnFailureListener {
                     Log.d("EGVAPPLOG", it.message.toString())

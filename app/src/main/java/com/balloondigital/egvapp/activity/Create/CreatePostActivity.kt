@@ -81,22 +81,6 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         imgPostInsertPic.setOnClickListener(this)
         btPostInsertPic.setOnClickListener(this)
         btPostPublish.setOnClickListener(this)
-
-        val fabListener = object : FabSpeedDial.MenuListener {
-            override fun onPrepareMenu(p0: NavigationMenu?): Boolean {
-                return true
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                when (menuItem.itemId) {
-                    R.id.fabArticlePublish -> showPublishPost()
-                }
-                return true
-            }
-            override fun onMenuClosed() {}
-        }
-
-        fabSpeedDial.setMenuListener(fabListener)
     }
 
     override fun onClick(view: View) {
@@ -166,20 +150,6 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                 e.printStackTrace()
             }
         }
-    }
-
-    private fun showPublishPost() {
-        mPublishPostIsHide = false
-        layoutToughtPublish.isGone = false
-        layoutToughtModal.isGone = false
-        layoutToughtModal.animate().alpha(1.0F)
-    }
-
-    private fun hidePublishPost() {
-        mPublishPostIsHide = true
-        layoutToughtModal.animate().alpha(0F)
-        layoutToughtPublish.isGone = true
-        layoutToughtModal.isGone = true
     }
 
     private fun saveUserData() {

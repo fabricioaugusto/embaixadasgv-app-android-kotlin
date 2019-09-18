@@ -195,9 +195,12 @@ class MainActivity : AppCompatActivity() {
             val singleEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEmbassy")
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleBulletin")
             val embassyAgendaMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyAgenda")
+            val embassyPhotosMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyPhotos")
             val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
             val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
             val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
+            val managePhotos: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:managePhotos")
+
 
             if (singleMenuUser != null && singleMenuUser.isVisible) {
                 transaction.remove(singleMenuUser).commit()
@@ -219,6 +222,11 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
+            if (embassyPhotosMenu != null && embassyPhotosMenu.isVisible) {
+                transaction.remove(embassyPhotosMenu).commit()
+                return
+            }
+
             if (embassyAgendaMenu != null && embassyAgendaMenu.isVisible) {
                 transaction.remove(embassyAgendaMenu).commit()
                 return
@@ -226,6 +234,11 @@ class MainActivity : AppCompatActivity() {
 
             if (singleEmbassy != null && singleEmbassy.isVisible) {
                 transaction.remove(singleEmbassy).commit()
+                return
+            }
+
+            if (managePhotos != null && managePhotos.isVisible) {
+                transaction.remove(managePhotos).commit()
                 return
             }
 

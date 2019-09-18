@@ -179,6 +179,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         mAdapter = PostListAdapter(mPostList, mUser, activity!!)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mRecyclerView.itemAnimator = null
 
         mSkeletonScreen = Skeleton.bind(mRecyclerView)
             .adapter(mAdapter)

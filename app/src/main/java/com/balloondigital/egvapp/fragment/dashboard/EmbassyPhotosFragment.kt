@@ -47,7 +47,6 @@ private const val ARG_PARAM2 = "param2"
 class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mEmbassyID: String
-    private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
@@ -64,19 +63,12 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
             mEmbassyID = bundle.getString("embassyID", "")
         }
 
         mToolbar = view.findViewById(R.id.embassyPhotosToolbar)
         mToolbar.title = ""
 
-
-        if (activity is AppCompatActivity) {
-            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
-        }
-
-        setHasOptionsMenu(true)
 
         mContext = view.context
 
@@ -133,23 +125,6 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_embassy_photos_toolbar, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.bar_add_picture -> {
-                startSendEmbassyPhotosActivity()
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
-
     override fun onClick(view: View) {
         val id = view.id
         if(id == R.id.btBackPress) {
@@ -190,58 +165,13 @@ class EmbassyPhotosFragment : Fragment(), View.OnClickListener {
             startSinglePhotoActivity(mPhotoList[pos])
         }
 
-        val photoLongSelectListener = AdapterView.OnItemLongClickListener {
-                adapterView, view, pos, posLong ->
-
-
-            val alertbox = AlertDialog.Builder(mContext)
-            val photo = mEmbassyPhotoList[pos]
-
-            if(mEmbassyID == photo.embassy_id && mUser.leader)   {
-                alertbox.setItems(R.array.posts_author_alert, DialogInterface.OnClickListener { dialog, pos ->
-                    if(pos == 0) {
-                        val deletePost = MyFirebase.database()
-                            .collection(MyFirebase.COLLECTIONS.EMBASSY_PHOTOS)
-                            .document(photo.id).delete()
-                        confirmDialog("Deletar Publicação",
-                            "Tem certeza que deseja remover esta publicação?", deletePost, pos)
-                    }
-                })
-            }
-            alertbox.show()
-            true
-        }
-
         gvEmbassyPhotos.onItemClickListener = photoSelectListener
-        gvEmbassyPhotos.onItemLongClickListener = photoLongSelectListener
     }
 
     private fun startSinglePhotoActivity(photoUrl: String) {
         val intent: Intent = Intent(mContext, SinglePhotoActivity::class.java)
         intent.putExtra("photoUrl", photoUrl)
         startActivity(intent)
-    }
-
-    private fun startSendEmbassyPhotosActivity() {
-        val intent: Intent = Intent(mContext, SendEmbassyPhotoActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, 100)
-    }
-
-    private fun confirmDialog(dialogTitle: String, dialogMessage: String, task: Task<Void>, position: Int) {
-        AlertDialog.Builder(mContext)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setTitle(dialogTitle)
-            .setMessage(dialogMessage)
-            .setPositiveButton("Sim") { dialog, which ->
-                task.addOnCompleteListener {
-                    setGridView()
-                }.addOnFailureListener {
-                    Log.d("EGVAPPLOG", it.message.toString())
-                }
-            }
-            .setNegativeButton("Não", null)
-            .show()
     }
 
 }
