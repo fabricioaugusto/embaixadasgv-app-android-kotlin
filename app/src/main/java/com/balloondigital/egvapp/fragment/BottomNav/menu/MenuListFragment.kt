@@ -31,6 +31,7 @@ import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.MenuItens
+import com.balloondigital.egvapp.utils.MyApplication
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -48,7 +49,6 @@ private const val ARG_PARAM2 = "param2"
 class MenuListFragment : Fragment() {
 
     private lateinit var mUser: User
-    private lateinit var mEvent: Event
     private lateinit var mContext: Context
     private lateinit var mMenuList: ListView
     private lateinit var mAuth: FirebaseAuth
@@ -394,8 +394,7 @@ class MenuListFragment : Fragment() {
     }
 
     private fun startAppRateActivity() {
-        val intent: Intent = Intent(mContext, AppRateActivity::class.java)
-        startActivity(intent)
+        MyApplication.util.openExternalLink(mContext, MyApplication.const.urls.googlePlayUrl)
     }
 
     private fun startSendMessageActivity() {

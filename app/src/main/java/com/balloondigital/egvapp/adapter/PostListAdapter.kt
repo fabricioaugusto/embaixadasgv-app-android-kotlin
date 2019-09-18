@@ -28,6 +28,7 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import android.content.DialogInterface
 import android.content.Intent
+import android.os.Bundle
 import android.os.Handler
 import android.text.Layout
 import android.widget.LinearLayout
@@ -39,6 +40,7 @@ import androidx.fragment.app.FragmentActivity
 import com.balloondigital.egvapp.activity.Single.UserProfileActivity
 import com.balloondigital.egvapp.fragment.BottomNav.feed.AllPostsFragment
 import com.balloondigital.egvapp.fragment.BottomNav.feed.EmbassyPostsFragment
+import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -246,9 +248,17 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
             }
 
             mLayoutUserProfile.setOnClickListener {
-                val intent: Intent = Intent(mContext, UserProfileActivity::class.java)
-                intent.putExtra("user", post.user)
-                mContext.startActivity(intent)
+
+                val bundle = Bundle()
+                bundle.putSerializable("user", post.user)
+
+                val nextFrag = SingleUserFragment()
+                nextFrag.arguments = bundle
+
+                mActivity.supportFragmentManager.beginTransaction()
+                    .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:singleUser")
+                    .addToBackStack(null)
+                    .commit()
             }
 
             mBtAdPostOptions.setOnClickListener(View.OnClickListener {

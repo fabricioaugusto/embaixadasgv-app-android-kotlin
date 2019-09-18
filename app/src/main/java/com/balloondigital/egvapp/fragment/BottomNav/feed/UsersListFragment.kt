@@ -3,11 +3,8 @@ package com.balloondigital.egvapp.fragment.BottomNav.feed
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import android.widget.SearchView
-import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,8 +22,7 @@ import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import org.json.JSONArray
+import kotlinx.android.synthetic.main.fragment_users_list.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -67,6 +63,7 @@ class UsersListFragment : Fragment(), View.OnClickListener {
             mRootView = bundle.getInt("rootViewer")
         }
 
+
         mDatabase = MyFirebase.database()
         mListUsers = mutableListOf()
         mContext = view.context
@@ -74,10 +71,23 @@ class UsersListFragment : Fragment(), View.OnClickListener {
         mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mIndex = mClient.getIndex("users")
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setListeners()
         getListUsers()
         setRecyclerView()
 
-        return view
+        if(mType == "post_likes") {
+            txtUserListToolbar.text = "Curtidas"
+        }
+
+        if(mType == "enrollments") {
+            txtUserListToolbar.text = "Inscritos"
+        }
     }
 
 
@@ -86,6 +96,14 @@ class UsersListFragment : Fragment(), View.OnClickListener {
         if(id == R.id.bar_search) {
             mImgLogoToolbar.isGone = true
         }
+
+        if(id == R.id.btBackPress) {
+            activity!!.onBackPressed()
+        }
+    }
+
+    private fun setListeners() {
+        btBackPress.setOnClickListener(this)
     }
 
     private fun getListUsers() {

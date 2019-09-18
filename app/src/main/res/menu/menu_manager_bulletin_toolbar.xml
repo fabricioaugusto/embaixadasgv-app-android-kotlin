@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-            android:id="@+id/bar_create_event"
-            android:icon="@drawable/ic_menu_create_event"
-            android:title="Novo evento"
+            android:id="@+id/bar_create_bulletin"
+            android:icon="@drawable/ic_menu_create_bulletin"
+            android:title="Novo Informativo"
             app:iconTint="@color/colorGrey" app:showAsAction="always"
     />
 </menu>

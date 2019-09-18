@@ -214,7 +214,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private fun getBulletinList() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
-            .orderBy("date", Query.Direction.ASCENDING)
+            .orderBy("date", Query.Direction.DESCENDING)
             .limit(3)
             .get().addOnSuccessListener { documentSnapshot ->
 

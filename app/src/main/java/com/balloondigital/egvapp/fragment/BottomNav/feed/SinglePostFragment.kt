@@ -26,6 +26,7 @@ import com.balloondigital.egvapp.adapter.CommentListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
+import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
@@ -127,6 +128,10 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         if(id == R.id.txtLikeCount) {
             startLikesUsersList()
         }
+
+        if(id == R.id.layoutUserProfile) {
+            startSingleUserActivity()
+        }
     }
 
     override fun onDestroyView() {
@@ -135,6 +140,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setListeners() {
+        layoutUserProfile.setOnClickListener(this)
         txtLikeCount.setOnClickListener(this)
         btPostSendComment.setOnClickListener(this)
         btPostOptions.setOnClickListener(this)
@@ -359,6 +365,19 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
         activity!!.supportFragmentManager.beginTransaction()
             .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:likeUsers")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startSingleUserActivity() {
+        val bundle = Bundle()
+        bundle.putSerializable("user", mPost.user)
+
+        val nextFrag = SingleUserFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:singleUser")
             .addToBackStack(null)
             .commit()
     }

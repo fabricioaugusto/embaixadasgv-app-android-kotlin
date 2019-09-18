@@ -110,13 +110,13 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener, View.OnClickList
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
-        inflater.inflate(R.menu.menu_manager_event_toolbar, menu)
+        inflater.inflate(R.menu.menu_manager_bulletin_toolbar, menu)
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.bar_create_event -> {
+            R.id.bar_create_bulletin -> {
                 startCreateBulletinActivity()
                 true
             }
@@ -174,7 +174,7 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener, View.OnClickList
     private fun getBulletinList() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
-            .orderBy("date", Query.Direction.ASCENDING)
+            .orderBy("date", Query.Direction.DESCENDING)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mBulletinList.clear()

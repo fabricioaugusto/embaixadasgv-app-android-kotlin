@@ -12,7 +12,9 @@ import kotlinx.android.synthetic.main.activity_register.*
 import android.util.Log
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.MyApplication
 import com.google.firebase.firestore.FirebaseFirestore
+import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
 
@@ -35,6 +37,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             mInvite = bundle.getSerializable("invite") as Invite
         }
 
+        txtSeePolicyPrivacy.text = KnifeParser.fromHtml("Ao se cadastrar você está de acordo com as <b>Políticas de Privacidade</b>")
+
         //set
         setListeners()
     }
@@ -49,11 +53,16 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         if (id == R.id.btRegister) {
             registerUser()
         }
+
+        if(id == R.id.txtSeePolicyPrivacy) {
+            MyApplication.util.openExternalLink(this, MyApplication.const.urls.policyPrivacy)
+        }
     }
 
     fun setListeners() {
         btRegister.setOnClickListener(this)
         tvToLogin.setOnClickListener(this)
+        txtSeePolicyPrivacy.setOnClickListener(this)
     }
 
     fun startCheckAuthActivity() {

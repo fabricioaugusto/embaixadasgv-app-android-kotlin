@@ -13,6 +13,7 @@ import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.BottomNav.feed.UsersListFragment
+import com.balloondigital.egvapp.fragment.BottomNav.search.SingleUserFragment
 import com.balloondigital.egvapp.model.Enrollment
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.model.User
@@ -127,9 +128,14 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         if(id == R.id.txtCountEnrolled) {
             startEnrollmentUserList()
         }
+
+        if(id == R.id.layoutEventModerator) {
+            startUserProfileActivity()
+        }
     }
 
     private fun setListeners() {
+        layoutEventModerator.setOnClickListener(this)
         txtCountEnrolled.setOnClickListener(this)
         mBtEnrollEvent.setOnClickListener(this)
         mBtBack.setOnClickListener(this)
@@ -358,5 +364,21 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
             .add(mRootView, nextFrag, "$mRootView:enrollmentUsers")
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun startUserProfileActivity() {
+
+        if(mEvent.moderator_1 != null) {
+            val bundle = Bundle()
+            bundle.putSerializable("user", mEvent.moderator_1)
+
+            val nextFrag = SingleUserFragment()
+            nextFrag.arguments = bundle
+
+            activity!!.supportFragmentManager.beginTransaction()
+                .add(mRootView, nextFrag, "$mRootView:singleUser")
+                .addToBackStack(null)
+                .commit()
+        }
     }
 }

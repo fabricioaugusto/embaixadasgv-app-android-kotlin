@@ -54,7 +54,6 @@
                     android:layout_height="wrap_content" android:id="@+id/txtBulletinDate"
                     android:textColor="@color/colorRed" android:layout_marginTop="4dp" tools:text="17/09/2019"/>
             <TextView
-                    android:text="TextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/txtBulletinText"
                     android:textColor="@color/colorText"
