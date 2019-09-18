@@ -203,6 +203,8 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
             Glide.with(this)
                 .load(mEvent.cover_img)
                 .into(imgEventCover)
+        } else {
+            imgEventCover.resources.getDrawable(R.drawable.bg_default_cover)
         }
 
         Glide.with(this)

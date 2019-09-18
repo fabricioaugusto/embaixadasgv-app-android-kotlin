@@ -138,8 +138,15 @@ class MainActivity : AppCompatActivity() {
 
         if(mTabSelected == 0) {
 
+            val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleBulletin")
+
             if (singleEmbassyUser != null && singleEmbassyUser.isVisible) {
                 transaction.remove(singleEmbassyUser).commit()
+                return
+            }
+
+            if (singleBulletin != null && singleBulletin.isVisible) {
+                transaction.remove(singleBulletin).commit()
                 return
             }
 
@@ -221,10 +228,18 @@ class MainActivity : AppCompatActivity() {
             val usersEventEnrollments: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:enrollmentUsers")
             val singleMenuEvent: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEvent")
             val singleEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEmbassy")
+            val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleBulletin")
             val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
+            val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
+            val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
 
             if (singleMenuUser != null && singleMenuUser.isVisible) {
                 transaction.remove(singleMenuUser).commit()
+                return
+            }
+
+            if (singleBulletin != null && singleBulletin.isVisible) {
+                transaction.remove(singleBulletin).commit()
                 return
             }
 
@@ -240,6 +255,16 @@ class MainActivity : AppCompatActivity() {
 
             if (singleMenuEvent != null && singleMenuEvent.isVisible) {
                 transaction.remove(singleMenuEvent).commit()
+                return
+            }
+
+            if (manageEvents != null && manageEvents.isVisible) {
+                transaction.remove(manageEvents).commit()
+                return
+            }
+
+            if (manageBulletins != null && manageBulletins.isVisible) {
+                transaction.remove(manageBulletins).commit()
                 return
             }
 

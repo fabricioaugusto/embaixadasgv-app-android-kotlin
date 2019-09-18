@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isGone
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
@@ -63,7 +64,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mTxtDashboardLocation: TextView
     private lateinit var mTxtDashboardNoEvent: TextView
     private lateinit var mProgressBarDashboard: ProgressBar
-    private lateinit var mRootView: ScrollView
+    private lateinit var mRootView: NestedScrollView
     private lateinit var mBtDashboardMembers: Button
     private lateinit var mBtDashboardPhotos: Button
     private lateinit var mBtDashboardEvents: Button
@@ -247,7 +248,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
             .shimmer(true).show()
 
         mAdapter.onItemClick = {
-                bulletin ->
+                bulletin -> startSingleBulletinActivity(bulletin)
 
         }
     }
@@ -312,6 +313,20 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
         activity!!.supportFragmentManager.beginTransaction()
             .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleEvent")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startSingleBulletinActivity(bulletin: Bulletin) {
+
+        val bundle = Bundle()
+        bundle.putString("bulletinID", bulletin.id)
+
+        val nextFrag = SingleBulletinFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleBulletin")
             .addToBackStack(null)
             .commit()
     }

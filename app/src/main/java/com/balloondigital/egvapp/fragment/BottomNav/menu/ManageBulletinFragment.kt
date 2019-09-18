@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Create.CreateEventActivity
-import com.balloondigital.egvapp.activity.Edit.EditEventActivity
+import com.balloondigital.egvapp.activity.Create.CreateBulletinActivity
+import com.balloondigital.egvapp.activity.Edit.EditBulletinActivity
 import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.BottomNav.agenda.SingleEventFragment
 import com.balloondigital.egvapp.fragment.BottomNav.dashboard.DashboardPanelFragment
+import com.balloondigital.egvapp.fragment.BottomNav.dashboard.SingleBulletinFragment
 import com.balloondigital.egvapp.model.Bulletin
 import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.model.User
@@ -36,6 +36,7 @@ import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
+import kotlinx.android.synthetic.main.fragment_manage_bulletin.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -46,7 +47,7 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ManageBulletinFragment : Fragment(), OnItemClickListener {
+class ManageBulletinFragment : Fragment(), OnItemClickListener, View.OnClickListener {
 
 
     private lateinit var mUser: User
@@ -61,7 +62,7 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
-    private val EVENT_REQUEST_CODE: Int = 200
+    private val BULLETIN_REQUEST_CODE: Int = 200
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -101,6 +102,8 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        setListeners()
         getBulletinList()
         setRecyclerView()
     }
@@ -141,12 +144,9 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
         if (resultCode == Activity.RESULT_OK) {
-
-            if(requestCode == EVENT_REQUEST_CODE) {
-                if(data != null) {
-                    getBulletinList()
-                    updateBulletinLists()
-                }
+            if(requestCode == BULLETIN_REQUEST_CODE) {
+                getBulletinList()
+                updateBulletinLists()
             }
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
@@ -157,6 +157,18 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
             // The user canceled the operation.
         }
 
+    }
+
+    override fun onClick(view: View) {
+        val id = view.id
+
+        if(id == R.id.btBackPress) {
+            activity!!.onBackPressed()
+        }
+    }
+
+    private fun setListeners() {
+        btBackPress.setOnClickListener(this)
     }
 
     private fun getBulletinList() {
@@ -204,24 +216,27 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener {
 
     private fun startSingleBulletinActivity() {
 
-        val nextFrag = SingleEventFragment()
+        val bundle = Bundle()
+        bundle.putString("bulletinID", mCurrentBulletin.id)
+
+        val nextFrag = SingleBulletinFragment()
+        nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleBulletin")
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleBulletin")
             .addToBackStack(null)
             .commit()
     }
 
     private fun startCreateBulletinActivity() {
-        val intent: Intent = Intent(mContext, CreateEventActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, EVENT_REQUEST_CODE)
+        val intent: Intent = Intent(mContext, CreateBulletinActivity::class.java)
+        startActivityForResult(intent, BULLETIN_REQUEST_CODE)
     }
 
     private fun startEditBulletinActivity() {
-        val intent: Intent = Intent(mContext, EditEventActivity::class.java)
-        intent.putExtra("eventID", mCurrentBulletin.id)
-        startActivityForResult(intent, EVENT_REQUEST_CODE)
+        val intent: Intent = Intent(mContext, EditBulletinActivity::class.java)
+        intent.putExtra("bulletinID", mCurrentBulletin.id)
+        startActivityForResult(intent, BULLETIN_REQUEST_CODE)
     }
 
     private fun setManageItemsDialog() {

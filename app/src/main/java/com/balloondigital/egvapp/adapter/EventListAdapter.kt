@@ -11,6 +11,7 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.model.Event
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
+import kotlinx.android.synthetic.main.fragment_single_event.*
 
 class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAdapter.EventViewHolder>() {
 
@@ -63,6 +64,8 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
                 Glide.with(context)
                     .load(event.cover_img)
                     .into(mEventCoverImage)
+            } else {
+                mEventCoverImage.resources.getDrawable(R.drawable.bg_default_cover)
             }
         }
     }

@@ -21,8 +21,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="android:icon">
-        <activity android:name=".activity.Edit.EditEventActivity"
+        <activity android:name=".activity.Edit.EditBulletinActivity"
                   android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.Edit.EditEventActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity
                 android:name=".activity.Edit.TextEditorBasicActivity"

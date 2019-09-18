@@ -24,7 +24,8 @@
                 <ImageView
                         android:layout_width="match_parent"
                         android:layout_height="190dp" app:srcCompat="@drawable/bg_default_cover"
-                        android:id="@+id/imgAdEventCover" android:adjustViewBounds="true" android:scaleType="centerCrop"
+                        android:id="@+id/imgAdEventCover" android:adjustViewBounds="false"
+                        android:scaleType="centerCrop"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"/>

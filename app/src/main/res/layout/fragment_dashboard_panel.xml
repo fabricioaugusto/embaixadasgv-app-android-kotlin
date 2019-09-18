@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/progressBarDashboard" android:layout_marginTop="32dp" tools:visibility="gone"/>
-    <ScrollView android:layout_width="match_parent" android:layout_height="match_parent"
+    <androidx.core.widget.NestedScrollView android:layout_width="match_parent" android:layout_height="match_parent"
                 android:background="@color/backgroundGreyStrong" android:id="@+id/rootView"
                 android:visibility="gone" tools:visibility="visible">
         <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
@@ -185,6 +185,6 @@
                         android:layout_height="wrap_content" android:id="@+id/rvBulletinList"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>
