@@ -65,7 +65,7 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
                     .load(event.cover_img)
                     .into(mEventCoverImage)
             } else {
-                mEventCoverImage.resources.getDrawable(R.drawable.bg_default_cover)
+                mEventCoverImage.resources.getDrawable(R.drawable.bg_cover_event)
             }
         }
     }

@@ -3,6 +3,7 @@ package com.balloondigital.egvapp.fragment.agenda
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -53,6 +54,7 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
     private var mPlaceLat: Double = 0.0
     private var mPlaceLng: Double = 0.0
     private var mEnrollProcessing  = false
+    private var isReadMoreClicked = false
     private lateinit var mPlaceName: String
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mBtEnrollEvent: Button
@@ -132,11 +134,28 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         if(id == R.id.layoutEventModerator) {
             startUserProfileActivity()
         }
+
+        if(id == R.id.txtEventReadMore) {
+            if(!isReadMoreClicked) {
+                isReadMoreClicked = true
+                txtEventReadMore.text = "Voltar"
+                txtEventDescription.maxLines = Integer.MAX_VALUE
+                txtEventDescription.ellipsize = null
+            } else {
+                isReadMoreClicked = false
+                txtEventReadMore.text = "Leia mais"
+                txtEventDescription.maxLines = 3
+                txtEventDescription.ellipsize = TextUtils.TruncateAt.END
+            }
+
+        }
+
     }
 
     private fun setListeners() {
         layoutEventModerator.setOnClickListener(this)
         txtCountEnrolled.setOnClickListener(this)
+        txtEventReadMore.setOnClickListener(this)
         mBtEnrollEvent.setOnClickListener(this)
         mBtBack.setOnClickListener(this)
     }
