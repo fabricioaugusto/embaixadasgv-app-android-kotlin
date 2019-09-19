@@ -100,7 +100,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         mPlaceFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG)
         mRecyclerView = findViewById(R.id.rvModerators)
         mSearchView = findViewById(R.id.svFindModerator)
-        mSearchView.isIconified = false
 
 
         mIndex = mClient.getIndex("users")

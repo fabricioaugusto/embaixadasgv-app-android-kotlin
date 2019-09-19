@@ -156,7 +156,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
 
                     if(!mListLikes.any { it.post_id == post.id } && !mLikeIsProcessing){
 
-                        val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = user)
+                        val postLike: PostLike = PostLike(post_id = post.id, user_id = mUser.id, user = mUser)
 
                         mLikeIsProcessing = true
 

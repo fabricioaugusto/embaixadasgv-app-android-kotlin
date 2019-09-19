@@ -4,12 +4,16 @@ package com.balloondigital.egvapp.fragment.feed
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
 import android.text.method.LinkMovementMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.widget.ScrollView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
@@ -51,6 +55,7 @@ private const val ARG_PARAM2 = "param2"
  */
 class SinglePostFragment : Fragment(), View.OnClickListener {
 
+
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mToolbar: Toolbar
@@ -60,9 +65,11 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     private lateinit var mPostCommentList: MutableList<PostComment>
     private lateinit var mAdapter: CommentListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mTxtPostEmptyComments: TextView
     private lateinit var mPostID: String
     private lateinit var mPost: Post
     private lateinit var mUser: User
+    private var isCommented: Boolean = false
     private var mCurrentUser: FirebaseUser? = null
 
     override fun onCreateView(
@@ -81,7 +88,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         mContext = view.context
         mDatabase = MyFirebase.database()
         mCurrentUser = UserService.authCurrentUser()
-
+        mTxtPostEmptyComments = view.findViewById(R.id.txtPostEmptyComments)
 
         mPostCommentList = mutableListOf()
         val bundle: Bundle? = arguments
@@ -144,7 +151,9 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
                 view, bool ->
             if(view.id == R.id.etCommentMessage) {
                 if(bool) {
-                   mRecyclerView.scrollToPosition(mPostCommentList.size-1)
+                    Handler().postDelayed({
+                        scrollToBottom()
+                    }, 500)
                 }
             }
         }
@@ -171,10 +180,11 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
                             bindData()
                             getComments()
                         } else {
-                            if(mPost.post_comments != post.post_comments) {
+                            val oldPost = mPost
+                            mPost = post
+                            if(oldPost.post_comments != post.post_comments) {
                                 getComments()
                             }
-                            mPost = post
                             updatePostInList()
                         }
                     }
@@ -185,9 +195,12 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getComments() {
+
+        makeToast("getComments")
+
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
             .whereEqualTo("post_id", mPost.id)
-            .orderBy("date", Query.Direction.DESCENDING)
+            .orderBy("date", Query.Direction.ASCENDING)
             .get()
             .addOnSuccessListener {
                     querySnapshot ->
@@ -200,9 +213,16 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
                             mPostCommentList.add(comment)
                         }
                     } else {
-                        txtPostEmptyComments.isGone = false
+                        mTxtPostEmptyComments.isGone = false
                     }
                     mAdapter.notifyDataSetChanged()
+                    if(isCommented) {
+                        makeToast("isCommented")
+                        Handler().postDelayed({
+                            scrollToBottom()
+                        }, 300)
+                        isCommented = false
+                    }
                 }
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
@@ -230,27 +250,6 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     }
 
 
-    private fun removeComment(comment: PostComment) {
-
-        val alertbox = AlertDialog.Builder(mContext)
-
-        if(comment.user_id == mCurrentUser!!.uid)   {
-            alertbox.setItems(R.array.comments_author_alert, DialogInterface.OnClickListener { dialog, pos ->
-                if(pos == 0) {
-                    val deleteComment = mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
-                        .document(comment.id).delete()
-                    confirmRemoveCommentDialog("Deletar Comentário",
-                        "Tem certeza que deseja remover esta publicação?", comment, deleteComment)
-                }
-            })
-        } else {
-            alertbox.setItems(R.array.posts_alert, DialogInterface.OnClickListener { dialog, pos ->
-                //pos will give the selected item position
-            })
-        }
-        alertbox.show()
-    }
-
     private fun setRecyclerView() {
 
         mAdapter = CommentListAdapter(mPostCommentList, mPost)
@@ -276,7 +275,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             }
             "thought" -> {
                 txtPostTitle.isGone = true
-                imgPostUser.isGone = true
+                imgPostPicture.isGone = true
                 txtPostText.textSize = 24F
             }
         }
@@ -334,16 +333,17 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             .addOnSuccessListener {
                     document ->
 
-                txtPostEmptyComments.isGone = true
+                isCommented = true
+
+                mTxtPostEmptyComments.isGone = true
 
                 document.update("id", document.id)
                 postComment.id = document.id
-                mPost.post_comments += 1
+                val post_comments = mPost.post_comments + 1
                 mPostCommentList.add(postComment)
-                mRecyclerView.scrollToPosition(0)
 
                 mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
-                    .document(mPostID).update("post_comments", mPost.post_comments)
+                    .document(mPostID).update("post_comments", post_comments)
             }
     }
 
@@ -428,19 +428,13 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
             .show()
     }
 
-    private fun confirmRemoveCommentDialog(dialogTitle: String, dialogMessage: String, comment: PostComment, task: Task<Void>) {
-        AlertDialog.Builder(mContext)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setTitle(dialogTitle)
-            .setMessage(dialogMessage)
-            .setPositiveButton("Sim") { dialog, which ->
-                task.addOnCompleteListener {
-                    mPostCommentList.remove(comment)
-                    mAdapter.notifyDataSetChanged()
-                }
-            }
-            .setNegativeButton("Não", null)
-            .show()
+    private fun scrollToBottom() {
+        val lastChild: View = nsvSinglePost.getChildAt(nsvSinglePost.childCount - 1)
+        val bottom = lastChild.bottom + nsvSinglePost.paddingBottom
+        val sy = nsvSinglePost.scrollY
+        val sh = nsvSinglePost.height
+        val delta = bottom - (sy + sh)
+        nsvSinglePost.smoothScrollBy(0, delta)
     }
 
     fun makeToast(text: String) {

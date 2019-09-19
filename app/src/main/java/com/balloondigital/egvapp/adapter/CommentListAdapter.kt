@@ -103,7 +103,7 @@ class CommentListAdapter(commentList: MutableList<PostComment>, post: Post): Rec
                     alertbox.setItems(R.array.comments_author_alert, DialogInterface.OnClickListener { dialog, pos ->
                         if(pos == 0) {
                             confirmRemoveCommentDialog("Deletar Comentário",
-                                "Tem certeza que deseja remover esta publicação?", comment)
+                                "Tem certeza que deseja remover este comentário?", comment)
                         }
                     })
                 } else {
@@ -124,10 +124,9 @@ class CommentListAdapter(commentList: MutableList<PostComment>, post: Post): Rec
                     mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
                         .document(comment.id).delete()
                         .addOnCompleteListener {
-                            mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
-                                .document(mPost.id).update("post_comments", mPost.post_comments-1)
                             mCommentList.remove(comment)
-                        notifyDataSetChanged()
+                            mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+                                .document(mPost.id).update("post_comments", mCommentList.size)
                     }
                 }
                 .setNegativeButton("Não", null)

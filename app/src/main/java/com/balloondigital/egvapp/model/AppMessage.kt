@@ -13,6 +13,7 @@ data class AppMessage(
     var user_id: String = "",
     var user_embassy: String = "",
     var user_city: String = "",
+    var type: String = "",
     var message: String = "",
     var user: User = User(),
     var date: Timestamp? = null
@@ -26,6 +27,7 @@ data class AppMessage(
             "user_embassy" to user_embassy,
             "user_city" to user_city,
             "user" to user.toBasicMap(),
+            "type" to type,
             "message" to message
         )
     }

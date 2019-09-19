@@ -70,6 +70,7 @@ class SendMessageActivity : AppCompatActivity(), View.OnClickListener {
         val appMessage = AppMessage(user_id = mUser.id,
             user_city = mUser.city!!,
             user_embassy = mUser.embassy.name,
+            type = "message",
             message = message,
             user = mUser)
 

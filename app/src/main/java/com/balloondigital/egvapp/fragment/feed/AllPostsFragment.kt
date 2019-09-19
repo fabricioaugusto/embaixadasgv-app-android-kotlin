@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,8 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
@@ -48,11 +51,14 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mLastDocument: DocumentSnapshot
+    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mAdapterDialog: CreatePostDialogAdapter
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mPostList: MutableList<Post>
+    private var isPostsOver: Boolean = false
     private var mAdapterPosition: Int = 0
     private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
@@ -171,7 +177,33 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
     }
 
     private fun setListeners() {
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getPostLikes() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            isPostsOver = false
+            getPostLikes()
+        })
+
+
+        val recyclerListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(!isPostsOver) {
+                        if(!::mLastDocumentRequested.isInitialized) {
+                            mLastDocumentRequested = mLastDocument
+                            loadMore()
+                        } else {
+                            if(mLastDocumentRequested != mLastDocument) {
+                                mLastDocumentRequested = mLastDocument
+                                loadMore()
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        mRecyclerView.addOnScrollListener(recyclerListener)
     }
 
     private fun setRecyclerView() {
@@ -225,9 +257,12 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .whereEqualTo("user_verified", false)
             .orderBy("date", Query.Direction.DESCENDING)
+            .limit(3)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mPostList.clear()
+
+                mLastDocument = documentSnapshot.documents[documentSnapshot.size() - 1]
 
                 if(documentSnapshot != null) {
                     for(document in documentSnapshot.documents) {
@@ -242,6 +277,37 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
                 mSkeletonScreen.hide()
                 mSwipeLayoutFeed.isRefreshing = false
             }
+    }
+
+    private fun loadMore() {
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", false)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .startAfter(mLastDocument)
+            .limit(3)
+            .get().addOnSuccessListener { querySnapshot ->
+                Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
+                if(querySnapshot != null) {
+                    if(querySnapshot.size() > 0) {
+                        makeToast(querySnapshot.size().toString())
+                        mLastDocumentRequested = mLastDocument
+                        mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
+                        for(document in querySnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged()
+                    } else {
+                        makeToast(mPostList.size.toString())
+                        isPostsOver = true
+                    }
+                }
+            }
+
     }
 
     fun updateLikes(post: Post, postLike: PostLike, action: String) {
@@ -329,6 +395,10 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
             mCPDialog = dialogBuilder.create()
             mCPDialog.show()
         }
+    }
+
+    private fun makeToast(text: String) {
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
     }
 
 }

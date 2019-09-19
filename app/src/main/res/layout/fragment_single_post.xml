@@ -42,7 +42,7 @@
             android:layout_alignParentRight="true" android:layout_marginRight="0dp" android:layout_marginEnd="0dp"
             android:layout_marginBottom="-1dp" android:layout_alignBottom="@+id/layoutCommentBox"
             android:layout_alignParentBottom="false" android:background="@color/backgroundGreyStrong"
-            android:layout_below="@+id/singlePostToolbar">
+            android:layout_below="@+id/singlePostToolbar" android:id="@+id/nsvSinglePost">
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                       android:orientation="vertical"
                       android:background="@color/backgroundGreyStrong">

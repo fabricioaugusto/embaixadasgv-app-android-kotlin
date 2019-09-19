@@ -389,11 +389,13 @@ class MenuListFragment : Fragment() {
 
     private fun startAboutAppActivity() {
         val intent: Intent = Intent(mContext, AboutAppActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
     private fun startSuggestsActivity() {
         val intent: Intent = Intent(mContext, SuggestsActivity::class.java)
+        intent.putExtra("user", mUser)
         startActivity(intent)
     }
 
