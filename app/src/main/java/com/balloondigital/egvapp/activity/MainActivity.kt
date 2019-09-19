@@ -257,6 +257,14 @@ class MainActivity : AppCompatActivity() {
                 return
             }
         }
+
+
+        if(mNavView.selectedItemId != R.id.navigation_home) {
+            mNavView.selectedItemId = R.id.navigation_home
+        } else {
+            finish()
+        }
+
     }
 
     private fun setBottomNavigationView(bnv: BottomNavigationView) {

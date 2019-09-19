@@ -175,6 +175,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgEventInsertCover.setImageDrawable(null)
                                 imgEventInsertCover.setImageURI(resultUri)
                             }
                             mCoverSelected = true

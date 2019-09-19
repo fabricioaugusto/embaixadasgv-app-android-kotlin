@@ -139,6 +139,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgPostInsertPic.setImageDrawable(null)
                                 imgPostInsertPic.setImageURI(resultUri)
                             }
                             mImgPostIsSet = true

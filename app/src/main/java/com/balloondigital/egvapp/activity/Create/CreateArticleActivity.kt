@@ -134,6 +134,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener{
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgArticleInsertCover.setImageDrawable(null)
                                 imgArticleInsertCover.setImageURI(resultUri)
                             }
                             mCoverIsSet = true

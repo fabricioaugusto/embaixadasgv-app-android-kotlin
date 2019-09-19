@@ -39,6 +39,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mEmbassyID: String
     private lateinit var mStorage: StorageReference
     private lateinit var mPhotoList: MutableList<String>
+    private var isCoverChanged = false
     private val GALLERY_CODE: Int = 200
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -88,7 +89,6 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
                     GALLERY_CODE -> {
                         if (data != null) {
                             val uri = data.data
-                            Log.d("GalleryActivity", "Chegou aqui")
                             CropImages.embassyCover(this, uri)
                         }
                     }
@@ -96,6 +96,8 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                isCoverChanged = true
+                                imgEditEmbassyCover.setImageDrawable(null)
                                 imgEditEmbassyCover.setImageURI(resultUri)
                             }
                         }
@@ -177,7 +179,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
-        if(name == mEmbassy.name && email == mEmbassy.email && phone == mEmbassy.phone) {
+        if(name == mEmbassy.name && email == mEmbassy.email && phone == mEmbassy.phone && !isCoverChanged) {
             makeToast("Nenhuma alteração foi realizada")
             return
         }
@@ -188,6 +190,19 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
 
         btEditEmbassySava.startAnimation()
+
+        if(!isCoverChanged) {
+            mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+                .document(mEmbassyID)
+                .set(mEmbassy.toMap())
+                .addOnSuccessListener {
+                    btEditEmbassySava.doneLoadingAnimation(
+                        resources.getColor(com.balloondigital.egvapp.R.color.colorGreen),
+                        Converters.drawableToBitmap(resources.getDrawable(com.balloondigital.egvapp.R.drawable.ic_check_grey_light))
+                    )
+                }
+        }
+
 
         var fileName: String? = mEmbassy.cover_img_file_name
 

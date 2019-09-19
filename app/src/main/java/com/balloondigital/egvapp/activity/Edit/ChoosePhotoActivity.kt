@@ -86,6 +86,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgCPUserProfile.setImageDrawable(null)
                                 imgCPUserProfile.setImageURI(resultUri)
                                 mImageIsLoaded = true
                             }

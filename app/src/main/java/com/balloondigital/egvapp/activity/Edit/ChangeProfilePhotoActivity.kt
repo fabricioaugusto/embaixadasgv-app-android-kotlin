@@ -109,6 +109,7 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgChangeProfilePhoto.setImageDrawable(null)
                                 imgChangeProfilePhoto.setImageURI(resultUri)
                             }
                         }

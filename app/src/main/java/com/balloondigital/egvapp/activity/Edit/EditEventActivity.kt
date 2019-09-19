@@ -174,6 +174,7 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocu
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgEventInsertCover.setImageDrawable(null)
                                 imgEventInsertCover.setImageURI(resultUri)
                             }
                             mCoverSelected = true
@@ -417,8 +418,8 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocu
         val place = etEventLocation.text.toString()
         val moderator = etEventModerator1.text.toString()
 
-        if(theme != mEvent.theme && description != mEvent.description
-            && place != mEvent.place && moderator != mEvent.moderator_1?.name && mCoverSelected) {
+        if(theme == mEvent.theme && description == mEvent.description
+            && place == mEvent.place && moderator == mEvent.moderator_1?.name && !mCoverSelected) {
 
             makeToast("Nenhuma alteração realizada")
             return

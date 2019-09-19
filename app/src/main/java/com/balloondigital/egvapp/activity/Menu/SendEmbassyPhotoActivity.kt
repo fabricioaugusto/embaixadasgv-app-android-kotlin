@@ -123,6 +123,7 @@ class SendEmbassyPhotoActivity : AppCompatActivity(), View.OnClickListener {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
                             if(resultUri != null) {
+                                imgEmbassyInsertPic.setImageDrawable(null)
                                 imgEmbassyInsertPic.setImageURI(resultUri)
                             }
                             mImgPostIsSet = true

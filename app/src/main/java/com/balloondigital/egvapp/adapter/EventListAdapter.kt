@@ -60,12 +60,10 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
             mEventDate.text = dateStr.date
             mEventEventTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
 
-            if(event.cover_img != null) {
+            if(!event.cover_img.isNullOrEmpty()) {
                 Glide.with(context)
                     .load(event.cover_img)
                     .into(mEventCoverImage)
-            } else {
-                mEventCoverImage.resources.getDrawable(R.drawable.bg_cover_event)
             }
         }
     }
