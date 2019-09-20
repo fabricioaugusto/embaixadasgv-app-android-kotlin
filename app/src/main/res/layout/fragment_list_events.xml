@@ -67,10 +67,16 @@
             <androidx.recyclerview.widget.RecyclerView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" android:id="@+id/eventsRecyclerView"
-                    android:paddingBottom="32dp" android:clipToPadding="false"
+                    android:paddingBottom="64dp" android:clipToPadding="false"
                     android:paddingTop="72dp"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:id="@+id/pbLoadingMore" android:visibility="gone"
+                android:layout_marginTop="-48dp"/>
     </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

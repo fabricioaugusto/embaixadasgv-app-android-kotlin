@@ -54,7 +54,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mPostCollection: CollectionReference
     private lateinit var mLikesCollection: CollectionReference
-    private var mListLikes: MutableList<PostLike> = mUser.post_likes
+    private lateinit var mListLikes: MutableList<PostLike>
     private var mLikeIsProcessing = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -99,6 +99,10 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post: Post = mPostList[position]
         holder.bindData(post, position)
+    }
+
+    fun updateListLikes(listLikes: MutableList<PostLike>) {
+        mListLikes = listLikes
     }
 
     inner class PostViewHolder(itemView: View, val context: Context): RecyclerView.ViewHolder(itemView) {

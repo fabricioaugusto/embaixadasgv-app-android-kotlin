@@ -35,6 +35,7 @@ import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
+import kotlinx.android.synthetic.main.fragment_all_posts.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,6 +59,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
     private lateinit var mAdapterDialog: CreatePostDialogAdapter
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mPostList: MutableList<Post>
+    private lateinit var mListLikes: MutableList<PostLike>
     private var isPostsOver: Boolean = false
     private var mAdapterPosition: Int = 0
     private val CREATE_POST_ACTIVITY_CODE = 200
@@ -65,14 +67,10 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("FRAGLIFECYCLE","Geral onCreate")
         val manager = activity!!.supportFragmentManager
         val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
         val rootListPost: ListPostFragment = fragment as ListPostFragment
-        Log.d("EGVAPPLOGVISIBLEFRAGS", this.tag.toString())
-        Log.d("EGVAPPLOGVISIBLEFRAGS", R.id.viewpager.toString())
         rootListPost.setFragmentTags("AllPostsFragment", tag!!)
-
     }
 
     override fun onCreateView(
@@ -94,14 +92,19 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
         mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
         mDatabase = MyFirebase.database()
+        mListLikes = mutableListOf()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
-        getPostLikes()
-        setListeners()
-
         // Inflate the layout for this fragment
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        getPostLikes()
+        setListeners()
     }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
@@ -178,7 +181,6 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
     private fun setListeners() {
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
-            isPostsOver = false
             getPostLikes()
         })
 
@@ -209,6 +211,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
     private fun setRecyclerView() {
 
         mAdapter = PostListAdapter(mPostList, mUser, activity!!)
+        mAdapter.updateListLikes(mListLikes)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
         mRecyclerView.itemAnimator = null
@@ -281,6 +284,8 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
     private fun loadMore() {
 
+        pbLoadingMore.isGone = false
+
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .whereEqualTo("user_verified", false)
             .orderBy("date", Query.Direction.DESCENDING)
@@ -301,8 +306,9 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
                             }
                         }
                         mAdapter.notifyDataSetChanged()
+                        pbLoadingMore.isGone = true
                     } else {
-                        makeToast(mPostList.size.toString())
+                        pbLoadingMore.isGone = true
                         isPostsOver = true
                     }
                 }
@@ -311,24 +317,27 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
     }
 
     fun updateLikes(post: Post, postLike: PostLike, action: String) {
+
         if(mPostList.any { p -> p.id == post.id }) {
 
             val list = mPostList.filter { p -> p.id == post.id }
             val pos = mPostList.indexOf(list[0])
 
             if(action == "like") {
-                if(!mUser.post_likes.contains(postLike)) {
-                    mUser.post_likes.add(postLike)
+                if(!mListLikes.contains(postLike)) {
+                    mListLikes.add(postLike)
                 }
                 mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
                 mAdapter.notifyItemChanged(pos)
             }
 
             if(action == "unlike") {
-                if(mUser.post_likes.contains(postLike)) {
-                    mUser.post_likes.remove(postLike)
+                if(mListLikes.contains(postLike)) {
+                    mListLikes.remove(postLike)
                 }
                 mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
                 mAdapter.notifyItemChanged(pos)
             }
         }
@@ -365,7 +374,8 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
 
     private fun getPostLikes() {
 
-        mUser.post_likes.clear()
+        isPostsOver = false
+        mListLikes.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
             .whereEqualTo("user_id", mUser.id)
@@ -375,7 +385,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
                 for(document in querySnapshot.documents) {
                     val postLike = document.toObject(PostLike::class.java)
                     if(postLike != null) {
-                        mUser.post_likes.add(postLike)
+                        mListLikes.add(postLike)
                     }
                 }
                 mRecyclerView.isGone = false

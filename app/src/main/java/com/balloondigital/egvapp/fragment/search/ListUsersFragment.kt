@@ -20,10 +20,13 @@ import com.algolia.search.saas.Query
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_list_users.*
 import org.json.JSONArray
 
 // TODO: Rename parameter arguments, choose names that match
@@ -43,11 +46,14 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mClient: Client
     private lateinit var mToolbar: Toolbar
+    private lateinit var mLastDocument: DocumentSnapshot
+    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mImgLogoToolbar: ImageView
     private lateinit var mIndex: Index
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSearchView: SearchView
     private lateinit var mListUsers: MutableList<User>
+    private var isPostsOver: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,10 +79,37 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mIndex = mClient.getIndex("users")
 
+        return view
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         getListUsers()
         setRecyclerView()
 
-        return view
+        val recyclerListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(!isPostsOver) {
+                        if(!::mLastDocumentRequested.isInitialized) {
+                            mLastDocumentRequested = mLastDocument
+                            loadMore()
+                        } else {
+                            if(mLastDocumentRequested != mLastDocument) {
+                                mLastDocumentRequested = mLastDocument
+                                loadMore()
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        mRecyclerView.addOnScrollListener(recyclerListener)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -128,7 +161,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
 
         val query = Query(query)
             .setAttributesToRetrieve("name", "profile_img")
-            .setHitsPerPage(50)
+            .setHitsPerPage(10)
         mIndex.searchAsync(query) { obj, p1 ->
             if(obj != null) {
                 mListUsers.clear()
@@ -147,19 +180,57 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
 
     private fun getListUsers() {
 
+        isPostsOver = false
+
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .limit(3)
             .get()
-            .addOnSuccessListener {
-                val documents = it.documents
-                for (document in documents) {
-                    val user: User? = document.toObject(User::class.java)
-                    if(user != null) {
-                        mListUsers.add(user)
+            .addOnSuccessListener {querySnapshot ->
+
+                if(querySnapshot.size() > 0) {
+                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+                    for (document in querySnapshot) {
+                        val user: User? = document.toObject(User::class.java)
+                        if(user != null) {
+                            mListUsers.add(user)
+                        }
                     }
                 }
 
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
+            }
+
+    }
+
+    private fun loadMore() {
+
+        pbLoadingMore.isGone = false
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .startAfter(mLastDocument)
+            .limit(3)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+
+                if(querySnapshot.size() > 0) {
+
+                    mLastDocumentRequested = mLastDocument
+                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
+                    for (document in querySnapshot) {
+                        val user: User? = document.toObject(User::class.java)
+                        if(user != null) {
+                            mListUsers.add(user)
+                        }
+                    }
+                    mAdapter.notifyDataSetChanged()
+                    pbLoadingMore.isGone = true
+                } else {
+                    pbLoadingMore.isGone = true
+                    isPostsOver = true
+                }
+
             }
 
     }

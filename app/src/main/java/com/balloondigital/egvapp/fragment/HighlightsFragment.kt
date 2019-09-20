@@ -14,7 +14,6 @@ import android.widget.ImageButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Menu.MenuActivity
 import com.balloondigital.egvapp.activity.Single.SingleArticleActivity
@@ -54,7 +53,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
-    private lateinit var mLikeList: MutableList<PostLike>
+    private lateinit var mListLikes: MutableList<PostLike>
     private var mAdapterPosition: Int = 0
     private lateinit var mUser: User
     private lateinit var mDbListener: ListenerRegistration
@@ -109,7 +108,9 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
     }
 
     private fun setListeners() {
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getListPosts() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            getListPosts()
+        })
     }
 
     private fun setRecyclerView() {
@@ -215,7 +216,7 @@ class HighlightsFragment : Fragment(), View.OnClickListener {
                     querySnapshot ->
                 for(document in querySnapshot) {
                     val postLike = document.toObject(PostLike::class.java)
-                    mUser.post_likes.add(postLike)
+                    mListLikes.add(postLike)
                 }
                 setRecyclerView()
                 getListPosts()

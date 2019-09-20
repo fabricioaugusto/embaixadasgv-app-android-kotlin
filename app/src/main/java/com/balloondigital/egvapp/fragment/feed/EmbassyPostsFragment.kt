@@ -13,7 +13,6 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.Create.CreateArticleActivity
 import com.balloondigital.egvapp.activity.Create.CreatePostActivity
@@ -28,6 +27,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
@@ -51,12 +51,16 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mLastDocument: DocumentSnapshot
+    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mRootListPost: ListPostFragment
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mAdapterDialog: CreatePostDialogAdapter
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mPostList: MutableList<Post>
+    private lateinit var mListLikes: MutableList<PostLike>
+    private var isPostsOver: Boolean = false
     private var mAdapterPosition: Int = 0
     private val CREATE_POST_ACTIVITY_CODE = 200
     private lateinit var mUser: User
@@ -90,8 +94,10 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
 
         mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
         mDatabase = MyFirebase.database()
+        mListLikes = mutableListOf()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
+
         // Inflate the layout for this fragment
         return view
     }
@@ -183,13 +189,39 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     }
 
     private fun setListeners() {
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getPostLikes() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+
+            getPostLikes()
+        })
         btWriteFirstPost.setOnClickListener(this)
+
+        val recyclerListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(!isPostsOver) {
+                        if(!::mLastDocumentRequested.isInitialized) {
+                            mLastDocumentRequested = mLastDocument
+                            loadMore()
+                        } else {
+                            if(mLastDocumentRequested != mLastDocument) {
+                                mLastDocumentRequested = mLastDocument
+                                loadMore()
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        mRecyclerView.addOnScrollListener(recyclerListener)
     }
 
     private fun setRecyclerView() {
 
         mAdapter = PostListAdapter(mPostList, mUser, activity!!)
+        mAdapter.updateListLikes(mListLikes)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
         mRecyclerView.itemAnimator = null
@@ -239,9 +271,12 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
             .whereEqualTo("user_verified", false)
             .whereEqualTo("embassy_id", mUser.embassy_id)
             .orderBy("date", Query.Direction.DESCENDING)
+            .limit(3)
             .get().addOnSuccessListener { querySnapshot ->
 
                 mPostList.clear()
+
+                mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
 
                 if(querySnapshot != null) {
                     if(querySnapshot.size() > 0) {
@@ -266,6 +301,41 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
             }
     }
 
+    private fun loadMore() {
+
+        pbLoadingMore.isGone = false
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", false)
+            .whereEqualTo("embassy_id", mUser.embassy_id)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .startAfter(mLastDocument)
+            .limit(3)
+            .get().addOnSuccessListener { querySnapshot ->
+                Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
+                if(querySnapshot != null) {
+                    if(querySnapshot.size() > 0) {
+                        makeToast(querySnapshot.size().toString())
+                        mLastDocumentRequested = mLastDocument
+                        mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
+                        for(document in querySnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged()
+                        pbLoadingMore.isGone = true
+                    } else {
+                        pbLoadingMore.isGone = true
+                        isPostsOver = true
+                    }
+                }
+            }
+
+    }
+
     fun updatePost(post: Post) {
 
         if(mPostList.any { p -> p.id == post.id }) {
@@ -278,25 +348,26 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     }
 
     fun updateLikes(post: Post, postLike: PostLike, action: String) {
-
         if(mPostList.any { p -> p.id == post.id }) {
 
             val list = mPostList.filter { p -> p.id == post.id }
             val pos = mPostList.indexOf(list[0])
 
             if(action == "like") {
-                if(!mUser.post_likes.contains(postLike)) {
-                    mUser.post_likes.add(postLike)
+                if(!mListLikes.contains(postLike)) {
+                    mListLikes.add(postLike)
                 }
                 mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
                 mAdapter.notifyItemChanged(pos)
             }
 
             if(action == "unlike") {
-                if(mUser.post_likes.contains(postLike)) {
-                    mUser.post_likes.remove(postLike)
+                if(mListLikes.contains(postLike)) {
+                    mListLikes.remove(postLike)
                 }
                 mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
                 mAdapter.notifyItemChanged(pos)
             }
         }
@@ -321,8 +392,8 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     }
 
     private fun getPostLikes() {
-
-        mUser.post_likes.clear()
+        isPostsOver = false
+        mListLikes.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
             .whereEqualTo("user_id", mUser.id)
@@ -332,7 +403,7 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
                 for(document in querySnapshot.documents) {
                     val postLike = document.toObject(PostLike::class.java)
                     if(postLike != null) {
-                        mUser.post_likes.add(postLike)
+                        mListLikes.add(postLike)
                     }
                 }
                 mRecyclerView.isGone = false

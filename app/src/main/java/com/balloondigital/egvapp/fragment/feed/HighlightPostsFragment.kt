@@ -24,8 +24,10 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import kotlinx.android.synthetic.main.fragment_highlight_posts.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,19 +45,21 @@ class HighlightPostsFragment : Fragment() {
     private lateinit var mContext: Context
     private lateinit var mAdapter: PostListAdapter
     private lateinit var mRecyclerView: RecyclerView
+    private lateinit var mLastDocument: DocumentSnapshot
+    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mPostList: MutableList<Post>
+    private lateinit var mListLikes: MutableList<PostLike>
+    private var isPostsOver: Boolean = false
     private var mAdapterPosition: Int = 0
     private lateinit var mUser: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("FRAGLIFECYCLE","Destaques onCreate")
         val manager = activity!!.supportFragmentManager
         val fragment: Fragment? = manager.findFragmentByTag("rootFeedFragment")
         val rootListPost: ListPostFragment = fragment as ListPostFragment
-        Log.d("EGVAPPLOGVISIBLEFRAGS", this.tag.toString())
         rootListPost.setFragmentTags("HighlightPostsFragment", tag!!)
     }
 
@@ -78,13 +82,18 @@ class HighlightPostsFragment : Fragment() {
         }
 
         mDatabase = MyFirebase.database()
+        mListLikes = mutableListOf()
         mPostList = mutableListOf()
         mRecyclerView = view.findViewById(R.id.postsRecyclerView)
 
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         getPostLikes()
         setListeners()
-
-        return view
     }
 
 
@@ -133,12 +142,39 @@ class HighlightPostsFragment : Fragment() {
     }
 
     private fun setListeners() {
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getPostLikes() })
+
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener {
+            getPostLikes()
+        })
+
+        val recyclerListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(!isPostsOver) {
+                        if(!::mLastDocumentRequested.isInitialized) {
+                            mLastDocumentRequested = mLastDocument
+                            loadMore()
+                        } else {
+                            if(mLastDocumentRequested != mLastDocument) {
+                                mLastDocumentRequested = mLastDocument
+                                loadMore()
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        mRecyclerView.addOnScrollListener(recyclerListener)
+
     }
 
     private fun setRecyclerView() {
 
         mAdapter = PostListAdapter(mPostList, mUser, activity!!)
+        mAdapter.updateListLikes(mListLikes)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
         mRecyclerView.itemAnimator = null
@@ -188,16 +224,21 @@ class HighlightPostsFragment : Fragment() {
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .whereEqualTo("user_verified", true)
             .orderBy("date", Query.Direction.DESCENDING)
-            .get().addOnSuccessListener { documentSnapshot ->
+            .limit(3)
+            .get().addOnSuccessListener { querySnapshot ->
 
                 mPostList.clear()
-
-                if(documentSnapshot != null) {
-                    for(document in documentSnapshot.documents) {
-                        val post: Post? = document.toObject(Post::class.java)
-                        if(post != null) {
-                            mPostList.add(post)
+                if(querySnapshot != null) {
+                    if(querySnapshot.size() > 0) {
+                        mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+                        for(document in querySnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
                         }
+                    } else {
+                        isPostsOver = true
                     }
                 }
 
@@ -209,9 +250,44 @@ class HighlightPostsFragment : Fragment() {
             }
     }
 
+    private fun loadMore() {
+
+        pbLoadingMore.isGone = false
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+            .whereEqualTo("user_verified", true)
+            .orderBy("date", Query.Direction.DESCENDING)
+            .startAfter(mLastDocument)
+            .limit(3)
+            .get().addOnSuccessListener { querySnapshot ->
+                Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
+                if(querySnapshot != null) {
+                    if(querySnapshot.size() > 0) {
+                        makeToast(querySnapshot.size().toString())
+                        mLastDocumentRequested = mLastDocument
+                        mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
+                        for(document in querySnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
+                        }
+                        mAdapter.notifyDataSetChanged()
+                        pbLoadingMore.isGone = true
+                    } else {
+                        pbLoadingMore.isGone = true
+                        isPostsOver = true
+                    }
+                }
+            }
+
+    }
+
     private fun getPostLikes() {
 
-        mUser.post_likes.clear()
+        isPostsOver = false
+        mListLikes.clear()
 
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_LIKES)
             .whereEqualTo("user_id", mUser.id)
@@ -221,9 +297,10 @@ class HighlightPostsFragment : Fragment() {
                 for(document in querySnapshot.documents) {
                     val postLike = document.toObject(PostLike::class.java)
                     if(postLike != null) {
-                        mUser.post_likes.add(postLike)
+                        mListLikes.add(postLike)
                     }
                 }
+
                 mRecyclerView.isGone = false
                 setRecyclerView()
                 getHighlightListPosts()

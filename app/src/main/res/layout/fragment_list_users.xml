@@ -22,8 +22,15 @@
         </androidx.appcompat.widget.Toolbar>
         <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/usersRecyclerView"/>
-
+                android:layout_height="match_parent" android:id="@+id/usersRecyclerView"
+                android:paddingBottom="64dp"
+                android:clipToPadding="false"/>
+        <ProgressBar
+                style="?android:attr/progressBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="32dp"
+                android:id="@+id/pbLoadingMore" android:visibility="gone"
+                android:layout_marginTop="-48dp"/>
     </LinearLayout>
 
 </FrameLayout>

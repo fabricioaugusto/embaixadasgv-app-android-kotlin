@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.model.Event
@@ -64,6 +65,8 @@ class EventListAdapter(userList: List<Event>): RecyclerView.Adapter<EventListAda
                 Glide.with(context)
                     .load(event.cover_img)
                     .into(mEventCoverImage)
+            } else {
+                mEventCoverImage.setImageDrawable(context.resources.getDrawable(R.drawable.bg_default_cover))
             }
         }
     }

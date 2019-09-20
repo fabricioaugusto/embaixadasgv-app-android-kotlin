@@ -3,11 +3,13 @@ package com.balloondigital.egvapp.fragment.menu
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -15,9 +17,12 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
+import com.balloondigital.egvapp.model.Post
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_list_embassy.*
 
 // TODO: Rename parameter arguments, choose names that match
@@ -36,11 +41,14 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: EmbassyListAdapter
     private lateinit var mToolbar: Toolbar
+    private lateinit var mLastDocument: DocumentSnapshot
+    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSearchView: SearchView
     private lateinit var mListEmbassy: MutableList<Embassy>
     private lateinit var mListFiltered: MutableList<Embassy>
+    private var isPostsOver: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -125,6 +133,28 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
     private fun setListeners() {
 
         btBackPress.setOnClickListener(this)
+
+        val recyclerListener = object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (!recyclerView.canScrollVertically(1)) {
+                    if(!isPostsOver) {
+                        if(!::mLastDocumentRequested.isInitialized) {
+                            mLastDocumentRequested = mLastDocument
+                            loadMore()
+                        } else {
+                            if(mLastDocumentRequested != mLastDocument) {
+                                mLastDocumentRequested = mLastDocument
+                                loadMore()
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
+
+        mRecyclerView.addOnScrollListener(recyclerListener)
     }
 
     private fun searchEmbassy(str: String) {
@@ -139,21 +169,61 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
 
     private fun getListUsers() {
 
+        isPostsOver = false
+
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
             .whereEqualTo("status", "active")
             .orderBy("state")
+            .limit(3)
             .get()
-            .addOnSuccessListener {
-                val documents = it.documents
-                for (document in documents) {
-                    val embassy: Embassy? = document.toObject(Embassy::class.java)
-                    if(embassy != null) {
-                        mListEmbassy.add(embassy)
+            .addOnSuccessListener {querySnapshot ->
+
+                if(querySnapshot.size() > 0) {
+                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+                    for (document in querySnapshot) {
+                        val embassy: Embassy? = document.toObject(Embassy::class.java)
+                        if(embassy != null) {
+                            mListEmbassy.add(embassy)
+                        }
                     }
                 }
+
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }
+    }
+
+    private fun loadMore() {
+
+        pbLoadingMore.isGone = false
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .whereEqualTo("status", "active")
+            .orderBy("state")
+            .startAfter(mLastDocument)
+            .limit(3)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+
+                if(querySnapshot.size() > 0) {
+
+                    mLastDocumentRequested = mLastDocument
+                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
+                    for (document in querySnapshot) {
+                        val embassy: Embassy? = document.toObject(Embassy::class.java)
+                        if(embassy != null) {
+                            mListEmbassy.add(embassy)
+                        }
+                    }
+                    mAdapter.notifyDataSetChanged()
+                    pbLoadingMore.isGone = true
+                } else {
+                    pbLoadingMore.isGone = true
+                    isPostsOver = true
+                }
+            }
+
     }
 
     private fun setRecyclerView() {
