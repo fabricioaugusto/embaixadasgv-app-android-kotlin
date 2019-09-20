@@ -31,7 +31,6 @@ class SuggestsActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         setListeners()
-
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

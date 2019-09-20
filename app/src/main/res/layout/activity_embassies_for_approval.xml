@@ -63,6 +63,20 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/textView5"
+                        android:textColor="@color/colorText" android:textStyle="bold" android:text="Padrinho: "/>
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:id="@+id/txtApprEmbassySponsor"
+                        android:layout_weight="1"
+                        tools:text="Charles Plautz" android:textColor="@color/colorText"/>
+            </LinearLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
                         android:text="Cidade: "
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/textView36"

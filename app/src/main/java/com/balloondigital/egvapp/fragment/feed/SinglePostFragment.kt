@@ -196,8 +196,6 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
     private fun getComments() {
 
-        makeToast("getComments")
-
         mDatabase.collection(MyFirebase.COLLECTIONS.POST_COMMENTS)
             .whereEqualTo("post_id", mPost.id)
             .orderBy("date", Query.Direction.ASCENDING)
@@ -217,7 +215,6 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
                     }
                     mAdapter.notifyDataSetChanged()
                     if(isCommented) {
-                        makeToast("isCommented")
                         Handler().postDelayed({
                             scrollToBottom()
                         }, 300)

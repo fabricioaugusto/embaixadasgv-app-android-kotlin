@@ -201,6 +201,7 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     private fun showEmbassyInfo(embassy: Embassy) {
 
         mEmbassy = embassy
+        val sponsor = mEmbassy.embassySponsor
 
         btEmbassyRelease.isGone = mEmbassy.status == "released"
 
@@ -209,6 +210,12 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         txtApprEmbassyLeader.text = mEmbassy.leader?.name
         txtApprEmbassyEmail.text = mEmbassy.email
         txtApprEmbassyPhone.text = mEmbassy.phone
+
+        if(sponsor != null) {
+            txtApprEmbassySponsor.text = sponsor.name
+        } else {
+            txtApprEmbassySponsor.text = "Nenhum padrinho cadastrado"
+        }
 
         mEmbassyInfoIsHide = false
         layoutToughtPublish.isGone = false

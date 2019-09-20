@@ -18,7 +18,9 @@ data class Embassy (
     var approved_by_id: String? = null,
     var approved_by_name: String? = null,
     var leader_id: String = "",
-    var leader: User? = null
+    var leader: User? = null,
+    var embassySponsor_id: String? = null,
+    var embassySponsor: EmbassySponsor? = null
 ) : Serializable {
     @Exclude
     fun toBasicMap(): Map<String, Any?> {
@@ -44,6 +46,8 @@ data class Embassy (
             "status" to status,
             "approved_by_id" to approved_by_id,
             "approved_by_name" to approved_by_name,
+            "embassySponsor_id" to embassySponsor_id,
+            "embassySponsor" to embassySponsor,
             "leader_id" to leader_id,
             "leader" to leader?.toBasicMap()
         )

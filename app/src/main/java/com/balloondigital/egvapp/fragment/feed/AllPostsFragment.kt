@@ -295,7 +295,6 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
                 Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {
                     if(querySnapshot.size() > 0) {
-                        makeToast(querySnapshot.size().toString())
                         mLastDocumentRequested = mLastDocument
                         mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
 

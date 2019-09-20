@@ -15,6 +15,8 @@ import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity
 import com.balloondigital.egvapp.api.GoogleAPI
+import com.balloondigital.egvapp.model.Embassy
+import com.balloondigital.egvapp.model.EmbassySponsor
 import com.balloondigital.egvapp.utils.AppStatus
 
 

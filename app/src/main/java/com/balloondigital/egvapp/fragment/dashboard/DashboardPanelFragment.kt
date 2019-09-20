@@ -19,15 +19,14 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
-import com.balloondigital.egvapp.model.Bulletin
-import com.balloondigital.egvapp.model.Event
-import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.utils.Converters
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.WriteBatch
 import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
