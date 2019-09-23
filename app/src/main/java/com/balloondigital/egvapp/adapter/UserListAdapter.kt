@@ -72,6 +72,8 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
             } else {
                 if(user.gender == "Female") {
                     mUserProfileImage.setImageResource(R.drawable.avatar_woman)
+                } else {
+                    mUserProfileImage.setImageResource(R.drawable.avatar)
                 }
             }
         }

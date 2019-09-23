@@ -121,6 +121,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         user["id"] = id
         user["name"] = name
         user["email"] = email
+        user["status"] = "registered"
 
         if(mInvite.isLeader) {
             user["leader"] = true

@@ -26,6 +26,7 @@ import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 import kotlinx.android.synthetic.main.fragment_list_users.*
 import org.json.JSONArray
 
@@ -136,6 +137,8 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         Log.d("searchView", "Listening..$str")
         if(str.isNotEmpty()) {
             searchUser(str)
+        } else {
+            setRecyclerView()
         }
         return true
     }
@@ -149,6 +152,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
 
     override fun onClose(): Boolean {
         mImgLogoToolbar.isGone = false
+        setRecyclerView()
         return false
     }
 
@@ -157,24 +161,31 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     }
 
 
-    private fun searchUser(query: String) {
+    private fun searchUser(str: String) {
 
-        val query = Query(query)
-            .setAttributesToRetrieve("name", "profile_img")
+        val query = Query(str)
+            .setAttributesToRetrieve("id", "name", "profile_img", "occupation")
             .setHitsPerPage(10)
         mIndex.searchAsync(query) { obj, p1 ->
             if(obj != null) {
-                mListUsers.clear()
+                val searchUser: MutableList<User> = mutableListOf()
                 val listObj = obj.get("hits") as JSONArray
-                for (i in 0 until listObj.length()) {
-                    val user = User()
-                    val userObj = listObj.getJSONObject(i)
-                    user.name = userObj.getString("name")
-                    user.profile_img = userObj.getString("profile_img")
-                    mListUsers.add(user)
+                if(listObj.length() > 0) {
+                    for (i in 0 until listObj.length()) {
+                        val user = User()
+                        val userObj = listObj.getJSONObject(i)
+                        user.id = userObj.getString("id")
+                        user.name = userObj.getString("name")
+                        val profileImg = userObj.has("profile_img")
+                        if(profileImg) {
+                            user.profile_img = userObj.getString("profile_img")
+                            user.occupation = userObj.getString("occupation")
+                        }
+                        searchUser.add(user)
+                    }
+                    setSearchRecyclerView(searchUser)
                 }
             }
-            mAdapter.notifyDataSetChanged()
         }
     }
 
@@ -183,6 +194,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .whereEqualTo("status", "active")
             .limit(30)
             .get()
             .addOnSuccessListener {querySnapshot ->
@@ -196,9 +208,10 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         }
                     }
                 }
-
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
             }
 
     }
@@ -208,6 +221,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         pbLoadingMore.isGone = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .whereEqualTo("status", "active")
             .startAfter(mLastDocument)
             .limit(30)
             .get()
@@ -226,6 +240,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                     }
                     mAdapter.notifyDataSetChanged()
                     pbLoadingMore.isGone = true
+
                 } else {
                     pbLoadingMore.isGone = true
                     isPostsOver = true
@@ -241,10 +256,24 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
-        mSkeletonScreen = Skeleton.bind(mRecyclerView)
-            .adapter(mAdapter)
-            .load(R.layout.item_skeleton_user)
-            .shimmer(true).show()
+        if(mListUsers.size > 0) {
+            mRecyclerView.adapter = mAdapter
+        } else {
+            mSkeletonScreen = Skeleton.bind(mRecyclerView)
+                .adapter(mAdapter)
+                .load(R.layout.item_skeleton_user)
+                .shimmer(true).show()
+        }
+
+        mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
+    }
+
+    private fun setSearchRecyclerView(listUser: MutableList<User>) {
+
+        mAdapter = UserListAdapter(listUser)
+        mAdapter.setHasStableIds(true)
+        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mRecyclerView.adapter = mAdapter
 
         mAdapter.onItemClick = {user -> startUserProfileActivity(user)}
     }

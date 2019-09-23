@@ -169,6 +169,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                         val uri = task.result
                         if (uri != null) {
                             mUser.profile_img = uri.toString()
+                            mUser.status = "active"
                             mDatabase.collection(mCollections.USERS)
                                 .document(mUser.id)
                                 .set(mUser.toMap())
