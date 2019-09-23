@@ -266,7 +266,6 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
         val bundle = Bundle()
         bundle.putString("embassyID", mUser.embassy_id)
-        bundle.putSerializable("user", mUser)
 
         val nextFrag = EmbassyMembersFragment()
         nextFrag.arguments = bundle

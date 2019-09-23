@@ -174,17 +174,25 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                 .set(mUser.toMap())
                                 .addOnSuccessListener {
 
-                                    mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-                                        .document(mUser.embassy_id.toString())
-                                        .update("leader", mUser.toBasicMap(),
-                                            "status", "active")
-                                        .addOnSuccessListener {
-                                            btCPSavePhoto.doneLoadingAnimation(
-                                                resources.getColor(R.color.colorGreen),
-                                                drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
-                                            )
-                                            startMainActivity()
-                                        }
+                                    if(mUser.leader) {
+                                        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+                                            .document(mUser.embassy_id.toString())
+                                            .update("leader", mUser.toBasicMap(),
+                                                "status", "active")
+                                            .addOnSuccessListener {
+                                                btCPSavePhoto.doneLoadingAnimation(
+                                                    resources.getColor(R.color.colorGreen),
+                                                    drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                                )
+                                                startMainActivity()
+                                            }
+                                    } else {
+                                        btCPSavePhoto.doneLoadingAnimation(
+                                            resources.getColor(R.color.colorGreen),
+                                            drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                                        )
+                                        startMainActivity()
+                                    }
                                 }
                         }
                     })

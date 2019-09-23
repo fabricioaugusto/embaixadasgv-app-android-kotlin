@@ -38,7 +38,7 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
 
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
-    private lateinit var mUser: User
+    private lateinit var mEmbassyID: String
     private lateinit var mAdapter: UserListAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mClient: Client
@@ -57,7 +57,7 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mUser = bundle.getSerializable("user") as User
+            mEmbassyID = bundle.getString("embassyID", "id")
         }
 
         mContext = view.context
@@ -119,10 +119,9 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
 
     private fun getListUsers() {
 
-        Log.d("EGVAPPLOGUSERS", mUser.embassy_id.toString())
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-            .whereEqualTo("embassy_id", mUser.embassy.id)
+            .whereEqualTo("embassy_id", mEmbassyID)
             .get()
             .addOnSuccessListener {
                 val documents = it.documents
@@ -132,7 +131,6 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
                         mListUsers.add(user)
                     }
                 }
-                mListUsers.remove(mUser)
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }

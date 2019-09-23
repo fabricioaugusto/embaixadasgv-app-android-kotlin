@@ -102,7 +102,7 @@ class ListEventsFragment : Fragment() {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
             .orderBy("date", Query.Direction.ASCENDING)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mEventList.clear()
@@ -137,7 +137,7 @@ class ListEventsFragment : Fragment() {
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
             .orderBy("date", Query.Direction.ASCENDING)
             .startAfter(mLastDocument)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 if(documentSnapshot != null) {

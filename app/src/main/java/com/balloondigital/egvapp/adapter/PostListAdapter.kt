@@ -31,6 +31,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.balloondigital.egvapp.fragment.feed.AllPostsFragment
 import com.balloondigital.egvapp.fragment.feed.EmbassyPostsFragment
+import com.balloondigital.egvapp.fragment.feed.HighlightPostsFragment
 import com.balloondigital.egvapp.fragment.search.SingleUserFragment
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -280,8 +281,14 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
             val fragTagPrefix = "android:switcher:${R.id.viewpager}"
 
             val manager = mActivity.supportFragmentManager
+            val highlightPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:0")
             val embassyPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:1")
             val allPostsfragment: Fragment? = manager.findFragmentByTag("$fragTagPrefix:2")
+
+            if(highlightPostsfragment != null && highlightPostsfragment.isVisible) {
+                val rootHighlightListPost: HighlightPostsFragment = highlightPostsfragment as HighlightPostsFragment
+                rootHighlightListPost.updateLikes(post, postLike, action)
+            }
 
             if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
                 val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment

@@ -135,23 +135,28 @@ class MenuListFragment : Fragment() {
 
     private fun setListView() {
 
-        mMenuItensList = MenuItens.getList()
+        var menulist: List<MenuItem> = MenuItens.getAccountSection()
 
         if(mUser.leader) {
-            mMenuItensList = MenuItens.getLeaderList()
+            menulist = menulist + MenuItens.getLeaderSection()
+        }
+
+        if(mUser.sponsor) {
+            menulist = menulist + MenuItens.getSponsorSection()
         }
 
         if(mUser.manager) {
-            mMenuItensList = MenuItens.getManagerList()
+            menulist = menulist + MenuItens.getManagerSection()
         }
 
-        mMenuSectionList = mMenuItensList.filter { it.type == "section" }
+        menulist = menulist + MenuItens.getPrivacySection()
+        menulist = menulist + MenuItens.getMoreOptionsSection()
 
-        Log.d("EGVAPPLOGMENU", mUser.toString())
+        mMenuSectionList = menulist.filter { it.type == "section" }
 
         var sectionIndex = 0
 
-        for(item in mMenuItensList) {
+        for(item in menulist) {
             if(item.type == "section") {
                 mAdapter.addSectionHeaderItem(mMenuSectionList[sectionIndex])
                 sectionIndex += 1
@@ -164,7 +169,7 @@ class MenuListFragment : Fragment() {
 
         val listViewListener = AdapterView.OnItemClickListener { adapter, view, pos, posLong ->
 
-            when(mMenuItensList[pos].item_name) {
+            when(menulist[pos].item_name) {
                 MenuItens.profile -> startUserProfileActivity()
                 MenuItens.editProfile -> startEditProfileActivity()
                 MenuItens.changeProfilePhoto -> startChangeProfilePhotoActivity()
@@ -178,6 +183,8 @@ class MenuListFragment : Fragment() {
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
+                MenuItens.affiliatedEmbassies -> startAffiliatedEmbassiesFragment()
+                MenuItens.manageSponsors -> startManageSponsorsActivity()
                 MenuItens.createBulletin -> startManageBulletinsActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
@@ -351,10 +358,41 @@ class MenuListFragment : Fragment() {
         startActivity(intent)
     }
 
+
+    private fun startAffiliatedEmbassiesFragment() {
+
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = AffiliatedEmbassiesFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:affiliatedEmbassies")
+            .addToBackStack(null)
+            .commit()
+    }
+
     private fun startEmbassyForApprovalActivity() {
         val intent: Intent = Intent(mContext, EmbassiesForApprovalActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
+    }
+
+    private fun startManageSponsorsActivity() {
+
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ManageSponsorsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageSponsors")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startManageBulletinsActivity() {

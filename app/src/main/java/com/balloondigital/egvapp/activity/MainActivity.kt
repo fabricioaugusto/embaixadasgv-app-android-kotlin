@@ -196,9 +196,12 @@ class MainActivity : AppCompatActivity() {
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleBulletin")
             val embassyAgendaMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyAgenda")
             val embassyPhotosMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyPhotos")
+            val embassyMembersMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyMembers")
             val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
             val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
             val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
+            val manageSponsors: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageSponsors")
+            val affiliatedEmbassies: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:affiliatedEmbassies")
             val managePhotos: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:managePhotos")
 
 
@@ -232,6 +235,11 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
+            if (embassyMembersMenu != null && embassyMembersMenu.isVisible) {
+                transaction.remove(embassyMembersMenu).commit()
+                return
+            }
+
             if (singleEmbassy != null && singleEmbassy.isVisible) {
                 transaction.remove(singleEmbassy).commit()
                 return
@@ -249,6 +257,16 @@ class MainActivity : AppCompatActivity() {
 
             if (manageBulletins != null && manageBulletins.isVisible) {
                 transaction.remove(manageBulletins).commit()
+                return
+            }
+
+            if (manageSponsors != null && manageSponsors.isVisible) {
+                transaction.remove(manageSponsors).commit()
+                return
+            }
+
+            if (affiliatedEmbassies != null && affiliatedEmbassies.isVisible) {
+                transaction.remove(affiliatedEmbassies).commit()
                 return
             }
 
