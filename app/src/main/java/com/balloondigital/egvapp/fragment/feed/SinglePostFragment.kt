@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.fragment_single_post.*
@@ -64,12 +65,14 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     private lateinit var mNavBar: BottomNavigationView
     private lateinit var mPostCommentList: MutableList<PostComment>
     private lateinit var mAdapter: CommentListAdapter
+    private lateinit var mRegistration: ListenerRegistration
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mTxtPostEmptyComments: TextView
     private lateinit var mPostID: String
     private lateinit var mPost: Post
     private lateinit var mUser: User
     private var isCommented: Boolean = false
+    private var mTextCheck: Boolean = true
     private var mCurrentUser: FirebaseUser? = null
 
     override fun onCreateView(
@@ -138,6 +141,10 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     override fun onDestroyView() {
         super.onDestroyView()
         mNavBar.isGone = false
+
+        if (::mRegistration.isInitialized) {
+            mRegistration.remove()
+        }
     }
 
     private fun setListeners() {
@@ -161,7 +168,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
     private fun getPost() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
+        mRegistration = mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .document(mPostID)
             .addSnapshotListener {
                 snapshot, e ->
@@ -281,11 +288,14 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         txtPostDate.text = "${postDate.date} ${postDate.monthAbr} ${postDate.fullyear} às ${postDate.hours}:${postDate.minutes}"
 
         if(mPost.post_likes > 0) {
+            txtLikeCount.isGone = false
             if(mPost.post_likes == 1) {
                 txtLikeCount.text = "1 curtida"
             } else {
                 txtLikeCount.text = "${mPost.post_likes} curtidas"
             }
+        } else {
+            txtLikeCount.isGone = true
         }
 
         val user: User = mPost.user

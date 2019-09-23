@@ -1,11 +1,12 @@
 package com.balloondigital.egvapp.fragment.menu
 
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
-import android.widget.ProgressBar
 import androidx.fragment.app.Fragment
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,16 +16,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Menu.AffiliatesEmbassiesAwaitingActivity
+import com.balloondigital.egvapp.activity.Menu.EmbassiesForApprovalActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Embassy
-import com.balloondigital.egvapp.model.Post
+import com.balloondigital.egvapp.model.EmbassySponsor
+import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
-import com.google.firebase.firestore.DocumentSnapshot
+import com.google.android.libraries.places.widget.Autocomplete
+import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import kotlinx.android.synthetic.main.fragment_list_embassy.*
+import kotlinx.android.synthetic.main.fragment_affiliated_embassies.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -35,21 +39,22 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnClickListener,
+class AffiliatedEmbassiesFragment : Fragment(), SearchView.OnQueryTextListener, View.OnClickListener,
     SearchView.OnCloseListener {
 
+
+    private lateinit var mUser: User
+    private lateinit var mSponsorID: String
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAdapter: EmbassyListAdapter
     private lateinit var mToolbar: Toolbar
-    private lateinit var mLastDocument: DocumentSnapshot
-    private lateinit var mLastDocumentRequested: DocumentSnapshot
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mSearchView: SearchView
+    private lateinit var mAwaitingListEmbassy: MutableList<Embassy>
     private lateinit var mListEmbassy: MutableList<Embassy>
     private lateinit var mListFiltered: MutableList<Embassy>
-    private lateinit var mPbLoadingMore: ProgressBar
     private var isPostsOver: Boolean = false
 
     override fun onCreateView(
@@ -58,7 +63,13 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
     ): View? {
         // Inflate the layout for this fragment
 
-        val view: View = inflater.inflate(R.layout.fragment_list_embassy, container, false)
+        val view: View = inflater.inflate(R.layout.fragment_affiliated_embassies, container, false)
+
+
+        val bundle: Bundle? = arguments
+        if (bundle != null) {
+            mUser = bundle.getSerializable("user") as User
+        }
 
         mToolbar = view.findViewById(R.id.listEmbassyToolbar)
         mToolbar.title = ""
@@ -69,9 +80,9 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
 
         setHasOptionsMenu(true)
 
-        mPbLoadingMore = view.findViewById(R.id.pbLoadingMore)
         mContext = view.context
         mDatabase = MyFirebase.database()
+        mAwaitingListEmbassy = mutableListOf()
         mListEmbassy = mutableListOf()
         mListFiltered = mutableListOf()
         mRecyclerView = view.findViewById(R.id.recyclerEmbassyList)
@@ -84,7 +95,7 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
 
         setListeners()
         setRecyclerView()
-        getListUsers()
+        getSponsorId()
 
     }
 
@@ -123,6 +134,10 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
         if(id == R.id.btBackPress) {
             activity!!.onBackPressed()
         }
+
+        if(id == R.id.layoutAwaitingEmbassies) {
+            startAffiliatesEmbassiesAwaitingActivity()
+        }
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -133,31 +148,28 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
         return false
     }
 
-    private fun setListeners() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
-        btBackPress.setOnClickListener(this)
+        if (resultCode == Activity.RESULT_OK) {
 
-        val recyclerListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
-                    if(!isPostsOver) {
-                        if(!::mLastDocumentRequested.isInitialized) {
-                            mLastDocumentRequested = mLastDocument
-                            loadMore()
-                        } else {
-                            if(mLastDocumentRequested != mLastDocument) {
-                                mLastDocumentRequested = mLastDocument
-                                loadMore()
-                            }
-                        }
-                    }
-
-                }
+            if(requestCode == 300) {
+                getListEmbassy()
             }
+
+        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
+            // TODO: Handle the error.
+            val status = Autocomplete.getStatusFromIntent(data!!)
+            Log.i("GooglePlaceLog", status.statusMessage)
+        } else if (resultCode == Activity.RESULT_CANCELED) {
+            // The user canceled the operation.
         }
 
-        mRecyclerView.addOnScrollListener(recyclerListener)
+    }
+
+    private fun setListeners() {
+        layoutAwaitingEmbassies.setOnClickListener(this)
+        btBackPress.setOnClickListener(this)
+
     }
 
     private fun searchEmbassy(str: String) {
@@ -170,62 +182,64 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
         setSearchRecyclerView(mSearchList.toMutableList())
     }
 
-    private fun getListUsers() {
+    private fun getSponsorId() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.SPONSORS)
+            .whereEqualTo("user_id", mUser.id)
+            .get()
+            .addOnSuccessListener {
+                querySnapshot ->
+
+                if(querySnapshot.documents.size > 0) {
+
+                    mSponsorID = querySnapshot.documents[0].id
+                    getListEmbassy()
+                }
+            }
+    }
+
+    private fun getListEmbassy() {
+
+        mListEmbassy.clear()
+        mAwaitingListEmbassy.clear()
 
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-            .whereEqualTo("status", "active")
-            .orderBy("state")
-            .limit(30)
+            .whereEqualTo("embassySponsor.id", mSponsorID)
             .get()
             .addOnSuccessListener {querySnapshot ->
-
                 if(querySnapshot.size() > 0) {
-                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
                     for (document in querySnapshot) {
                         val embassy: Embassy? = document.toObject(Embassy::class.java)
                         if(embassy != null) {
-                            mListEmbassy.add(embassy)
+                            embassy.id = document.id
+
+                            if(embassy.status == "active") {
+                                mListEmbassy.add(embassy)
+                            }
+
+                            if(embassy.status == "awaiting") {
+                                mAwaitingListEmbassy.add(embassy)
+                            }
+
                         }
                     }
                 }
 
+                bindData()
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }
     }
 
-    private fun loadMore() {
+    private fun bindData() {
 
-        mPbLoadingMore.isGone = false
-
-        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-            .whereEqualTo("status", "active")
-            .orderBy("state")
-            .startAfter(mLastDocument)
-            .limit(30)
-            .get()
-            .addOnSuccessListener { querySnapshot ->
-
-                if(querySnapshot.size() > 0) {
-
-                    mLastDocumentRequested = mLastDocument
-                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
-
-                    for (document in querySnapshot) {
-                        val embassy: Embassy? = document.toObject(Embassy::class.java)
-                        if(embassy != null) {
-                            mListEmbassy.add(embassy)
-                        }
-                    }
-                    mAdapter.notifyDataSetChanged()
-                    mPbLoadingMore.isGone = true
-                } else {
-                    mPbLoadingMore.isGone = true
-                    isPostsOver = true
-                }
-            }
+        if(mAwaitingListEmbassy.size > 0) {
+            txtAwaitingEmbassies.text = mAwaitingListEmbassy.size.toString()
+            layoutAwaitingEmbassies.isGone = false
+        } else {
+            layoutAwaitingEmbassies.isGone = true
+        }
 
     }
 
@@ -265,6 +279,14 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
             .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEmbassy")
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun startAffiliatesEmbassiesAwaitingActivity() {
+        val intent: Intent = Intent(mContext, AffiliatesEmbassiesAwaitingActivity::class.java)
+        intent.putExtra("user", mUser)
+        intent.putExtra("sponsor_id", mSponsorID)
+        startActivityForResult(intent, 300)
+
     }
 
 }

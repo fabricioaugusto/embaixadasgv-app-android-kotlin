@@ -29,6 +29,14 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
         return  mUserList.size
     }
 
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user: User = mUserList[position]
         holder.bindData(user)

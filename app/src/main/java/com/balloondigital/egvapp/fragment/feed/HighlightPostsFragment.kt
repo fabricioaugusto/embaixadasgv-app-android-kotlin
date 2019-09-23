@@ -137,6 +137,32 @@ class HighlightPostsFragment : Fragment() {
 
     }
 
+    fun updateLikes(post: Post, postLike: PostLike, action: String) {
+        if(mPostList.any { p -> p.id == post.id }) {
+
+            val list = mPostList.filter { p -> p.id == post.id }
+            val pos = mPostList.indexOf(list[0])
+
+            if(action == "like") {
+                if(!mListLikes.contains(postLike)) {
+                    mListLikes.add(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
+                mAdapter.notifyItemChanged(pos)
+            }
+
+            if(action == "unlike") {
+                if(mListLikes.contains(postLike)) {
+                    mListLikes.remove(postLike)
+                }
+                mPostList[pos] = post
+                mAdapter.updateListLikes(mListLikes)
+                mAdapter.notifyItemChanged(pos)
+            }
+        }
+    }
+
     fun updateList() {
         getPostLikes()
     }
@@ -224,7 +250,7 @@ class HighlightPostsFragment : Fragment() {
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .whereEqualTo("user_verified", true)
             .orderBy("date", Query.Direction.DESCENDING)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
 
                 mPostList.clear()
@@ -258,7 +284,7 @@ class HighlightPostsFragment : Fragment() {
             .whereEqualTo("user_verified", true)
             .orderBy("date", Query.Direction.DESCENDING)
             .startAfter(mLastDocument)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
                 Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {

@@ -90,13 +90,15 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             Log.d("FirebaseLog", mUser.toString())
         }
 
+        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
+        mPlacesClient = Places.createClient(this)
+
         mEvent = Event()
         mListUsers = mutableListOf()
         mClient = Client("2IGM62FIAI", "042b50ac3860ac597be1fbefad09b9d4")
         mDatabase = MyFirebase.database()
         mStorage = MyFirebase.storage()
         mCollections = MyFirebase.COLLECTIONS
-        mPlacesClient = Places.createClient(this)
         mPlaceFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.LAT_LNG)
         mRecyclerView = findViewById(R.id.rvModerators)
         mSearchView = findViewById(R.id.svFindModerator)

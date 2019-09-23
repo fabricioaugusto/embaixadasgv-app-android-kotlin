@@ -29,6 +29,7 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
+    private var mTextCheck = true
     private val KNIFE_TEXT = 500
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,6 +129,17 @@ class CreateToughtActivity : AppCompatActivity(), View.OnClickListener {
         mPost.embassy_id = mUser.embassy_id
 
         btToughtPublish.startAnimation()
+
+        while (mTextCheck) {
+
+            val lastStr = mPost.text.toString().takeLast(4)
+
+            if(lastStr == "<br>") {
+                mPost.text = mPost.text.toString().dropLast(4)
+            } else {
+                mTextCheck = false
+            }
+        }
 
         mDatabase.collection(mCollections.POSTS)
             .add(mPost.toMapTought())

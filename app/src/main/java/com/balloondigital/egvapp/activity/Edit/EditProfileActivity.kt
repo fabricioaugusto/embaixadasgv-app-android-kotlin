@@ -38,7 +38,6 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_profile)
 
-
         supportActionBar!!.title = "Editar perfil"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -47,9 +46,12 @@ class EditProfileActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             mUser = bundle.getSerializable("user") as User
         }
 
+        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
+        mPlacesClient = Places.createClient(this)
+
         mDatabase = MyFirebase.database()
         mCollections = MyFirebase.COLLECTIONS
-        mPlacesClient = Places.createClient(this)
+
         mPlaceFields = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS, Place.Field.TYPES)
     }
 

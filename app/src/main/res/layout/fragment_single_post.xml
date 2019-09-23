@@ -97,7 +97,7 @@
                         android:adjustViewBounds="true"/>
                 <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" android:id="@+id/txtPostTitle" android:textSize="18sp"
+                        android:layout_height="wrap_content" android:id="@+id/txtPostTitle" android:textSize="22sp"
                         android:textStyle="bold" android:textColor="@color/colorText"
                         android:layout_marginBottom="4dp" android:layout_marginLeft="16dp"
                         android:layout_marginRight="16dp" android:clickable="false"
@@ -107,7 +107,8 @@
                         android:layout_height="wrap_content" android:id="@+id/txtPostText"
                         android:textColor="@color/colorText" android:textSize="16sp" android:clickable="false"
                         android:layout_marginLeft="16dp" android:layout_marginRight="16dp"
-                        tools:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "/>
+                        tools:text="We have witnessed quite a paradigm shift in the way we see nutrition over the last few decades. The “one size fits all” nutritional supplement is no longer adequate, as we are now becoming more aware of the fact that each individual has different health needs and concerns. "
+                        android:layout_marginTop="@dimen/keyline_1_minus_8dp"/>
                 <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/txtLikeCount"

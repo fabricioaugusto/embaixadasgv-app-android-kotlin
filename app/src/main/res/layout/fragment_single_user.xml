@@ -94,7 +94,7 @@
                         android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         android:layout_marginEnd="32dp" android:layout_marginRight="32dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="32dp"
                         app:layout_constraintBottom_toBottomOf="parent">
                     <LinearLayout
                             android:orientation="horizontal"
@@ -248,7 +248,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content" android:id="@+id/txtUserProfileBiography"
                                 android:layout_marginTop="8dp"
-                                android:textColor="@color/colorText" android:textSize="14sp"/>
+                                android:textColor="@color/colorText" android:textSize="16sp"/>
                     </LinearLayout>
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

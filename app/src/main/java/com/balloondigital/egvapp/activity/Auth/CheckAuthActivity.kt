@@ -70,6 +70,10 @@ class CheckAuthActivity : AppCompatActivity() {
                 if(documentSnapshot != null) {
                     val user = documentSnapshot.toObject(User::class.java)
                     if(user != null) {
+                        val leader = documentSnapshot.data?.get("leader")
+                        if(leader != null) {
+                            user.leader = documentSnapshot.data?.get("leader") as Boolean
+                        }
                         mUser = user
                         checkUser()
                     } else {

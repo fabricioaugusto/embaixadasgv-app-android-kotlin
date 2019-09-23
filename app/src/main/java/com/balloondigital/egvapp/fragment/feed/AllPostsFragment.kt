@@ -260,20 +260,24 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
             .whereEqualTo("user_verified", false)
             .orderBy("date", Query.Direction.DESCENDING)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mPostList.clear()
 
-                mLastDocument = documentSnapshot.documents[documentSnapshot.size() - 1]
-
                 if(documentSnapshot != null) {
-                    for(document in documentSnapshot.documents) {
-                        val post: Post? = document.toObject(Post::class.java)
-                        if(post != null) {
-                            mPostList.add(post)
+                    if(documentSnapshot.documents.size > 0) {
+
+                        mLastDocument = documentSnapshot.documents[documentSnapshot.size() - 1]
+
+                        for(document in documentSnapshot.documents) {
+                            val post: Post? = document.toObject(Post::class.java)
+                            if(post != null) {
+                                mPostList.add(post)
+                            }
                         }
                     }
+
                 }
 
                 mAdapter.notifyDataSetChanged()
@@ -290,7 +294,7 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
             .whereEqualTo("user_verified", false)
             .orderBy("date", Query.Direction.DESCENDING)
             .startAfter(mLastDocument)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
                 Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {

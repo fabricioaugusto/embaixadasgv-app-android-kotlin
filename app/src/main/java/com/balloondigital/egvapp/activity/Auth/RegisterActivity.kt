@@ -10,6 +10,7 @@ import com.balloondigital.egvapp.api.MyFirebase
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_register.*
 import android.util.Log
+import com.balloondigital.egvapp.model.EmbassySponsor
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.MyApplication
@@ -139,24 +140,28 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                         currentUser.id = id
                         currentUser.email = email
 
-                        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-                            .document(embassy?.id.toString())
-                            .update("leader", currentUser.toBasicMap(), "leader_id", currentUser.id)
-                            .addOnSuccessListener {
-                                startCheckAuthActivity()
-                            }.addOnFailureListener {
-                                Log.d("EGVAPPLOG", it.message.toString())
-                            }
+                        setEmbassy(currentUser)
+
                     } else {
                         startCheckAuthActivity()
                     }
-
                 }
+        }
 
-        }.addOnFailureListener {
+    }
 
+    private fun setEmbassy(currentUser: User) {
+
+        val embassy = mInvite.embassy_receiver
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .document(embassy?.id.toString())
+            .update("leader", currentUser.toBasicMap(), "leader_id", currentUser.id)
+            .addOnSuccessListener {
+                startCheckAuthActivity()
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
             }
-
     }
 
     private fun validateRegister (name: String, email: String, pass: String, passConfirm: String): Boolean {

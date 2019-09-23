@@ -183,7 +183,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-            .limit(3)
+            .limit(30)
             .get()
             .addOnSuccessListener {querySnapshot ->
 
@@ -209,7 +209,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
             .startAfter(mLastDocument)
-            .limit(3)
+            .limit(30)
             .get()
             .addOnSuccessListener { querySnapshot ->
 

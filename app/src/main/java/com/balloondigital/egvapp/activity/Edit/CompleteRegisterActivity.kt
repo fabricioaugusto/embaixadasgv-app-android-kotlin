@@ -42,7 +42,7 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         toolbar.setTitleTextColor(resources.getColor(R.color.colorGrey))
         setSupportActionBar(toolbar)
 
-        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY");
+        Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
         mPlacesClient = Places.createClient(applicationContext)
 
         val bundle: Bundle? = intent.extras

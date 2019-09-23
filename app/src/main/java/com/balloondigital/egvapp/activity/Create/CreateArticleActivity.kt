@@ -43,6 +43,7 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var mStorage: StorageReference
     private lateinit var mCollections: MyFirebase.COLLECTIONS
     private var mCoverIsSet = false
+    private var mTextCheck = true
     private val GALLERY_CODE: Int = 200
     private val KNIFE_TEXT = 500
     private val permissions: List<String> = listOf(
@@ -183,14 +184,22 @@ class CreateArticleActivity : AppCompatActivity(), View.OnClickListener{
             return
         }
 
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
-        val currentDate = sdf.format(Date())
-
         mPost.title = title
         mPost.text = text
         mPost.embassy_id = mUser.embassy_id
 
         btArticlePublish.startAnimation()
+
+        while (mTextCheck) {
+
+            val lastStr = mPost.text.toString().takeLast(4)
+
+            if(lastStr == "<br>") {
+                mPost.text = mPost.text.toString().dropLast(4)
+            } else {
+                mTextCheck = false
+            }
+        }
 
         val imageName = UUID.randomUUID().toString()
         val fileName = "$imageName.jpg"

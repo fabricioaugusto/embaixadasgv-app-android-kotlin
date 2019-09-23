@@ -271,15 +271,16 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
             .whereEqualTo("user_verified", false)
             .whereEqualTo("embassy_id", mUser.embassy_id)
             .orderBy("date", Query.Direction.DESCENDING)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
 
                 mPostList.clear()
 
-                mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
-
                 if(querySnapshot != null) {
                     if(querySnapshot.size() > 0) {
+
+                        mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+
                         for(document in querySnapshot.documents) {
                             val post: Post? = document.toObject(Post::class.java)
                             if(post != null) {
@@ -310,7 +311,7 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
             .whereEqualTo("embassy_id", mUser.embassy_id)
             .orderBy("date", Query.Direction.DESCENDING)
             .startAfter(mLastDocument)
-            .limit(3)
+            .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
                 Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {
