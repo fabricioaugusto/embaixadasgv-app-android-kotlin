@@ -11,6 +11,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.algolia.search.saas.Client
@@ -90,10 +91,18 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         getListUsers()
         setRecyclerView()
 
-        val recyclerListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
+
+        val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
+            override fun onScrollChange(
+                v: NestedScrollView,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+
+                if (scrollY == -( v.getMeasuredHeight() - v.getChildAt(0).getMeasuredHeight() )) {
+
                     if(!isPostsOver) {
                         if(!::mLastDocumentRequested.isInitialized) {
                             mLastDocumentRequested = mLastDocument
@@ -105,12 +114,12 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                             }
                         }
                     }
-
                 }
             }
+
         }
 
-        mRecyclerView.addOnScrollListener(recyclerListener)
+        usersNestedSV.setOnScrollChangeListener(nestedSVListener)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -178,10 +187,12 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         user.name = userObj.getString("name")
                         val profileImg = userObj.has("profile_img")
                         if(profileImg) {
-                            user.profile_img = userObj.getString("profile_img")
-                            user.occupation = userObj.getString("occupation")
+                            if(user.profile_img != null) {
+                                user.profile_img = userObj.getString("profile_img")
+                                user.occupation = userObj.getString("occupation")
+                                searchUser.add(user)
+                            }
                         }
-                        searchUser.add(user)
                     }
                     setSearchRecyclerView(searchUser)
                 }

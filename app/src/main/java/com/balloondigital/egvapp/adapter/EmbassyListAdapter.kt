@@ -47,7 +47,7 @@ class EmbassyListAdapter(embassyList: List<Embassy>): RecyclerView.Adapter<Embas
         private val mTxtAdEmbassyName: TextView = itemView.findViewById(R.id.txtAdEmbassyName)
         private val mTxtAdEmbassyCity: TextView = itemView.findViewById(R.id.txtAdEmbassyCity)
         private val mTxtAdEmbassyInList: TextView = itemView.findViewById(R.id.txtAdEmbassyInList)
-
+        private val mtxtAdEmbassyLeaderNotRegistered: TextView = itemView.findViewById(R.id.txtAdEmbassyLeaderNot)
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(mEmbassyList[adapterPosition], adapterPosition)
@@ -57,6 +57,7 @@ class EmbassyListAdapter(embassyList: List<Embassy>): RecyclerView.Adapter<Embas
         fun bindData(embassy: Embassy) {
 
             mTxtAdEmbassyInList.isGone = embassy.status != "released"
+            mtxtAdEmbassyLeaderNotRegistered.isGone = embassy.status != "approved"
 
             mTxtAdEmbassyName.text = embassy.name
             mTxtAdEmbassyCity.text = "${embassy.city} - ${embassy.state_short}"

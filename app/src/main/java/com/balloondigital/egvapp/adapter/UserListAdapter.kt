@@ -6,9 +6,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import de.hdodenhof.circleimageview.CircleImageView
 
 class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
@@ -44,7 +50,8 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
 
     inner class UserViewHolder(itemView: View, val context: Context): RecyclerView.ViewHolder(itemView) {
 
-        val mUserProfileImage: CircleImageView = itemView.findViewById(R.id.imageUserRowProfile)
+        val mUserIdentifer: TextView = itemView.findViewById(R.id.txtUserIdentifier)
+        val mUserProfileImage: ImageView = itemView.findViewById(R.id.imageUserRowProfile)
         val mTextViewName: TextView = itemView.findViewById(R.id.textUserRowName)
         val mTextViewEmail: TextView = itemView.findViewById(R.id.textUserRowEmail)
 
@@ -65,17 +72,38 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
                 mTextViewEmail.text = user.occupation
             }
 
+            val requestOptions: RequestOptions = RequestOptions()
+            val options = requestOptions.transforms(CenterCrop(), RoundedCorners(120))
+
             if(user.profile_img != null) {
                 Glide.with(context)
                     .load(user.profile_img)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .apply(options)
                     .into(mUserProfileImage)
             } else {
-                if(user.gender == "Female") {
+                if(user.gender == "female") {
                     mUserProfileImage.setImageResource(R.drawable.avatar_woman)
                 } else {
                     mUserProfileImage.setImageResource(R.drawable.avatar)
                 }
             }
+
+            if(user.leader) {
+                mUserIdentifer.text = "Líder"
+                mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_leader_identifier)
+            }
+
+            if(user.sponsor) {
+                if(user.gender == "female") {
+                    mUserIdentifer.text = "Madrinha"
+                } else {
+                    mUserIdentifer.text = "Padrinho"
+                }
+                mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_sponsor_identifier)
+            }
+
+            mUserIdentifer.isGone = !(user.sponsor || user.leader)
         }
     }
 }

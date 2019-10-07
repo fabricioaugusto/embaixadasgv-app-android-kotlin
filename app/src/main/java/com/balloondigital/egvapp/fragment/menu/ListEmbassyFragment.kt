@@ -196,6 +196,37 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
             }
     }
 
+    private fun getListApprovedEmbassy() {
+
+        isPostsOver = false
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .whereEqualTo("status", "approved")
+            .orderBy("state")
+            .limit(30)
+            .get()
+            .addOnSuccessListener {querySnapshot ->
+
+                if(querySnapshot.size() > 0) {
+                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
+                    for (document in querySnapshot) {
+                        val embassy: Embassy? = document.toObject(Embassy::class.java)
+                        if(embassy != null) {
+                            mListEmbassy.add(embassy)
+                        }
+                    }
+                    mPbLoadingMore.isGone = true
+                    isPostsOver = true
+                } else {
+                    mPbLoadingMore.isGone = true
+                    isPostsOver = true
+                }
+
+                mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
+            }
+    }
+
     private fun loadMore() {
 
         mPbLoadingMore.isGone = false
@@ -222,8 +253,7 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
                     mAdapter.notifyDataSetChanged()
                     mPbLoadingMore.isGone = true
                 } else {
-                    mPbLoadingMore.isGone = true
-                    isPostsOver = true
+                    getListApprovedEmbassy()
                 }
             }
 

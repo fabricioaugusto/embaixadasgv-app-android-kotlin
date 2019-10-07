@@ -68,14 +68,15 @@
                             android:text="Gin Festival London 2017"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventTheme"
-                            android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"/>
+                            android:textColor="@color/colorText" android:textStyle="bold" android:textSize="18sp"
+                            android:paddingRight="16dp"/>
                     <TextView
                             android:text="Embaixada Ipatinga - Ipatinga, MG"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content" android:id="@+id/txtAdEventPlace"
                             android:drawableLeft="@drawable/ic_place_red" android:gravity="center_vertical"
                             android:textColor="@color/colorText"
-                            android:drawablePadding="2dp" android:layout_marginTop="4dp"/>
+                            android:drawablePadding="2dp" android:layout_marginTop="4dp" android:paddingRight="16dp"/>
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout

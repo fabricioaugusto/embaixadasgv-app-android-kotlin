@@ -6,7 +6,7 @@
              tools:context=".fragment.search.ListUsersFragment">
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-                  android:orientation="vertical" android:background="@color/backgroundGrey">
+                  android:orientation="vertical" android:background="@color/backgroundGreyStrong">
         <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -20,17 +20,31 @@
                     android:layout_marginLeft="16dp"/>
 
         </androidx.appcompat.widget.Toolbar>
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" android:id="@+id/usersRecyclerView"
-                android:paddingBottom="64dp"
-                android:clipToPadding="false"/>
-        <ProgressBar
-                style="?android:attr/progressBarStyle"
-                android:layout_width="match_parent"
-                android:layout_height="32dp"
-                android:id="@+id/pbLoadingMore" android:visibility="gone"
-                android:layout_marginTop="-48dp"/>
+                android:layout_height="match_parent" android:fillViewport="true" android:id="@+id/usersNestedSV">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical">
+                <TextView
+                        android:text="GV's cadastrados"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtUsersCount" android:textStyle="bold"
+                        android:textColor="@color/colorPrimary" android:textSize="16sp" android:paddingTop="16dp"
+                        android:paddingBottom="8dp" android:paddingRight="16dp" android:paddingLeft="16dp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/usersRecyclerView"
+                        android:paddingBottom="64dp"
+                        android:clipToPadding="false">
+                </androidx.recyclerview.widget.RecyclerView>
+                <ProgressBar
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:id="@+id/pbLoadingMore" android:visibility="visible"
+                        android:layout_marginTop="-48dp"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
 </FrameLayout>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -17,13 +18,13 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.EventListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Event
-import com.balloondigital.egvapp.model.Post
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_list_events.*
+import java.util.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,10 +74,11 @@ class ListEventsFragment : Fragment() {
         getEventList()
         setRecyclerView(mEventList)
 
-        val recyclerListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
+
+        val nestedSVListener =
+            NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (scrollY == -( v.measuredHeight - v.getChildAt(0).measuredHeight)) {
+
                     if(!isPostsOver) {
                         if(!::mLastDocumentRequested.isInitialized) {
                             mLastDocumentRequested = mLastDocument
@@ -88,19 +90,21 @@ class ListEventsFragment : Fragment() {
                             }
                         }
                     }
-
                 }
             }
-        }
 
-        mRecyclerView.addOnScrollListener(recyclerListener)
+        eventsNestedSV.setOnScrollChangeListener(nestedSVListener)
     }
 
     private fun getEventList() {
 
+        val today = Date()
+        val timestamp = com.google.firebase.Timestamp(today)
+
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
+            .whereGreaterThan("date", timestamp)
             .orderBy("date", Query.Direction.ASCENDING)
             .limit(10)
             .get().addOnSuccessListener { documentSnapshot ->
@@ -132,9 +136,13 @@ class ListEventsFragment : Fragment() {
 
     private fun loadMore() {
 
+        val today = Date()
+        val timestamp = com.google.firebase.Timestamp(today)
+
         pbLoadingMore.isGone = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.EVENTS)
+            .whereGreaterThan("date", timestamp)
             .orderBy("date", Query.Direction.ASCENDING)
             .startAfter(mLastDocument)
             .limit(10)

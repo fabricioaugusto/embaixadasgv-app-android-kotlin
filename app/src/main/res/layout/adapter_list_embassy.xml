@@ -39,6 +39,12 @@
                     android:drawableLeft="@drawable/ic_check_circle_green" android:textStyle="bold"
                     android:textColor="@color/colorGreen" android:drawablePadding="2dp" android:visibility="gone"
                     tools:visibility="visible"/>
+            <TextView
+                    android:text="Líder não cadastrado no app"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtAdEmbassyLeaderNot"
+                    android:textColor="@color/colorText" android:drawableLeft="@drawable/ic_mini_warning_yellow"
+                    android:drawablePadding="4dp" android:visibility="gone" tools:visibility="visible"/>
         </LinearLayout>
 
     </LinearLayout>
