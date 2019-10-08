@@ -183,6 +183,80 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent" android:id="@+id/rvModerators"
                         android:layout_marginTop="8dp"/>
+                <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:id="@+id/layoutAddManually"
+                        android:visibility="gone">
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintStart_toStartOf="parent"
+                            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                            android:gravity="center" android:id="@+id/layoutAddModeratorPhoto"
+                            app:layout_constraintHorizontal_bias="0.5"
+                            app:layout_constraintBottom_toTopOf="@+id/btCPSavePhoto"
+                            app:layout_constraintVertical_chainStyle="packed"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout13" android:layout_marginTop="24dp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/imgAddModerator"
+                                android:layout_width="160dp"
+                                android:layout_height="160dp"
+                                android:src="@drawable/avatar"
+                                app:civ_border_width="5dp"
+                                app:civ_border_color="#FFF" android:layout_marginEnd="8dp"
+                                android:layout_marginStart="8dp"
+                        />
+                        <ImageButton
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:srcCompat="@drawable/ic_photo_library_grey_light"
+                                android:id="@+id/btAddModerator"
+                                android:background="@drawable/bg_circular_blue" android:padding="12dp"
+                                android:layout_marginTop="-36dp"/>
+                    </LinearLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Nome" android:id="@+id/txtModeratorName"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Breve biografia" android:id="@+id/txtModeratorDescription"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                            android:text="Salvar"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/btSaveModerator"
+                            app:finalCornerAngle="50dp"
+                            app:initialCornerAngle="0dp"
+                            app:spinning_bar_color="#FFF"
+                            app:spinning_bar_padding="6dp"
+                            android:background="@drawable/bg_circular_progressbar"
+                            android:textColor="@color/backgroundGrey"
+                            android:layout_marginTop="24dp"/>
+                </LinearLayout>
+                <TextView
+                        android:text="Adicionar Manualmente"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtAddManually" android:textSize="16sp"
+                        android:layout_marginTop="16dp" android:textColor="@color/colorLink" android:gravity="right"
+                        android:textStyle="bold" android:clickable="true" android:paddingTop="8dp"
+                        android:paddingBottom="8dp"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

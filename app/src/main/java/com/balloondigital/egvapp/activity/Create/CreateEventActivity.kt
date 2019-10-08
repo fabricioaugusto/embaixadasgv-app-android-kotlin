@@ -39,6 +39,7 @@ import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_create_event.*
 import org.json.JSONArray
@@ -70,8 +71,11 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     )
     private val AUTOCOMPLETE_REQUEST_CODE = 300
     private val GALLERY_CODE: Int = 200
+    private val GALLERY_MODERATOR_CODE: Int = 400
     private var mCoverSelected = false
+    private var mModeratorPhotoSelected = false
     private var mModeratorsListIsHide = true
+    private var mAddModeratorManually = false
     private var mModerator1Focus = false
     private var mModerator2Focus = false
 
@@ -121,6 +125,10 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             startGalleryActivity()
         }
 
+        if(id == R.id.imgAddModerator || id == R.id.btAddModerator) {
+            startGalleryModeratorActivity()
+        }
+
         if(id == R.id.layoutModeratorsModal) {
             if(!mModeratorsListIsHide) {
                 hideModeratorsList()
@@ -131,6 +139,17 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             layoutAlertInfo.animate().alpha(0F).withEndAction {
                 layoutAlertInfo.isGone = true
             }
+        }
+
+        if(id == R.id.txtAddManually) {
+            layoutAddManually.isGone = false
+            mAddModeratorManually = true
+            mSearchView.isGone = true
+            mRecyclerView.isGone = true
+        }
+
+        if(id == R.id.btSaveModerator) {
+            saveModerator()
         }
     }
 
@@ -172,14 +191,29 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                             CropImages.eventCover(this, uri)
                         }
                     }
+                    GALLERY_MODERATOR_CODE -> {
+                        if (data != null) {
+                            val uri = data.data
+                            CropImages.profilePicture(this, uri)
+                        }
+                    }
                     UCrop.REQUEST_CROP -> {
                         if (data != null) {
                             val resultUri: Uri? = UCrop.getOutput(data)
-                            if(resultUri != null) {
-                                imgEventInsertCover.setImageDrawable(null)
-                                imgEventInsertCover.setImageURI(resultUri)
+                            if(mAddModeratorManually) {
+                                if(resultUri != null) {
+                                    imgAddModerator.setImageDrawable(null)
+                                    imgAddModerator.setImageURI(resultUri)
+                                }
+                                mModeratorPhotoSelected = true
+                            } else {
+                                if(resultUri != null) {
+                                    imgEventInsertCover.setImageDrawable(null)
+                                    imgEventInsertCover.setImageURI(resultUri)
+                                }
+                                mCoverSelected = true
                             }
-                            mCoverSelected = true
+
                         }
                     }
                     AUTOCOMPLETE_REQUEST_CODE -> {
@@ -204,7 +238,11 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         imgEventInsertCover.setOnClickListener(this)
         layoutModeratorsModal.setOnClickListener(this)
         layoutAlertInfo.setOnClickListener(this)
+        txtAddManually.setOnClickListener(this)
+        imgAddModerator.setOnClickListener(this)
+        btAddModerator.setOnClickListener(this)
         btEventInsertCover.setOnClickListener(this)
+        btSaveModerator.setOnClickListener(this)
         etEventLocation.onFocusChangeListener = this
         etEventModerator1.onFocusChangeListener = this
 
@@ -242,6 +280,32 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     }
 
+
+    private fun saveModerator() {
+
+        val moderatorName = txtModeratorName.text.toString()
+        val moderatorDescription = txtModeratorDescription.text.toString()
+
+        if(moderatorName.isEmpty() ||  moderatorDescription.isEmpty()) {
+            makeToast("Você deve preencher o nome e a descrição do moderador")
+            return
+        }
+
+        if(!mModeratorPhotoSelected) {
+            makeToast("Você deve selecionar uma foto para o moderador")
+            return
+        }
+
+        if(mModerator1Focus) {
+            etEventModerator1.setText(moderatorName)
+            hideModeratorsList()
+            mModerator1Focus = false
+        }
+
+        mAddModeratorManually = false
+
+    }
+
     private fun startPlacesActivity() {
 
         // Start the autocomplete intent.
@@ -258,9 +322,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         val addressComponents = place.addressComponents
         val ltdlng = place.latLng
 
-        Log.d("EGVAPPLOGCREATEEVENT0", place.toString())
-        Log.d("EGVAPPLOGCREATEEVENT3", place.name.toString())
-        Log.d("EGVAPPLOGCREATEEVENT4", place.latLng.toString())
         mEvent.place = place.name
         mEvent.address = place.address
 
@@ -303,14 +364,19 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
     }
 
 
+    private fun startGalleryModeratorActivity() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, GALLERY_MODERATOR_CODE)
+    }
+
     private fun startGalleryActivity() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, GALLERY_CODE)
     }
 
-    private fun searchUser(query: String) {
+    private fun searchUser(str: String) {
 
-        val query = Query(query)
+        val query = Query(str)
             .setAttributesToRetrieve("id", "name", "profile_img")
             .setHitsPerPage(20)
         mIndex.searchAsync(query, object : CompletionHandler {
@@ -339,7 +405,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
     private fun getListUsers() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.USERS).limit(20)
+        mDatabase.collection(MyFirebase.COLLECTIONS.USERS).limit(3)
             .get()
             .addOnSuccessListener {
                 val documents = it.documents
@@ -451,19 +517,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             return
         }
 
-        val imageName = UUID.randomUUID().toString()
-        val fileName = "$imageName.jpg"
-        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EVENT_COVER}/$fileName")
-        mEvent.cover_img_file_name = fileName
-
-        val bitmap = (imgEventInsertCover.drawable as BitmapDrawable).bitmap
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
-        val data = baos.toByteArray()
-
-        val uploadTask = storagePath.putBytes(data)
-
-        uploadTask.addOnFailureListener {
+        getCoverUploadTask().addOnFailureListener {
             Toast.makeText(this, "Erro ao carregar a imagem. Tente novamente!", Toast.LENGTH_LONG).show()
         }.addOnSuccessListener {
 
@@ -475,26 +529,35 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                         val uri = task.result
                         if (uri != null) {
                             mEvent.cover_img = uri.toString()
-                            mDatabase.collection(mCollections.EVENTS)
-                                .add(mEvent.toMap())
-                                .addOnSuccessListener {
-                                    documentReference ->
-                                    documentReference.update("id", documentReference.id)
-                                    mEvent.id = documentReference.id
-                                    btSaveNewEvent.doneLoadingAnimation(
-                                        resources.getColor(R.color.colorGreen),
-                                        Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
-                                    )
-                                    Handler().postDelayed({
-                                        val returnIntent = Intent()
-                                        returnIntent.putExtra("eventId", mEvent.id)
-                                        returnIntent.putExtra("placeName", mEvent.place)
-                                        returnIntent.putExtra("placeLat", mEvent.lat)
-                                        returnIntent.putExtra("placeLng", mEvent.long)
-                                        setResult(Activity.RESULT_OK, returnIntent)
-                                        finish()
-                                    }, 100)
-                                }
+
+
+                            if(mAddModeratorManually) {
+                                getModeratorPhotoUploadTask()
+                                    .addOnFailureListener {
+                                        Toast.makeText(this, "Erro ao carregar a imagem. Tente novamente!", Toast.LENGTH_LONG).show()
+                                    }.addOnSuccessListener {
+                                        val metadata2 = it.metadata
+                                        if (metadata2 != null) {
+                                            val ref2 = metadata.reference
+                                            if (ref2 != null) {
+                                                ref2.downloadUrl.addOnCompleteListener(OnCompleteListener { task ->
+                                                    val uri2 = task.result
+                                                    if (uri2 != null) {
+                                                        val user = User()
+                                                        user.name = txtModeratorName.text.toString()
+                                                        user.description = txtModeratorDescription.text.toString()
+                                                        user.profile_img = uri2.toString()
+                                                        mEvent.moderator_1 = user
+                                                        addEventFirestore()
+
+                                                    }
+                                                })
+                                            }
+                                        }
+                                    }
+                            } else {
+                                addEventFirestore()
+                            }
                         }
                     })
                 }
@@ -502,6 +565,59 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         }
     }
 
+    private fun addEventFirestore() {
+        mDatabase.collection(mCollections.EVENTS)
+            .add(mEvent.toMap())
+            .addOnSuccessListener {
+                    documentReference ->
+                documentReference.update("id", documentReference.id)
+                mEvent.id = documentReference.id
+                btSaveNewEvent.doneLoadingAnimation(
+                    resources.getColor(R.color.colorGreen),
+                    Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                )
+                Handler().postDelayed({
+                    val returnIntent = Intent()
+                    returnIntent.putExtra("eventId", mEvent.id)
+                    returnIntent.putExtra("placeName", mEvent.place)
+                    returnIntent.putExtra("placeLat", mEvent.lat)
+                    returnIntent.putExtra("placeLng", mEvent.long)
+                    setResult(Activity.RESULT_OK, returnIntent)
+                    finish()
+                }, 100)
+            }
+    }
+
+    private fun getCoverUploadTask() : UploadTask {
+
+        val imageName = UUID.randomUUID().toString()
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EVENT_COVER}/$fileName")
+        mEvent.cover_img_file_name = fileName
+
+        val bitmap = (imgEventInsertCover.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
+        val data = baos.toByteArray()
+
+        return storagePath.putBytes(data)
+    }
+
+
+    private fun getModeratorPhotoUploadTask() : UploadTask {
+
+        val imageName = UUID.randomUUID().toString()
+        val fileName = "$imageName.jpg"
+        val storagePath: StorageReference = mStorage.child("${MyFirebase.STORAGE.EVENT_MODERATOR_PHOTO}/$fileName")
+        mEvent.cover_img_file_name = fileName
+
+        val bitmap = (imgAddModerator.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 70, baos)
+        val data = baos.toByteArray()
+
+        return storagePath.putBytes(data)
+    }
 
     private fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()

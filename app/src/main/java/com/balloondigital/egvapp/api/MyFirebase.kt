@@ -62,6 +62,7 @@ class MyFirebase private constructor(){
         val USER_PROFILE = "images/user/profile"
         val POST_IMG = "images/post/article"
         val EVENT_COVER = "images/event/cover"
+        val EVENT_MODERATOR_PHOTO = "images/event/moderator"
         val EMBASSY_PHOTO = "images/embassy/picture"
         val EMBASSY_COVER = "images/embassy/cover"
     }
