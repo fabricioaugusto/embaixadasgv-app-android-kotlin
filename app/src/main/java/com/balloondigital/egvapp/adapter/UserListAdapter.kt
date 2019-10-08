@@ -55,7 +55,6 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
         val mTextViewName: TextView = itemView.findViewById(R.id.textUserRowName)
         val mTextViewEmail: TextView = itemView.findViewById(R.id.textUserRowEmail)
 
-
         init {
             itemView.setOnClickListener {
                 onItemClick?.invoke(mUserList[adapterPosition])

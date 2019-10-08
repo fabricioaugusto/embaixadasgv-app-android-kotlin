@@ -246,8 +246,10 @@ class SingleEventFragment : Fragment(), OnMapReadyCallback, View.OnClickListener
         txtEventDescription.text = mEvent.description
         txtModeratorName1.text = mEvent.moderator_1?.name
 
-        if(mEvent.moderator_1?.occupation != null) {
-            txtModeratorProfession1.text = mEvent.moderator_1?.occupation
+        val moderator = mEvent.moderator_1
+
+        if(moderator != null) {
+            txtModeratorProfession1.text = moderator.occupation
         } else {
             txtModeratorProfession1.text = "Eu sou GV!"
         }
