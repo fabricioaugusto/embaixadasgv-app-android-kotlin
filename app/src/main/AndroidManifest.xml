@@ -21,6 +21,8 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="android:icon">
+        <activity android:name=".RequestCodeActivity">
+        </activity>
         <activity android:name=".activity.Auth.RequestInviteActivity">
         </activity>
         <activity

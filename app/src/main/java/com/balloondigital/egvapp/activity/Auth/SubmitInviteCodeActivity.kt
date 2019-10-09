@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.RequestCodeActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
@@ -37,10 +38,15 @@ class SubmitInviteCodeActivity : AppCompatActivity(), View.OnClickListener {
         if(id == R.id.btSendInviteCode) {
             saveData()
         }
+
+        if(id == R.id.txtRequestCode) {
+            startRequestCodeActivity()
+        }
     }
 
     private fun setListeners() {
         btSendInviteCode.setOnClickListener(this)
+        txtRequestCode.setOnClickListener(this)
     }
 
     private fun saveData() {
@@ -73,6 +79,12 @@ class SubmitInviteCodeActivity : AppCompatActivity(), View.OnClickListener {
                 Log.d("EGVAPPLOG", it.message.toString())
                 btSendInviteCode.revertAnimation()
             }
+    }
+
+    private fun startRequestCodeActivity() {
+        val intent: Intent = Intent(this, RequestCodeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun startRegisterActivity(invite: Invite) {

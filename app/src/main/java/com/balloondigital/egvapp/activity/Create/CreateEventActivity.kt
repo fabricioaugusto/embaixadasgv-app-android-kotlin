@@ -437,7 +437,6 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }
-
     }
 
     private fun setRecyclerView() {

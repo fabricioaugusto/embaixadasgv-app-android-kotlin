@@ -83,6 +83,12 @@
                 android:background="@drawable/bg_circular_progressbar"
                 android:textColor="@color/colorGrey" app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintBottom_toTopOf="@+id/tvForgotPassword" android:layout_marginTop="32dp"/>
+        <TextView
+                android:text="Não tenho código"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/txtRequestCode" android:layout_marginTop="32dp"
+                android:padding="8dp" android:gravity="center" android:textColor="@color/colorAccent"
+                android:textStyle="bold" android:textSize="18sp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
