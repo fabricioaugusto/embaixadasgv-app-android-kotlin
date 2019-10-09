@@ -93,7 +93,7 @@
                 <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1" android:layout_marginLeft="8dp">
+                        android:layout_weight="1" android:layout_marginLeft="8dp" android:layout_marginRight="8dp">
 
                     <com.santalu.maskedittext.MaskEditText
                             android:layout_width="match_parent"
@@ -123,9 +123,10 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Moderador do encontro"
                         android:backgroundTint="@color/colorLineGrey"
-                        android:hint="Uma breve descrição do tema" android:id="@+id/etEventDescription"
-                        android:paddingBottom="32dp"/>
+                        android:id="@+id/etEventModerator1"
+                        android:textColor="@color/colorAccent" android:paddingBottom="16dp"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -134,11 +135,38 @@
                 <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Moderador do encontro"
                         android:backgroundTint="@color/colorLineGrey"
-                        android:id="@+id/etEventModerator1"
-                        android:textColor="@color/colorAccent" android:paddingBottom="16dp"/>
+                        android:hint="Uma breve descrição do tema" android:id="@+id/etEventDescription"
+                        android:paddingBottom="32dp"/>
             </com.google.android.material.textfield.TextInputLayout>
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" android:layout_weight="1">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/colorLineGrey"
+                            android:paddingBottom="16dp"
+                            android:hint="Observação"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" android:layout_marginLeft="8dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@color/colorLineGrey"
+                            android:paddingBottom="16dp"
+                            android:hint="N de Vagas"/>
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
             <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Salvar"
                     android:layout_width="match_parent"

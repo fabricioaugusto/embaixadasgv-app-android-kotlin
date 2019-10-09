@@ -409,14 +409,9 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
                         val userObj = listObj.getJSONObject(i)
                         user.id = userObj.getString("id")
                         user.name = userObj.getString("name")
-                        val profileImg = userObj.has("profile_img")
-                        if(profileImg) {
-                            if(user.profile_img != null) {
-                                user.profile_img = userObj.getString("profile_img")
-                                user.occupation = userObj.getString("occupation")
-                                mListUsers.add(user)
-                            }
-                        }
+                        user.profile_img = userObj.getString("profile_img")
+                        user.occupation = userObj.getString("occupation")
+                        mListUsers.add(user)
                     }
                 }
 
