@@ -57,10 +57,19 @@
                     android:textSize="22dp" android:paddingLeft="48dp" android:paddingRight="48dp"/>
 
             <TextView
-                    android:text="TextView"
+                    android:text="Buscar cidade"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/etSelectCity"
-                    android:paddingTop="8dp" android:paddingBottom="8dp"/>
+                    android:paddingTop="8dp" android:paddingBottom="8dp" android:textColor="@color/colorGrey"
+                    android:layout_marginLeft="32dp" android:layout_marginRight="32dp" android:textSize="20sp"
+                    android:layout_marginTop="24dp" android:drawableLeft="@drawable/ic_place_grey"
+                    android:drawablePadding="8dp"/>
+            <ProgressBar
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pbSearchingCity" android:layout_marginTop="32dp" android:visibility="gone"
+                    tools:visibility="visible"/>
 
         </LinearLayout>
         <LinearLayout
@@ -78,7 +87,7 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:paddingLeft="48dp" android:paddingRight="48dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="24dp">
                 <Button
                         android:text="Participante"
                         android:layout_width="wrap_content"
@@ -97,7 +106,7 @@
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/layoutThirdQuestion" tools:visibility="gone"
+                android:layout_height="wrap_content" android:id="@+id/layoutThirdQuestion" tools:visibility="visible"
                 android:visibility="gone">
             <TextView
                     android:text="Encontramos algumas embaixadas ativas em sua cidade! Você pode participar de uma já existente ou fundar uma nova. Qual a sua escolha?"
@@ -109,26 +118,46 @@
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:paddingLeft="48dp" android:paddingRight="48dp"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="24dp">
                 <Button
                         android:text="Participar"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyParticipate"
                         android:layout_weight="1"
-                        android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
+                        android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
                         android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
                 <Button
                         android:text="Fundar uma nova"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyFound" android:layout_weight="1"
-                        android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
+                        android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
                         android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/layoutTextNoEmbassyFound" tools:visibility="gone"
+                android:layout_height="wrap_content" android:id="@+id/layoutTextNewEmbassy"
+                tools:visibility="visible"
+                android:visibility="gone">
+            <TextView
+                    android:text="Preencha o formulário abaixo com os seus dados que em breve entraremos em contato para lhe fornecer o suporte necessário na abertura de seua embaixada."
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtInstructionText" android:gravity="center"
+                    android:textColor="@color/colorGrey" android:textAllCaps="false"
+                    android:textSize="18dp" android:paddingLeft="32dp" android:paddingRight="32dp"/>
+            <TextView
+                    android:text="Ir para o site"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtGoToSite"
+                    android:textColor="@color/colorAccent" android:textSize="22sp" android:textStyle="bold"
+                    android:gravity="center_horizontal" android:layout_marginTop="32dp" android:visibility="gone"/>
+        </LinearLayout>
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/layoutTextNoEmbassyFound"
+                tools:visibility="gone"
                 android:visibility="gone">
             <TextView
                     android:text="Não foi encontrada nenhuma embaixada ativa em sua cidade, caso queira fundar uma embaixada preencha o formulário abaixo:"
@@ -141,7 +170,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" android:visibility="gone" android:id="@+id/layoutForm"
-                tools:visibility="gone">
+                tools:visibility="gone" android:paddingLeft="32dp" android:paddingRight="32dp">
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -167,10 +196,10 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/colorGrey"
                         android:textColor="@color/colorGrey"
-                        android:hint="Telefone"
-                        android:drawableLeft="@drawable/ic_lock_grey"
+                        android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey"
                         android:drawablePadding="8dp"
-                        android:paddingBottom="16dp" android:id="@+id/etRegisterPass" android:inputType="textPassword"/>
+                        android:paddingBottom="16dp" android:id="@+id/etRegisterEmail"
+                        android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -182,10 +211,10 @@
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/colorGrey"
                         android:textColor="@color/colorGrey"
-                        android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey"
+                        android:hint="Telefone"
+                        android:drawableLeft="@drawable/ic_lock_grey"
                         android:drawablePadding="8dp"
-                        android:paddingBottom="16dp" android:id="@+id/etRegisterEmail"
-                        android:inputType="textEmailAddress"/>
+                        android:paddingBottom="16dp" android:id="@+id/etRegisterPass" android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
             <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Enviar"
