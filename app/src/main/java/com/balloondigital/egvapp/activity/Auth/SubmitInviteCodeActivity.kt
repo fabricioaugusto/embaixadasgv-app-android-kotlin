@@ -3,17 +3,12 @@ package com.balloondigital.egvapp.activity.Auth
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.RequestCodeActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Invite
-import com.balloondigital.egvapp.model.User
-import com.balloondigital.egvapp.utils.Converters
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 

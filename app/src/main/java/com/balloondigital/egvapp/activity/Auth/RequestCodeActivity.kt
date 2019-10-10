@@ -1,4 +1,4 @@
-package com.balloondigital.egvapp
+package com.balloondigital.egvapp.activity.Auth
 
 import android.app.Activity
 import android.content.Intent
@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
+import com.balloondigital.egvapp.R
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -17,7 +18,7 @@ import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import kotlinx.android.synthetic.main.activity_request_code.*
 import java.util.*
 
-class RequestCodeActivity : AppCompatActivity(), View.OnClickListener, View.OnFocusChangeListener {
+class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mPlaceFields: List<Place.Field>
     private val AUTOCOMPLETE_REQUEST_CODE = 1
@@ -46,19 +47,16 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
             mIsPartOfEmbassy = false
             layoutFirstQuestion.isGone = true
             layoutChooseCity.isGone = false
+            startPlacesActivity()
         }
-    }
 
-    override fun onFocusChange(view: View, bool: Boolean) {
-        val id = view.id
         if(id == R.id.etSelectCity) {
-            if (bool) {
-                startPlacesActivity()
-            }
+            startPlacesActivity()
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == this.AUTOCOMPLETE_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -88,7 +86,7 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
         btEmbassyLeader.setOnClickListener(this)
         btEmbassyParticipate.setOnClickListener(this)
         btEmbassyFound.setOnClickListener(this)
-        etSelectCity.onFocusChangeListener = this
+        etSelectCity.setOnClickListener(this)
     }
 
     private fun startPlacesActivity() {
