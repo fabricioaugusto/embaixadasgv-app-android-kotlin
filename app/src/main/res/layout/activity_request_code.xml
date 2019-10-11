@@ -84,29 +84,30 @@
                     android:textColor="@color/colorGrey" android:textAllCaps="false" android:textStyle="bold"
                     android:textSize="22sp" android:paddingLeft="48dp" android:paddingRight="48dp"/>
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:paddingLeft="48dp" android:paddingRight="48dp"
                     android:layout_marginTop="24dp">
                 <Button
                         android:text="Participante"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyParticipant"
                         android:layout_weight="1"
                         android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
                         android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
                 <Button
                         android:text="Líder"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyLeader" android:layout_weight="1"
                         android:layout_marginLeft="4dp" android:layout_marginRight="4dp"
-                        android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
+                        android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="16dp"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/layoutThirdQuestion" tools:visibility="visible"
+                android:layout_height="wrap_content" android:id="@+id/layoutThirdQuestion" tools:visibility="gone"
                 android:visibility="gone">
             <TextView
                     android:text="Encontramos algumas embaixadas ativas em sua cidade! Você pode participar de uma já existente ou fundar uma nova. Qual a sua escolha?"
@@ -115,23 +116,24 @@
                     android:textColor="@color/colorGrey" android:textAllCaps="false"
                     android:textSize="18dp" android:paddingLeft="32dp" android:paddingRight="32dp"/>
             <LinearLayout
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:paddingLeft="48dp" android:paddingRight="48dp"
                     android:layout_marginTop="24dp">
                 <Button
                         android:text="Participar"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyParticipate"
                         android:layout_weight="1"
                         android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
                         android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
                 <Button
                         android:text="Fundar uma nova"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content" android:id="@+id/btEmbassyFound" android:layout_weight="1"
                         android:layout_marginLeft="8dp" android:layout_marginRight="8dp"
-                        android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"/>
+                        android:background="@drawable/bg_white_round_button" android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="16dp"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -152,6 +154,14 @@
                     android:layout_height="wrap_content" android:id="@+id/txtGoToSite"
                     android:textColor="@color/colorAccent" android:textSize="22sp" android:textStyle="bold"
                     android:gravity="center_horizontal" android:layout_marginTop="32dp" android:visibility="gone"/>
+            <Button
+                    android:text="texto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/btInstructionAction"
+                    android:layout_marginLeft="48dp"
+                    android:layout_marginRight="48dp" android:background="@drawable/bg_blue_round_button"
+                    android:layout_marginTop="24dp" android:textColor="@color/backgroundGrey"
+                    android:visibility="gone"/>
         </LinearLayout>
         <LinearLayout
                 android:orientation="vertical"
@@ -183,7 +193,7 @@
                         android:textColor="@color/colorGrey"
                         android:hint="Nome" android:drawableLeft="@drawable/ic_person_grey"
                         android:drawablePadding="8dp"
-                        android:paddingBottom="16dp" android:id="@+id/etRegisterName"
+                        android:paddingBottom="16dp" android:id="@+id/etInterestedName"
                         android:inputType="textPersonName"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -198,7 +208,7 @@
                         android:textColor="@color/colorGrey"
                         android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey"
                         android:drawablePadding="8dp"
-                        android:paddingBottom="16dp" android:id="@+id/etRegisterEmail"
+                        android:paddingBottom="16dp" android:id="@+id/etInterestedEmail"
                         android:inputType="textEmailAddress"/>
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
@@ -212,15 +222,16 @@
                         android:backgroundTint="@color/colorGrey"
                         android:textColor="@color/colorGrey"
                         android:hint="Telefone"
-                        android:drawableLeft="@drawable/ic_lock_grey"
+                        android:drawableLeft="@drawable/ic_local_phone_white"
                         android:drawablePadding="8dp"
-                        android:paddingBottom="16dp" android:id="@+id/etRegisterPass" android:inputType="textPassword"/>
+                        android:paddingBottom="16dp" android:id="@+id/etInterestedPhone"
+                        android:inputType="phone"/>
             </com.google.android.material.textfield.TextInputLayout>
             <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
                     android:text="Enviar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/btRegister"
+                    android:id="@+id/btInterestedRegister"
                     android:textColor="@color/colorGrey"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:finalCornerAngle="50dp"

@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -18,6 +21,7 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_create_event.*
 import kotlinx.android.synthetic.main.activity_request_code.*
 import java.util.*
 
@@ -30,12 +34,15 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mPlacesClient: PlacesClient
     private var mIsPartOfEmbassy: Boolean = false
     private lateinit var mCity: String
-
+    private lateinit var mState: String
+    private lateinit var mStateShort: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_code)
 
-
+        mCity = ""
+        mState = ""
+        mStateShort = ""
         mDatabase = MyFirebase.database()
 
         Places.initialize(this, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
@@ -50,10 +57,8 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
 
         if(id == R.id.btEmbassyYes) {
             mIsPartOfEmbassy = true
-            txtInstructionText.text = "Se você é um(a) líder de embaixada, é necessário cadastra-la no site embaixadasgv.app. Ao realizar o cadastro, aguarde a sua embaixada ser aprovada para receber o convite com o código no seu e-mail. Caso você seja um participante, o líder da embaixada que você participa precisa estar cadastrado no aplicativo e lhe enviar o convite com o código através do próprio app."
-            txtGoToSite.isGone = false
-            layoutThirdQuestion.isGone = true
-            layoutTextNewEmbassy.isGone = false
+            layoutSecondQuestion.isGone = false
+            layoutFirstQuestion.isGone = true
         }
 
         if(id == R.id.btEmbassyNo) {
@@ -63,8 +68,9 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if(id == R.id.btEmbassyParticipate) {
-            txtInstructionText.text = "Entre no site embaixadasgv.app, confira a listas das embaixadas localizadas em $mCity e entre em contato com o líder da embaixada mais próxima de sua região!"
-            txtGoToSite.isGone = false
+            txtInstructionText.text = "Entre no site embaixadasgv.app (ou clique no link abaixo), confira a lista das embaixadas localizadas em $mCity e entre em contato com o líder da embaixada mais próxima de sua região!"
+            btInstructionAction.isGone = false
+            btInstructionAction.text = "Ir para a lista"
             layoutThirdQuestion.isGone = true
             layoutTextNewEmbassy.isGone = false
         }
@@ -76,8 +82,27 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
             layoutForm.isGone = false
         }
 
+        if(id == R.id.btEmbassyParticipant) {
+            layoutSecondQuestion.isGone = true
+            layoutTextNewEmbassy.isGone = false
+            txtInstructionText.text = "Entre em contato com o(a) líder de sua embaixada e solicite o envio do convite com o código para ter acesso ao cadastro do aplicativo. Para que o(a) líder de sua embaixada lhe envie o convite, é necessário que ele/ela esteja já cadastrado(a) no app."
+
+        }
+
+        if(id == R.id.btEmbassyLeader) {
+            layoutSecondQuestion.isGone = true
+            layoutTextNewEmbassy.isGone = false
+            txtInstructionText.text = "Cadastre a sua embaixada no site embaixadasgv.app (ou clique no link abaixo). O código de acesso será enviado por e-mail assim que a sua embaixada for aprovada pelo seu padrinho/madrinha ou por um de nossos gestores. Caso você já tenha realizado o cadastro, aguarde em até 48 horas para que a sua embaixada seja aprovada."
+            btInstructionAction.isGone = false
+            btInstructionAction.text = "Cadastrar embaixada"
+        }
+
         if(id == R.id.etSelectCity) {
             startPlacesActivity()
+        }
+
+        if(id == R.id.btInterestedRegister) {
+            sendRegister()
         }
     }
 
@@ -93,6 +118,11 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
                 etSelectCity.text = city
                 mCity = city.toString()
                 pbSearchingCity.isGone = false
+                if(addressComponents != null) {
+                    val stateObj = addressComponents.asList()[2]
+                    mState = stateObj.name
+                    mStateShort = stateObj.shortName.toString()
+                }
 
                 mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
                     .whereEqualTo("city", city)
@@ -129,6 +159,8 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
         btEmbassyLeader.setOnClickListener(this)
         btEmbassyParticipate.setOnClickListener(this)
         btEmbassyFound.setOnClickListener(this)
+        btInterestedRegister.setOnClickListener(this)
+        btInstructionAction.setOnClickListener(this)
         txtGoToSite.setOnClickListener(this)
         etSelectCity.setOnClickListener(this)
     }
@@ -147,5 +179,43 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
 
     fun makeToast(text: String) {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
+    }
+
+    private fun sendRegister() {
+
+
+        val name = etInterestedName.text.toString()
+        val email = etInterestedEmail.text.toString()
+        val phone = etInterestedPhone.text.toString()
+
+        if(name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            makeToast("Você deve preencher todos os campos!")
+            return
+        }
+
+        btInterestedRegister.startAnimation()
+
+        val collection = mDatabase.collection("interested")
+
+        val interested = HashMap<String, Any>()
+        interested["name"] = name
+        interested["email"] = email
+        interested["phone"] = phone
+        interested["city"] = mCity
+        interested["state"] = mState
+        interested["stateShort"] = mStateShort
+        interested["isInAnEmbassy"] = mIsPartOfEmbassy
+
+        collection.add(interested)
+            .addOnSuccessListener {
+                makeToast("Cadastro realizado com sucesso! Em até 48 horas entraremos em contato com você ;)")
+                btInterestedRegister.doneLoadingAnimation(
+                    resources.getColor(R.color.colorGreen),
+                    Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                )
+                Handler().postDelayed({
+                    finish()
+                }, 200)
+            }
     }
 }
