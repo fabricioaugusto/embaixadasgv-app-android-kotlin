@@ -7,51 +7,64 @@
         android:layout_height="match_parent"
         tools:context=".fragment.menu.ListEmbassyFragment" android:background="@color/backgroundGreyStrong">
 
-    <androidx.appcompat.widget.Toolbar
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/listEmbassyToolbar" app:contentInsetStart="0dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true" android:layout_alignParentRight="true"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-        <ImageButton
-                android:background="@android:color/transparent"
-                app:srcCompat="@drawable/ic_arrow_back_white"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/btBackPress"
-                android:paddingRight="24dp" android:paddingLeft="16dp" android:paddingTop="8dp"
-                android:paddingBottom="8dp"/>
-        <TextView
-                android:text="Lista de Embaixadas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/txtSingleUserToolbar"
-                android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
-                tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="64dp"/>
+            android:layout_height="match_parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.appcompat.widget.Toolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPrimary"
+                android:theme="?attr/actionBarTheme"
+                android:minHeight="?attr/actionBarSize" android:id="@+id/listEmbassyToolbar" app:contentInsetStart="0dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true" android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true" android:layout_alignParentRight="true"
+        >
+            <ImageButton
+                    android:background="@android:color/transparent"
+                    app:srcCompat="@drawable/ic_arrow_back_white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/btBackPress"
+                    android:paddingRight="24dp" android:paddingLeft="16dp" android:paddingTop="8dp"
+                    android:paddingBottom="8dp"/>
+            <TextView
+                    android:text="Lista de Embaixadas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/txtSingleUserToolbar"
+                    android:textColor="@color/colorGrey" android:textStyle="bold" android:textSize="16sp"
+                    tools:layout_editor_absoluteY="17dp" tools:layout_editor_absoluteX="64dp"/>
 
-    </androidx.appcompat.widget.Toolbar>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:id="@+id/recyclerEmbassyList"
-            app:layout_constraintTop_toBottomOf="@+id/listEmbassyToolbar"
-            android:clipToPadding="false"
-            app:layout_constraintBottom_toTopOf="@+id/pbLoadingMore" android:paddingBottom="64dp"/>
-
-    <ProgressBar
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="32dp"
-            android:id="@+id/pbLoadingMore" android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recyclerEmbassyList"/>
+        </androidx.appcompat.widget.Toolbar>
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:fillViewport="true" android:id="@+id/embassiesNestedSV">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                          android:orientation="vertical">
+                <TextView
+                        android:text="Embaixadas cadastradas"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/txtEmbassiesCount" android:textStyle="bold"
+                        android:textColor="@color/colorPrimary" android:textSize="16sp" android:paddingTop="16dp"
+                        android:paddingBottom="8dp" android:paddingRight="16dp" android:paddingLeft="16dp"
+                        tools:visibility="visible" android:visibility="gone"/>
+                <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/recyclerEmbassyList"
+                        android:clipToPadding="false"
+                        android:paddingBottom="64dp"/>
+                <ProgressBar
+                        style="?android:attr/progressBarStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="32dp"
+                        android:id="@+id/pbLoadingMore" android:visibility="gone"
+                        android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
+                />
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

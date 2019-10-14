@@ -11,6 +11,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -25,6 +26,7 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_list_embassy.*
+import kotlinx.android.synthetic.main.fragment_list_users.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -137,10 +139,17 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
 
         btBackPress.setOnClickListener(this)
 
-        val recyclerListener = object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)) {
+        val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
+            override fun onScrollChange(
+                v: NestedScrollView,
+                scrollX: Int,
+                scrollY: Int,
+                oldScrollX: Int,
+                oldScrollY: Int
+            ) {
+
+                if (scrollY == -( v.getMeasuredHeight() - v.getChildAt(0).getMeasuredHeight() )) {
+
                     if(!isPostsOver) {
                         if(!::mLastDocumentRequested.isInitialized) {
                             mLastDocumentRequested = mLastDocument
@@ -152,12 +161,12 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
                             }
                         }
                     }
-
                 }
             }
+
         }
 
-        mRecyclerView.addOnScrollListener(recyclerListener)
+        embassiesNestedSV.setOnScrollChangeListener(nestedSVListener)
     }
 
     private fun searchEmbassy(str: String) {
@@ -168,6 +177,23 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
                 || it.state.toLowerCase().contains(query)}
 
         setSearchRecyclerView(mSearchList.toMutableList())
+    }
+
+    private fun countEmbassies() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.APP_SERVER)
+            .document("embassies_count")
+            .get()
+            .addOnSuccessListener {documentSnapshot ->
+
+                val data = documentSnapshot.data
+                if(data != null) {
+                    val embassies_count = data["value"]
+                    txtEmbassiesCount.text = "$embassies_count embaixadas cadastradas"
+                    txtEmbassiesCount.isGone = false
+                }
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
     }
 
     private fun getListUsers() {
@@ -191,6 +217,7 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
                     }
                 }
 
+                countEmbassies()
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }

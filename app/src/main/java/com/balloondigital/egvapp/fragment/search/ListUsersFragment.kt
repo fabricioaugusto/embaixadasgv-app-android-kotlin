@@ -92,6 +92,9 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         setRecyclerView()
 
 
+
+
+
         val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView,
@@ -169,6 +172,22 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    private fun countUsers() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.APP_SERVER)
+            .document("users_count")
+            .get()
+            .addOnSuccessListener {documentSnapshot ->
+
+                val data = documentSnapshot.data
+                if(data != null) {
+                    val users_count = data["value"]
+                    txtUsersCount.text = "$users_count GV's cadastrados"
+                    txtUsersCount.isGone = false
+                }
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
+    }
 
     private fun searchUser(str: String) {
 
@@ -219,6 +238,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         }
                     }
                 }
+                countUsers()
                 mAdapter.notifyDataSetChanged()
                 mSkeletonScreen.hide()
             }.addOnFailureListener {

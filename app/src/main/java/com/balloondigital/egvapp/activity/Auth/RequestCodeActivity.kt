@@ -11,8 +11,8 @@ import android.widget.Toast
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.MyApplication
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.model.TypeFilter
@@ -21,7 +21,6 @@ import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.android.libraries.places.widget.model.AutocompleteActivityMode
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_create_event.*
 import kotlinx.android.synthetic.main.activity_request_code.*
 import java.util.*
 
@@ -36,10 +35,12 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mCity: String
     private lateinit var mState: String
     private lateinit var mStateShort: String
+    private lateinit var mSiteUrl: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_request_code)
 
+        mSiteUrl = "https://embaixadasgv.app/"
         mCity = ""
         mState = ""
         mStateShort = ""
@@ -68,7 +69,8 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
         }
 
         if(id == R.id.btEmbassyParticipate) {
-            txtInstructionText.text = "Entre no site embaixadasgv.app (ou clique no link abaixo), confira a lista das embaixadas localizadas em $mCity e entre em contato com o líder da embaixada mais próxima de sua região!"
+            mSiteUrl = "https://embaixadasgv.app/lista?cidade=$mCity"
+            txtInstructionText.text = "Confira a lista das embaixadas localizadas em $mCity e entre em contato com o líder da embaixada mais próxima de sua região para já começar a participar das reuniões!"
             btInstructionAction.isGone = false
             btInstructionAction.text = "Ir para a lista"
             layoutThirdQuestion.isGone = true
@@ -85,16 +87,21 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
         if(id == R.id.btEmbassyParticipant) {
             layoutSecondQuestion.isGone = true
             layoutTextNewEmbassy.isGone = false
-            txtInstructionText.text = "Entre em contato com o(a) líder de sua embaixada e solicite o envio do convite com o código para ter acesso ao cadastro do aplicativo. Para que o(a) líder de sua embaixada lhe envie o convite, é necessário que ele/ela esteja já cadastrado(a) no app."
+            txtInstructionText.text = "Entre em contato com o(a) líder de sua embaixada e solicite o envio do convite com o código para ter acesso ao cadastro do aplicativo. Para que o líder de sua embaixada lhe envie o convite é necessário que ele/ela esteja já cadastrado no app."
 
         }
 
         if(id == R.id.btEmbassyLeader) {
+            mSiteUrl = "https://embaixadasgv.app/#cadastrar-embaixada"
             layoutSecondQuestion.isGone = true
             layoutTextNewEmbassy.isGone = false
-            txtInstructionText.text = "Cadastre a sua embaixada no site embaixadasgv.app (ou clique no link abaixo). O código de acesso será enviado por e-mail assim que a sua embaixada for aprovada pelo seu padrinho/madrinha ou por um de nossos gestores. Caso você já tenha realizado o cadastro, aguarde em até 48 horas para que a sua embaixada seja aprovada."
+            txtInstructionText.text = "Cadastre a sua embaixada no site das Embaixadas GV App. O código de acesso será enviado por e-mail assim que a sua embaixada for aprovada pelo seu padrinho/madrinha ou por um de nossos gestores. Caso você já tenha realizado o cadastro, aguarde até 48 horas para que a sua embaixada seja aprovada."
             btInstructionAction.isGone = false
             btInstructionAction.text = "Cadastrar embaixada"
+        }
+
+        if(id == R.id.btInstructionAction) {
+            MyApplication.util.openExternalLink(this, mSiteUrl)
         }
 
         if(id == R.id.etSelectCity) {
@@ -103,6 +110,10 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
 
         if(id == R.id.btInterestedRegister) {
             sendRegister()
+        }
+
+        if(id == R.id.btScreenClose) {
+            finish()
         }
     }
 
@@ -161,6 +172,7 @@ class RequestCodeActivity : AppCompatActivity(), View.OnClickListener {
         btEmbassyFound.setOnClickListener(this)
         btInterestedRegister.setOnClickListener(this)
         btInstructionAction.setOnClickListener(this)
+        btScreenClose.setOnClickListener(this)
         txtGoToSite.setOnClickListener(this)
         etSelectCity.setOnClickListener(this)
     }
