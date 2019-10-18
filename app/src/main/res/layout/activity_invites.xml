@@ -15,6 +15,20 @@
             android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
             android:layout_marginRight="32dp" android:layout_marginTop="64dp" android:gravity="center_horizontal">
         <TextView
+                android:text="Copiar Link"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/textView14" android:textColor="@color/colorText"
+                android:textSize="18sp" android:textAllCaps="true" android:textStyle="bold" android:gravity="center"/>
+        <TextView
+                android:text="https://embaixadasgv.app"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/txtInvitationLink"
+                android:background="@drawable/bg_grey_round_retangle" android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="14dp" android:paddingRight="14dp" android:layout_marginTop="8dp"
+                android:layout_marginBottom="32dp" android:textColor="@color/colorText"
+                android:drawableRight="@drawable/ic_content_copy_black" android:clickable="true"/>
+        <TextView
                 android:text="Enviar convite"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView2" android:gravity="center"
@@ -24,7 +38,7 @@
                 android:text="Preencha com o e-mail e o nome da pessoa que deseja convidar para utilizar o aplicativo das embaixadas Geração de Valor!"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/textView4" android:gravity="center"
-                android:textColor="@color/colorText" android:layout_marginTop="24dp"/>
+                android:textColor="@color/colorText" android:layout_marginTop="8dp"/>
 
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"

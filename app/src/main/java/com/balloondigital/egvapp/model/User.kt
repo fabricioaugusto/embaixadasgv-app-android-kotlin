@@ -34,6 +34,7 @@ data class User(
     var leader: Boolean = false,
     var manager: Boolean = false,
     var sponsor: Boolean = false,
+    var username: String? = null,
     var embassy_id: String? = null,
     var embassy: Embassy = Embassy()
 ) : Serializable {
@@ -66,6 +67,7 @@ data class User(
             "leader" to leader,
             "manager" to manager,
             "sponsor" to sponsor,
+            "username" to username,
             "embassy_id" to embassy_id,
             "embassy" to embassy.toBasicMap()
         )
@@ -78,6 +80,7 @@ data class User(
             "profile_img" to profile_img,
             "embassy_id" to embassy_id,
             "occupation" to occupation,
+            "username" to username,
             "verified" to verified
         )
     }

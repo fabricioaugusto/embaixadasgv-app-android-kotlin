@@ -183,6 +183,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.sentEmbassyPhotos -> startSendEmbassyPhotosActivity()
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
+                MenuItens.invitationRequests -> startApprovalInvitationRequestsActivity()
                 MenuItens.affiliatedEmbassies -> startAffiliatedEmbassiesFragment()
                 MenuItens.manageSponsors -> startManageSponsorsActivity()
                 MenuItens.createBulletin -> startManageBulletinsActivity()
@@ -336,6 +337,20 @@ class MenuListFragment : Fragment() {
         val intent: Intent = Intent(mContext, InvitesActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
+    }
+
+    private fun startApprovalInvitationRequestsActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ApprovalInvitationRequestsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:approvalInvitationRequests")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startSendEmbassyPhotosActivity() {

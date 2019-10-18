@@ -37,6 +37,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
             list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
+            list.add(MenuItem(invitationRequests, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
 
             return list
@@ -172,6 +173,7 @@ class MenuItens private constructor() {
         const val myFavoriteEvents = "Meus eventos favoritos"
         const val newEvent = "Gerenciar eventos"
         const val sendInvites = "Convidar Membros"
+        const val invitationRequests = "Solicitação de convites"
         const val sentEmbassyPhotos = "Gerenciar fotos"
         const val editEmbassy = "Editar dados da embaixada"
         const val affiliatedEmbassies = "Embaixadas Afiliadas"

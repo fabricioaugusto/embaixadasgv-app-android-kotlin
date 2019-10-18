@@ -51,6 +51,7 @@ class MyFirebase private constructor(){
         val APP_INVITATIONS = "app_invitations"
         val APP_MESSAGES = "app_messages"
         val APP_SERVER = "server_data"
+        val INVITATION_REQUEST = "invitation_request"
         object APP_CONTENT {
             val name = "app_content"
             object KEYS {

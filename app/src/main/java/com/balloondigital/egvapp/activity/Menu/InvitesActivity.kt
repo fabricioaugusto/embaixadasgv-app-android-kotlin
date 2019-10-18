@@ -13,6 +13,11 @@ import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_invites.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+
+
 
 class InvitesActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -36,6 +41,8 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
         mDatabase = MyFirebase.database()
         mCollections = MyFirebase.COLLECTIONS
 
+        txtInvitationLink.text = "https://embaixadasgv.app/convite/${mUser.username}"
+
         setListeners()
 
     }
@@ -44,6 +51,13 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
         val id = view.id
         if(id == R.id.btSendInvite) {
             saveData()
+        }
+
+        if(id == R.id.txtInvitationLink) {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("label","https://embaixadasgv.app/convite/${mUser.username}")
+            clipboard.setPrimaryClip(clip)
+            makeToast("Link copiado!")
         }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -57,6 +71,7 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun setListeners() {
+        txtInvitationLink.setOnClickListener(this)
         btSendInvite.setOnClickListener(this)
     }
 

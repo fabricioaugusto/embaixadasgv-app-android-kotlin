@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.*
 import android.widget.Toast
@@ -17,30 +18,22 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.activity.Create.CreateEventActivity
-import com.balloondigital.egvapp.activity.Edit.EditEventActivity
-import com.balloondigital.egvapp.activity.Menu.SelectSponsorActivity
-import com.balloondigital.egvapp.adapter.EventManagerListAdapter
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
-import com.balloondigital.egvapp.adapter.SponsorManagerListAdapter
+import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
 import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
-import com.balloondigital.egvapp.fragment.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.model.EmbassySponsor
-import com.balloondigital.egvapp.model.Event
+import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.model.MenuItem
-import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.Converters
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
 import com.google.android.libraries.places.widget.AutocompleteActivity
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
-import kotlinx.android.synthetic.main.fragment_manage_events.*
+import kotlinx.android.synthetic.main.fragment_approval_invitation_requests.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,38 +44,35 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickListener {
+class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View.OnClickListener {
 
     private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
-    private lateinit var mCurrentSponsor: EmbassySponsor
+    private lateinit var mCurrentRequestor: User
+    private lateinit var mInvite: Invite
     private lateinit var mDatabase: FirebaseFirestore
-    private lateinit var mEmbassyID: String
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
-    private lateinit var mSponsorList: MutableList<EmbassySponsor>
-    private lateinit var mAdapter: SponsorManagerListAdapter
+    private lateinit var mUsersList: MutableList<User>
+    private lateinit var mAdapter: UserListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
-    private val SPONSOR_REQUEST_CODE: Int = 200
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-
-        val view: View = inflater.inflate(R.layout.fragment_manage_sponsors, container, false)
+        val view: View =  inflater.inflate(R.layout.fragment_approval_invitation_requests, container, false)
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mEmbassyID = bundle.getString("embassyID", "")
             mUser = bundle.getSerializable("user") as User
         }
 
-        mToolbar = view.findViewById(R.id.manageSponsorsToolbar)
+        mToolbar = view.findViewById(R.id.invRequestsToolbar)
         mToolbar.title = ""
 
         if (activity is AppCompatActivity) {
@@ -92,20 +82,20 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         setHasOptionsMenu(true)
 
         mDatabase = MyFirebase.database()
-        mSponsorList = mutableListOf()
+        mUsersList = mutableListOf()
         mContext = view.context
-        mRecyclerView = view.findViewById(R.id.rvManageSponsors)
-        mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
+        mRecyclerView = view.findViewById(R.id.rvInvRequests)
+        mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutInvRequests)
 
         val menuList: List<MenuItem> = listOf(
-            MenuItem("Visualizar", "item", R.drawable.ic_visibility_black),
-            MenuItem("Editar", "item", R.drawable.ic_edit_black),
+            MenuItem("Ver Detalhes", "item", R.drawable.ic_visibility_black),
+            MenuItem("Aprovar", "item", R.drawable.ic_edit_black),
             MenuItem("Excluir", "item", R.drawable.ic_delete_black)
         )
 
         mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 3, menuList)
 
-        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getSponsorList() })
+        mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getRequestorsList() })
 
         return view
     }
@@ -114,8 +104,8 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         super.onViewCreated(view, savedInstanceState)
 
         setListeners()
-        getSponsorList()
-        setRecyclerView(mSponsorList)
+        getRequestorsList()
+        setRecyclerView(mUsersList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -127,7 +117,6 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
     override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
         return when(item.itemId) {
             R.id.bar_create_event -> {
-                startSelectSponsorActivity()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -139,36 +128,15 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         mCPDialog.dismiss()
 
         if(position == 0) {
-            startSingleEventActivity()
         }
 
         if(position == 1) {
-            startEditEventActivity()
+            inviteUser()
         }
 
         if(position == 2) {
             confirmDeleteDialog()
         }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        if (resultCode == Activity.RESULT_OK) {
-
-            if(requestCode == SPONSOR_REQUEST_CODE) {
-                if(data != null) {
-                    getSponsorList()
-                }
-            }
-
-        } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
-            // TODO: Handle the error.
-            val status = Autocomplete.getStatusFromIntent(data!!)
-            Log.i("GooglePlaceLog", status.statusMessage)
-        } else if (resultCode == Activity.RESULT_CANCELED) {
-            // The user canceled the operation.
-        }
-
     }
 
     override fun onClick(view: View) {
@@ -183,20 +151,24 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         btBackPress.setOnClickListener(this)
     }
 
-    private fun getSponsorList() {
+    private fun getRequestorsList() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.SPONSORS)
-            .orderBy("name", Query.Direction.ASCENDING)
+        mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
+            .whereEqualTo("leaderId", mUser.id)
             .get().addOnSuccessListener { documentSnapshot ->
 
-                mSponsorList.clear()
+                mUsersList.clear()
 
                 if(documentSnapshot != null) {
                     if(documentSnapshot.size() > 0) {
                         for(document in documentSnapshot) {
-                            val sponsor: EmbassySponsor? = document.toObject(EmbassySponsor::class.java)
-                            if(sponsor != null) {
-                                mSponsorList.add(sponsor)
+                            val invitationRequest : InvitationRequest? = document.toObject(InvitationRequest::class.java)
+                            if(invitationRequest != null) {
+                                invitationRequest.id = document.id
+                                val user = User()
+                                user.name = invitationRequest.requestorName
+                                user.email = invitationRequest.requestorEmail
+                                mUsersList.add(user)
                             }
                         }
                     }
@@ -209,9 +181,9 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
     }
 
 
-    private fun setRecyclerView(sponsors: MutableList<EmbassySponsor>) {
+    private fun setRecyclerView(users: MutableList<User>) {
 
-        mAdapter = SponsorManagerListAdapter(sponsors)
+        mAdapter = UserListAdapter(users)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
 
         mSkeletonScreen = Skeleton.bind(mRecyclerView)
@@ -220,37 +192,12 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
             .shimmer(true).show()
 
         mAdapter.onItemClick = {
-                sponsor ->
-            mCurrentSponsor = sponsor
+                user ->
+            mCurrentRequestor = user
             setManageItemsDialog()
         }
     }
 
-    private fun startSingleEventActivity() {
-
-
-        val bundle = Bundle()
-
-        val nextFrag = SingleEventFragment()
-        nextFrag.arguments = bundle
-
-        activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEvent")
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun startSelectSponsorActivity() {
-        val intent: Intent = Intent(mContext, SelectSponsorActivity::class.java)
-        intent.putExtra("user", mUser)
-        startActivityForResult(intent, SPONSOR_REQUEST_CODE)
-    }
-
-    private fun startEditEventActivity() {
-        val intent: Intent = Intent(mContext, EditEventActivity::class.java)
-        intent.putExtra("eventID", mCurrentSponsor.id)
-        startActivityForResult(intent, SPONSOR_REQUEST_CODE)
-    }
 
     private fun setManageItemsDialog() {
 
@@ -269,22 +216,53 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         AlertDialog.Builder(mContext)
             .setIcon(R.drawable.ic_warning_yellow)
             .setTitle("Remover padrinho")
-            .setMessage("Tem certeza que deseja remover ${mCurrentSponsor.name} como padrinho?")
+            .setMessage("Tem certeza que deseja remover a solicitação de ${mCurrentRequestor.name}?")
             .setPositiveButton("Sim") { dialog, which ->
-                mDatabase.collection(MyFirebase.COLLECTIONS.SPONSORS)
-                    .document(mCurrentSponsor.id)
+                mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
+                    .document(mCurrentRequestor.id)
                     .delete()
                     .addOnCompleteListener {
-                        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-                            .document(mCurrentSponsor.user_id)
-                            .update("sponsor", false)
-                            .addOnSuccessListener {
-                                getSponsorList()
-                            }
+                        getRequestorsList()
                     }
             }
             .setNegativeButton("Não", null)
             .show()
+    }
+
+    private fun inviteUser() {
+        val name: String = mCurrentRequestor.name
+        val email: String = mCurrentRequestor.email
+
+        if(name.isEmpty() || email.isEmpty()) {
+            makeToast("Você deve preencher todos os campos")
+            return
+        }
+
+        val code: Int = (100000..999999).random()
+
+        mInvite = Invite(
+            name_sender = mUser.name,
+            email_sender = mUser.email,
+            name_receiver = name,
+            email_receiver = email,
+            embassy_receiver = mUser.embassy,
+            invite_code = code
+        )
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
+            .whereEqualTo("email_receiver", email).get()
+            .addOnSuccessListener { querySnapshot ->
+                if(querySnapshot.documents.size > 0) {
+                    makeToast("Um convite já foi enviado para este e-mail")
+                } else {
+                    mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
+                        .document(code.toString())
+                        .set(mInvite.toMap())
+                        .addOnSuccessListener {
+
+                        }
+                }
+            }
     }
 
 
@@ -292,4 +270,6 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
     private fun makeToast(text: String) {
         Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
     }
+
+
 }
