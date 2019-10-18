@@ -97,7 +97,7 @@ class SelectSponsorActivity : AppCompatActivity(), SearchView.OnQueryTextListene
     private fun searchUser(str: String) {
 
         val query = Query(str)
-            .setAttributesToRetrieve("name", "profile_img")
+            .setAttributesToRetrieve("id", "name", "email", "profile_img", "occupation")
             .setHitsPerPage(10)
         mIndex.searchAsync(query) { obj, p1 ->
             if(obj != null) {
@@ -106,9 +106,17 @@ class SelectSponsorActivity : AppCompatActivity(), SearchView.OnQueryTextListene
                 for (i in 0 until listObj.length()) {
                     val user = User()
                     val userObj = listObj.getJSONObject(i)
+                    user.id = userObj.getString("id")
                     user.name = userObj.getString("name")
-                    user.profile_img = userObj.getString("profile_img")
-                    mListUsers.add(user)
+                    user.email = userObj.getString("email")
+                    val profileImg = userObj.has("profile_img")
+                    if(profileImg) {
+                        if(!userObj.getString("profile_img").isNullOrEmpty()) {
+                            user.profile_img = userObj.getString("profile_img")
+                            user.occupation = userObj.getString("occupation")
+                            mListUsers.add(user)
+                        }
+                    }
                 }
             }
             mAdapter.notifyDataSetChanged()

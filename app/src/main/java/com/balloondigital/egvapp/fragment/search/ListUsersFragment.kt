@@ -190,7 +190,6 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     }
 
     private fun searchUser(str: String) {
-
         val query = Query(str)
             .setAttributesToRetrieve("id", "name", "profile_img", "occupation")
             .setHitsPerPage(10)
@@ -206,7 +205,7 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         user.name = userObj.getString("name")
                         val profileImg = userObj.has("profile_img")
                         if(profileImg) {
-                            if(user.profile_img != null) {
+                            if(!userObj.getString("profile_img").isNullOrEmpty()) {
                                 user.profile_img = userObj.getString("profile_img")
                                 user.occupation = userObj.getString("occupation")
                                 searchUser.add(user)

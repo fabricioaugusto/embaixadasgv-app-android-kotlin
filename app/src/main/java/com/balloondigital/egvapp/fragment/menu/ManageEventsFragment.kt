@@ -150,10 +150,8 @@ class ManageEventsFragment : Fragment(), OnItemClickListener, View.OnClickListen
         if (resultCode == Activity.RESULT_OK) {
 
              if(requestCode == EVENT_REQUEST_CODE) {
-                if(data != null) {
-                    getEventList()
-                    updateEventLists()
-                }
+                 getEventList()
+                 updateEventLists()
             }
 
         } else if (resultCode == AutocompleteActivity.RESULT_ERROR) {
