@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
             val manageSponsors: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageSponsors")
             val affiliatedEmbassies: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:affiliatedEmbassies")
             val managePhotos: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:managePhotos")
-
+            val approvalInvitationRequests: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:approvalInvitationRequests")
 
             if (singleMenuUser != null && singleMenuUser.isVisible) {
                 transaction.remove(singleMenuUser).commit()
@@ -257,6 +257,11 @@ class MainActivity : AppCompatActivity() {
 
             if (manageBulletins != null && manageBulletins.isVisible) {
                 transaction.remove(manageBulletins).commit()
+                return
+            }
+
+            if (approvalInvitationRequests != null && approvalInvitationRequests.isVisible) {
+                transaction.remove(approvalInvitationRequests).commit()
                 return
             }
 

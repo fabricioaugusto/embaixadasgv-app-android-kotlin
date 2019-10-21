@@ -12,6 +12,7 @@ data class InvitationRequest(
     var leaderName: String = "",
     var requestorEmail: String = "",
     var requestorName: String = "",
+    var requestorWhatsapp: String = "",
     var embassy: Embassy? = null
 ): Serializable {
     @Exclude
@@ -22,6 +23,7 @@ data class InvitationRequest(
             "leaderName" to leaderName,
             "requestorEmail" to requestorEmail,
             "requestorName" to requestorName,
+            "requestorWhatsapp" to requestorWhatsapp,
             "embassy" to embassy
         )
     }

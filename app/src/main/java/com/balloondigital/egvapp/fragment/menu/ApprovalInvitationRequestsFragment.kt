@@ -25,6 +25,7 @@ import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.model.MenuItem
 import com.balloondigital.egvapp.utils.Converters
+import com.balloondigital.egvapp.utils.MyApplication.util.openExternalLink
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
@@ -75,12 +76,6 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         mToolbar = view.findViewById(R.id.invRequestsToolbar)
         mToolbar.title = ""
 
-        if (activity is AppCompatActivity) {
-            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
-        }
-
-        setHasOptionsMenu(true)
-
         mDatabase = MyFirebase.database()
         mUsersList = mutableListOf()
         mContext = view.context
@@ -88,12 +83,13 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutInvRequests)
 
         val menuList: List<MenuItem> = listOf(
-            MenuItem("Ver Detalhes", "item", R.drawable.ic_visibility_black),
-            MenuItem("Aprovar", "item", R.drawable.ic_edit_black),
+            MenuItem("Aprovar", "item", R.drawable.ic_thumb_up_black),
+            MenuItem("Chamar no Whatsapp", "item", R.drawable.ic_whatsapp_black),
+            MenuItem("Enviar e-mail", "item", R.drawable.ic_email_black),
             MenuItem("Excluir", "item", R.drawable.ic_delete_black)
         )
 
-        mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 3, menuList)
+        mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 4, menuList)
 
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getRequestorsList() })
 
@@ -108,33 +104,24 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         setRecyclerView(mUsersList)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_manager_event_toolbar, menu)
-        return super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
-        return when(item.itemId) {
-            R.id.bar_create_event -> {
-                true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
 
         mCPDialog.dismiss()
 
         if(position == 0) {
-        }
-
-        if(position == 1) {
             inviteUser()
         }
 
+        if(position == 1) {
+            openExternalLink(mContext, "https://wa.me/+55${mCurrentRequestor.whatsapp}")
+        }
+
         if(position == 2) {
+            openExternalLink(mContext, "mailto:${mCurrentRequestor.email}")
+        }
+
+        if(position == 3) {
             confirmDeleteDialog()
         }
     }
@@ -166,8 +153,10 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
                             if(invitationRequest != null) {
                                 invitationRequest.id = document.id
                                 val user = User()
+                                user.id = document.id
                                 user.name = invitationRequest.requestorName
                                 user.email = invitationRequest.requestorEmail
+                                user.whatsapp = invitationRequest.requestorWhatsapp
                                 mUsersList.add(user)
                             }
                         }

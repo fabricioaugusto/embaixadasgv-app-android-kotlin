@@ -18,6 +18,7 @@ data class Embassy (
     var approved_by_id: String? = null,
     var approved_by_name: String? = null,
     var leader_id: String = "",
+    var leader_username: String = "",
     var leader: User? = null,
     var embassySponsor_id: String? = null,
     var embassySponsor: EmbassySponsor? = null
@@ -49,6 +50,7 @@ data class Embassy (
             "embassySponsor_id" to embassySponsor_id,
             "embassySponsor" to embassySponsor,
             "leader_id" to leader_id,
+            "leader_username" to leader_username,
             "leader" to leader?.toBasicMap()
         )
     }

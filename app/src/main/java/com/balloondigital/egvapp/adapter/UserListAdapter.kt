@@ -88,6 +88,9 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
                 }
             }
 
+            mUserIdentifer.text = "Membro"
+            mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_member_identifier)
+
             if(user.leader) {
                 mUserIdentifer.text = "Líder"
                 mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_leader_identifier)
@@ -102,7 +105,7 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
                 mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_sponsor_identifier)
             }
 
-            mUserIdentifer.isGone = !(user.sponsor || user.leader)
+            mUserIdentifer.isGone = user.status != "active"
         }
     }
 }
