@@ -200,6 +200,7 @@ class MainActivity : AppCompatActivity() {
             val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
             val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
             val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
+            val report: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:report")
             val manageSponsors: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageSponsors")
             val affiliatedEmbassies: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:affiliatedEmbassies")
             val managePhotos: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:managePhotos")
@@ -257,6 +258,11 @@ class MainActivity : AppCompatActivity() {
 
             if (manageBulletins != null && manageBulletins.isVisible) {
                 transaction.remove(manageBulletins).commit()
+                return
+            }
+
+            if (report != null && report.isVisible) {
+                transaction.remove(report).commit()
                 return
             }
 

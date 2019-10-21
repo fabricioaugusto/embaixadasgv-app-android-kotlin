@@ -59,6 +59,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
             list.add(MenuItem(manageSponsors, "item", R.drawable.ic_menu_manage_sponsors))
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
+            list.add(MenuItem(report, "item", R.drawable.ic_report_black))
 
             return list
         }
@@ -180,6 +181,7 @@ class MenuItens private constructor() {
         const val embassyForApproval = "Embaixadas para aprovação"
         const val createBulletin = "Gerenciar Informativos"
         const val manageSponsors = "Gerenciar Padrinhos"
+        const val report = "Informações"
         const val setPrivacy = "Configurações de privacidade"
         const val policyPrivacy = "Políticas de privacidade"
         const val embassyList = "Lista de embaixadas"

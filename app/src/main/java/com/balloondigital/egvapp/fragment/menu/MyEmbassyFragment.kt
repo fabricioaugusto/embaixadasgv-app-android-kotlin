@@ -69,6 +69,8 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         getEmbassyDetails()
     }
 
+
+
     override fun onClick(view: View) {
         val id = view.id
         if(id == R.id.btEmbassyPhone) {

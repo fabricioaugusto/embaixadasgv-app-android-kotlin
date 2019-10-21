@@ -105,6 +105,12 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
                 mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_sponsor_identifier)
             }
 
+            if(user.committee_leader) {
+                val committee = user.committee
+                mUserIdentifer.text = "Líder de Comitê"
+                mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_committee_leader_identifier)
+            }
+
             mUserIdentifer.isGone = user.status != "active"
         }
     }

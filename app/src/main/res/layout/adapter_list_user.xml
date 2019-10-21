@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:tools="http://schemas.android.com/tools" android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -19,7 +19,7 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:gravity="center_vertical"
-                android:layout_weight="1" android:paddingTop="8dp" android:paddingBottom="8dp"
+                android:layout_weight="1" android:paddingBottom="8dp"
                 android:paddingRight="16dp" android:paddingLeft="8dp">
             <TextView
                     android:text="Nome"
@@ -31,15 +31,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/textUserRowEmail"
                     android:textColor="@color/colorSubText"/>
+            <TextView
+                    android:text="Padrinho"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/txtUserIdentifier"
+                    android:background="@drawable/bg_sponsor_identifier" android:textColor="@color/backgroundGrey"
+                    android:layout_marginTop="@dimen/keyline_1_minus_8dp" android:paddingLeft="12dp"
+                    android:paddingRight="12dp" android:paddingTop="4dp" android:paddingBottom="4dp"
+                    android:visibility="gone" tools:visibility="visible"/>
         </LinearLayout>
-        <TextView
-                android:text="Padrinho"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/txtUserIdentifier"
-                android:background="@drawable/bg_sponsor_identifier" android:textColor="@color/backgroundGrey"
-                android:layout_marginTop="@dimen/keyline_1_minus_8dp" android:paddingLeft="12dp"
-                android:paddingRight="12dp" android:paddingTop="4dp" android:paddingBottom="4dp"
-                android:visibility="gone"/>
 
     </LinearLayout>
 

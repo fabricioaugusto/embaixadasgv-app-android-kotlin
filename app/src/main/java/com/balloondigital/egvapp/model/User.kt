@@ -34,6 +34,10 @@ data class User(
     var leader: Boolean = false,
     var manager: Boolean = false,
     var sponsor: Boolean = false,
+    var committee_leader: Boolean = false,
+    var committee_manager: Boolean = false,
+    var committee_member: Boolean = false,
+    var committee: Committee? = null,
     var username: String? = null,
     var embassy_id: String? = null,
     var embassy: Embassy = Embassy()
@@ -67,6 +71,10 @@ data class User(
             "leader" to leader,
             "manager" to manager,
             "sponsor" to sponsor,
+            "committee_leader" to committee_leader,
+            "committee_manager" to committee_manager,
+            "committee_member" to committee_member,
+            "committee" to committee,
             "username" to username,
             "embassy_id" to embassy_id,
             "embassy" to embassy.toBasicMap()
@@ -81,6 +89,11 @@ data class User(
             "embassy_id" to embassy_id,
             "occupation" to occupation,
             "username" to username,
+            "leader" to leader,
+            "manager" to manager,
+            "sponsor" to sponsor,
+            "committee_leader" to committee_leader,
+            "committee" to committee,
             "verified" to verified
         )
     }
