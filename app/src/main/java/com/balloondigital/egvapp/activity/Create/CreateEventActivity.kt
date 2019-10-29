@@ -505,7 +505,7 @@ class CreateEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFo
 
         if(datetext.isNotEmpty() && timettext.isNotEmpty()) {
             val date = Converters.stringToDate("$datetext $timettext")
-            mEvent.date = com.google.firebase.Timestamp(date)
+            mEvent.date = com.google.firebase.Timestamp(date!!)
         } else {
             makeToast("A data e horário precisam ser preenchidos")
             return
