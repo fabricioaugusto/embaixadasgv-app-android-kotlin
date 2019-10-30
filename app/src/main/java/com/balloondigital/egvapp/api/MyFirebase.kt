@@ -2,6 +2,7 @@ package com.balloondigital.egvapp.api
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 
@@ -31,9 +32,17 @@ class MyFirebase private constructor(){
             return storage as StorageReference
         }
 
+        fun messaging(): FirebaseMessaging {
+            if (messaging == null) {
+                messaging = FirebaseMessaging.getInstance()
+            }
+            return messaging as FirebaseMessaging
+        }
+
         private var auth: FirebaseAuth? = null
         private var database: FirebaseFirestore? = null
         private var storage: StorageReference? = null
+        private var messaging: FirebaseMessaging? = null
     }
 
     object COLLECTIONS {

@@ -55,6 +55,5 @@ class MyNotifications: FirebaseMessagingService() {
         }
 
         notificationManager.notify(300, notification.build())
-
     }
 }
