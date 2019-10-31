@@ -16,7 +16,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(changeProfilePhoto, "item", R.drawable.ic_menu_change_photo))
             list.add(MenuItem(changePassword, "item", R.drawable.ic_menu_change_pass))
             list.add(MenuItem(editSocialNetwork, "item", R.drawable.ic_menu_edit_social))
-            list.add(MenuItem(myEmbassy, "item", R.drawable.ic_menu_myembassy))
+            list.add(MenuItem(myEmbassy, "item", R.drawable.ic_logo_embaixadagv_black))
 
             return list
         }
@@ -59,6 +59,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
             list.add(MenuItem(manageSponsors, "item", R.drawable.ic_menu_manage_sponsors))
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
+            list.add(MenuItem(sendNotifications, "item", R.drawable.ic_menu_add_notification))
             list.add(MenuItem(report, "item", R.drawable.ic_report_black))
 
             return list
@@ -180,6 +181,7 @@ class MenuItens private constructor() {
         const val affiliatedEmbassies = "Embaixadas Afiliadas"
         const val embassyForApproval = "Embaixadas para aprovação"
         const val createBulletin = "Gerenciar Informativos"
+        const val sendNotifications = "Enviar Notificações"
         const val manageSponsors = "Gerenciar Padrinhos"
         const val report = "Informações"
         const val setPrivacy = "Configurações de privacidade"

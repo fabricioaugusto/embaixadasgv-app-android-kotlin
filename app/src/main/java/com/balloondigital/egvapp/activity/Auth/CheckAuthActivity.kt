@@ -83,19 +83,15 @@ class CheckAuthActivity : AppCompatActivity() {
                             user.leader = documentSnapshot.data?.get("leader") as Boolean
                         }
 
-                        if(!user.topic_subscribed) {
-                            user.topic_subscribed = user.topic_subscribed
-                            if(user.leader) {
-                                mMessaging.subscribeToTopic("egv_topic_leaders")
-                            }
-                            mMessaging.subscribeToTopic("egv_topic_members").addOnCompleteListener {
+                        if(user.leader) {
+                            mMessaging.subscribeToTopic("egv_topic_leaders")
+                        }
+                        mMessaging.subscribeToTopic("egv_topic_members").addOnCompleteListener {
                                 task ->
-                                if(task.isSuccessful) {
-                                    documentSnapshot.reference.update("topic_subscribed", true)
-                                }
+                            if(task.isSuccessful) {
+                                documentSnapshot.reference.update("topic_subscribed", true)
                             }
                         }
-
 
                         if(user.fcm_token.isNullOrEmpty()) {
                             obterToken(documentSnapshot.reference)

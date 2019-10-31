@@ -188,6 +188,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.manageSponsors -> startManageSponsorsActivity()
                 MenuItens.report -> startReportFragment()
                 MenuItens.createBulletin -> startManageBulletinsActivity()
+                MenuItens.sendNotifications -> startSendNotificationsActivity()
                 MenuItens.setPrivacy -> startSetPrivacyActivity()
                 MenuItens.policyPrivacy -> startPrivacyActivity()
                 MenuItens.embassyList -> startEmbassyListActivity()
@@ -424,6 +425,13 @@ class MenuListFragment : Fragment() {
             .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageBulletins")
             .addToBackStack(null)
             .commit()
+    }
+
+    private fun startSendNotificationsActivity() {
+
+        val intent: Intent = Intent(mContext, SendNotificationActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
     }
 
     private fun startReportFragment() {

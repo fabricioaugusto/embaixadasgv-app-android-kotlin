@@ -39,6 +39,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var mEmbassyID: String
     private lateinit var mStorage: StorageReference
     private lateinit var mPhotoList: MutableList<String>
+    private lateinit var mEmbassyFrequency: String
     private var isCoverChanged = false
     private val GALLERY_CODE: Int = 200
     private val permissions: List<String> = listOf(
@@ -64,6 +65,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         mDatabase = MyFirebase.database()
         mPhotoList = mutableListOf()
         mStorage = MyFirebase.storage()
+        mEmbassyFrequency = ""
 
         setListeners()
         getEmbassyDetails()
@@ -152,6 +154,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         etEditEmbassyName.setText(mEmbassy.name)
         etEditEmbassyPhone.setText(mEmbassy.phone)
         etEditEmbassyEmail.setText(mEmbassy.email)
+        etEditEmbassyMembersQuantity.setText(mEmbassy.members_quantity.toString())
 
         val coverImg = mEmbassy.cover_img
 
@@ -160,6 +163,19 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
                 .load(coverImg)
                 .into(imgEditEmbassyCover)
         }
+
+        val frequency = mEmbassy.frequency
+
+        if(frequency != null) {
+            mEmbassyFrequency = frequency
+        }
+
+        when {
+            mEmbassy.frequency == "biweekly" -> {radioBtBiweekly.isChecked = true}
+            mEmbassy.frequency == "monthly" -> {radioBtMonthly.isChecked = true}
+            mEmbassy.frequency == "weekly" -> {radioBtWeekly.isChecked = true}
+        }
+
     }
 
     private fun startGalleryActivity() {
@@ -172,6 +188,20 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         val name = etEditEmbassyName.text.toString()
         val email = etEditEmbassyEmail.text.toString()
         val phone = etEditEmbassyPhone.text.toString()
+        val embassyQuantity = etEditEmbassyMembersQuantity.text.toString().toInt()
+
+
+        if(radioBtBiweekly.isChecked) {
+            mEmbassy.frequency = "biweekly"
+        }
+
+        if(radioBtMonthly.isChecked) {
+            mEmbassy.frequency = "monthly"
+        }
+
+        if(radioBtWeekly.isChecked) {
+            mEmbassy.frequency = "weekly"
+        }
 
         if(name.isEmpty()) {
             makeToast("O campo de Nome da embaixada não pode ficar vazio")
@@ -179,7 +209,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         }
 
 
-        if(name == mEmbassy.name && email == mEmbassy.email && phone == mEmbassy.phone && !isCoverChanged) {
+        if(name == mEmbassy.name && email == mEmbassy.email && phone == mEmbassy.phone && !isCoverChanged && embassyQuantity == mEmbassy.members_quantity && mEmbassyFrequency == mEmbassy.frequency) {
             makeToast("Nenhuma alteração foi realizada")
             return
         }
@@ -187,7 +217,7 @@ class EditEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         mEmbassy.name = name
         mEmbassy.email = email
         mEmbassy.phone = phone
-
+        mEmbassy.members_quantity = embassyQuantity
 
         btEditEmbassySava.startAnimation()
 
