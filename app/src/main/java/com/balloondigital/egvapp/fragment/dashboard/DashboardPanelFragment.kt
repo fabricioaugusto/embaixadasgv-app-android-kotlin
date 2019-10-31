@@ -4,11 +4,12 @@ package com.balloondigital.egvapp.fragment.dashboard
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
+import android.view.*
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.WriteBatch
 import java.util.*
+import android.widget.TextView
+import androidx.core.view.MenuItemCompat
+
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -44,6 +49,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mUser: User
     private lateinit var mEvent: Event
     private lateinit var mContext: Context
+    private lateinit var mToolbar: Toolbar
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
     private lateinit var mAdapter: BulletinManagerListAdapter
@@ -63,6 +69,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mBtDashboardPhotos: Button
     private lateinit var mBtDashboardEvents: Button
     private lateinit var mBtDashboardCloud: Button
+    private lateinit var mNotificationBadge: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +77,16 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     ): View? {
 
         val view: View = inflater.inflate(R.layout.fragment_dashboard_panel, container, false)
+
+
+        mToolbar = view.findViewById(R.id.homeToolbar)
+        mToolbar.title = ""
+
+        if (activity is AppCompatActivity) {
+            (activity as AppCompatActivity).setSupportActionBar(mToolbar)
+        }
+
+        setHasOptionsMenu(true)
 
         mAuth = MyFirebase.auth()
         mContext = view.context
@@ -108,6 +125,37 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
         setRecyclerView()
         getBulletinList()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.menu_dashboard_toolbar, menu)
+
+        val menuItem = menu.findItem(R.id.action_notification)
+
+        val actionView = menuItem.actionView
+        mNotificationBadge = actionView.findViewById(R.id.notification_badge)
+        mNotificationBadge.text = "20"
+
+        actionView.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+
+            }
+        })
+
+        //setupBadge()
+
+        return super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.bar_create_post -> {
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onClick(view: View) {
@@ -200,6 +248,8 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mTxtDashboardTheme.text = mEvent.theme
         mTxtDashboardTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
         mTxtDashboardLocation.text = "${mEvent.city}, ${mEvent.state_short}"
+
+
 
         mProgressBarDashboard.isGone = true
         mRootView.isGone = false

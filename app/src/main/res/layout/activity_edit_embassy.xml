@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".activity.Edit.EditEmbassyActivity">
+            tools:context=".activity.Edit.EditEmbassyActivity" android:background="@color/backgroundGrey">
 
         <LinearLayout
                 android:orientation="vertical"
@@ -51,7 +51,8 @@
                 android:id="@+id/textInputLayout6"
                 android:layout_marginTop="24dp" app:layout_constraintTop_toBottomOf="@+id/imgEditEmbassyCover"
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
-                android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
+                android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="32dp"
                 android:layout_marginRight="32dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -63,8 +64,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textInputLayout4" android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout6" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="32dp" android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout6"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="32dp" android:layout_marginRight="32dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -77,8 +80,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/textInputLayout5" android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@+id/textInputLayout4" app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginLeft="32dp" android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textInputLayout4"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginLeft="32dp" android:layout_marginStart="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="32dp" android:layout_marginRight="32dp">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -128,7 +133,8 @@
                     <RadioButton
                             android:text="Semanal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:id="@+id/radioBtWeekly" android:layout_weight="1"
+                            android:layout_height="wrap_content" android:id="@+id/radioBtWeekly"
+                            android:layout_weight="1"
                             android:textColor="@color/colorText"/>
                     <RadioButton
                             android:text="Quinzenal"

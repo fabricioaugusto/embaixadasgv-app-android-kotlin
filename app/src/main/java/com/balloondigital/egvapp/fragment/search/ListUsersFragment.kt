@@ -91,10 +91,6 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         getListUsers()
         setRecyclerView()
 
-
-
-
-
         val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView,
