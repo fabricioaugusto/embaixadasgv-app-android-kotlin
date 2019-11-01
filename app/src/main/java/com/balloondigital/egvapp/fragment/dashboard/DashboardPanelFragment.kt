@@ -31,7 +31,7 @@ import com.google.firebase.firestore.WriteBatch
 import java.util.*
 import android.widget.TextView
 import androidx.core.view.MenuItemCompat
-
+import com.google.firebase.firestore.FieldValue
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -135,11 +135,12 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
         val actionView = menuItem.actionView
         mNotificationBadge = actionView.findViewById(R.id.notification_badge)
-        mNotificationBadge.text = "20"
+
+        getNotifications()
 
         actionView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-
+                startNotificationsFragment()
             }
         })
 
@@ -192,6 +193,25 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mBtDashboardEvents.setOnClickListener(this)
         mBtDashboardCloud.setOnClickListener(this)
         mLayoutNextEvent.setOnClickListener(this)
+    }
+
+    private fun getNotifications() {
+
+        val today = Date()
+        val timestamp = com.google.firebase.Timestamp(today)
+
+        mDatabase.collection(mColletions.NOTIFICATIONS)
+            .whereGreaterThan("last_read_notification", timestamp)
+            .get()
+            .addOnSuccessListener {
+                    querySnapshot ->
+
+                if(querySnapshot.documents.size > 0) {
+                    mNotificationBadge.text = querySnapshot.documents.size.toString()
+                } else {
+                    mNotificationBadge.isGone = true
+                }
+            }
     }
 
     private fun getUserDetails(userId: String) {
@@ -295,6 +315,20 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
                 bulletin -> startSingleBulletinActivity(bulletin)
 
         }
+    }
+
+    private fun startNotificationsFragment() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ListNotificationsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "listNotifications")
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun startEmbassyPhotosActivity() {

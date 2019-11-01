@@ -1,5 +1,6 @@
 package com.balloondigital.egvapp.model
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -21,8 +22,10 @@ data class Notification (
     var post_id: String? = null,
     var company_id: String? = null,
     var event_id: String? = null,
-    var sender_id: String? = null
-): Serializable {
+    var sender_id: String? = null,
+    var created_at: Timestamp? = null
+
+    ): Serializable {
     @Exclude
     fun toMap(): Map<String, Any?> {
         return mapOf(
