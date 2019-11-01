@@ -31,7 +31,9 @@ import com.google.firebase.firestore.WriteBatch
 import java.util.*
 import android.widget.TextView
 import androidx.core.view.MenuItemCompat
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
+import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -75,9 +77,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view: View = inflater.inflate(R.layout.fragment_dashboard_panel, container, false)
-
 
         mToolbar = view.findViewById(R.id.homeToolbar)
         mToolbar.title = ""
@@ -108,35 +108,30 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mTxtDashboardNoEvent = view.findViewById(R.id.txtDashboardNoEvent)
         mRootView = view.findViewById(R.id.rootView)
 
-        val currentUser = mAuth.currentUser
-        if(currentUser != null) {
-            getUserDetails(currentUser.uid)
-        }
 
-        setListeners()
-
-        Log.d("EGVAPPLOGAGENDA", tag.toString())
         // Inflate the layout for this fragment
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         setRecyclerView()
+        setListeners()
         getBulletinList()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_dashboard_toolbar, menu)
-
         val menuItem = menu.findItem(R.id.action_notification)
 
         val actionView = menuItem.actionView
         mNotificationBadge = actionView.findViewById(R.id.notification_badge)
 
-        getNotifications()
+        val currentUser = mAuth.currentUser
+        if(currentUser != null) {
+            getUserDetails(currentUser.uid)
+        }
 
         actionView.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
@@ -195,22 +190,35 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mLayoutNextEvent.setOnClickListener(this)
     }
 
-    private fun getNotifications() {
-
-        val today = Date()
-        val timestamp = com.google.firebase.Timestamp(today)
+    private fun getNotifications(timestamp: Timestamp) {
 
         mDatabase.collection(mColletions.NOTIFICATIONS)
-            .whereGreaterThan("last_read_notification", timestamp)
+            .whereGreaterThan("created_at", timestamp)
+            .whereEqualTo("type", "manager_notification")
             .get()
             .addOnSuccessListener {
-                    querySnapshot ->
+                    managerNotifications ->
 
-                if(querySnapshot.documents.size > 0) {
-                    mNotificationBadge.text = querySnapshot.documents.size.toString()
-                } else {
-                    mNotificationBadge.isGone = true
-                }
+                mDatabase.collection(mColletions.NOTIFICATIONS)
+                    .whereGreaterThan("created_at", timestamp)
+                    .whereEqualTo("receiver_id", mUser.id)
+                    .get()
+                    .addOnSuccessListener {
+                        othersNotifications ->
+
+                        val qtd_notifications = managerNotifications.documents.size + othersNotifications.documents.size
+
+                        if(qtd_notifications > 0) {
+                            mNotificationBadge.text = qtd_notifications.toString()
+                            mNotificationBadge.isGone = false
+                        }
+                    }.addOnFailureListener {
+                        Log.d("EGVAPPLOG", it.message.toString())
+                    }
+
+
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
             }
     }
 
@@ -223,6 +231,11 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
                 val user = documentSnapshot.toObject(User::class.java)
                 if(user != null) {
                     mUser = user
+                    val lastNotificationRead: Timestamp? = documentSnapshot.get("last_read_notification") as Timestamp?
+                    if(lastNotificationRead != null) {
+                        getNotifications(lastNotificationRead)
+                    }
+
                     getNextEvent()
                 }
             }

@@ -33,6 +33,7 @@ import com.balloondigital.egvapp.fragment.feed.AllPostsFragment
 import com.balloondigital.egvapp.fragment.feed.EmbassyPostsFragment
 import com.balloondigital.egvapp.fragment.feed.HighlightPostsFragment
 import com.balloondigital.egvapp.fragment.search.SingleUserFragment
+import com.balloondigital.egvapp.model.Notification
 import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -175,6 +176,7 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
                             updatePosts(post, postLike, position, "like")
                             it.update("id", it.id).addOnSuccessListener {
                                 mPostCollection.document(post.id).update("post_likes", post.post_likes)
+                                setNotification("post_like", postLike.id, post)
                                 mLikeIsProcessing = false
                             }
                         }
@@ -274,6 +276,20 @@ class PostListAdapter(postList: MutableList<Post>, user: User, activity: Fragmen
                 }
                 alertbox.show()
             })
+        }
+
+        private fun setNotification(type: String, likeID: String, post: Post) {
+
+            val notification = Notification()
+            notification.type = type
+            notification.post_id = post.id
+            notification.title = "<b>${mUser.name}</b> curtiu a sua publicação"
+            notification.picture = mUser.profile_img.toString()
+            notification.receiver_id = post.user_id
+            notification.like_id = likeID
+
+            mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+                .add(notification.toMap())
         }
 
         private fun updatePosts(post: Post, postLike: PostLike, pos: Int, action: String) {

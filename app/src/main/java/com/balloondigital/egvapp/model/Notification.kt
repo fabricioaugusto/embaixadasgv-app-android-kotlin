@@ -15,7 +15,7 @@ data class Notification (
     var text: String = "",
     var picture: String = "",
     var type:  String = "",
-    var read: Boolean? = false,
+    var read: Boolean = true,
     var comment_id: String? = null,
     var like_id: String? = null,
     var relationship_id: String? = null,

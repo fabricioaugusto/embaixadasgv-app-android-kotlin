@@ -27,6 +27,7 @@ import com.balloondigital.egvapp.adapter.CommentListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.api.UserService
 import com.balloondigital.egvapp.fragment.search.SingleUserFragment
+import com.balloondigital.egvapp.model.Notification
 import com.balloondigital.egvapp.model.Post
 import com.balloondigital.egvapp.model.PostComment
 import com.balloondigital.egvapp.model.User
@@ -351,9 +352,25 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
 
                 mDatabase.collection(MyFirebase.COLLECTIONS.POSTS)
                     .document(mPostID).update("post_comments", post_comments)
+
+                setNotification("post_comment", postComment.id)
             }
     }
 
+
+    private fun setNotification(type: String, commentID: String) {
+
+        val notification = Notification()
+        notification.type = type
+        notification.post_id = mPostID
+        notification.title = "<b>${mUser.name}</b> comentou em sua publicação"
+        notification.picture = mUser.profile_img.toString()
+        notification.receiver_id = mPost.user_id
+        notification.comment_id = commentID
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .add(notification.toMap())
+    }
 
     private fun startLikesUsersList() {
 

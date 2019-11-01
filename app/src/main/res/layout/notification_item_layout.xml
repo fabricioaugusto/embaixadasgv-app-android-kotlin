@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
-        xmlns:app="http://schemas.android.com/apk/res-auto" style="?attr/actionButtonStyle"
+        xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools" style="?attr/actionButtonStyle"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,6 +26,6 @@
             android:padding="3dp"
             android:textColor="@android:color/white"
             android:text="0"
-            android:textSize="10sp"/>
+            android:textSize="10sp" tools:visibility="visible" android:visibility="gone"/>
 
 </FrameLayout>

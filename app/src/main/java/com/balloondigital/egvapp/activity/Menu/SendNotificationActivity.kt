@@ -187,6 +187,7 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
         mNotification.title = title
         mNotification.description = description
         mNotification.text = text
+        mNotification.type = "manager_notification"
 
         btNotificationPublish.startAnimation()
 

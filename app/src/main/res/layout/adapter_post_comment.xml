@@ -61,7 +61,7 @@
                 android:paddingBottom="5dp"
                 android:text="Algum comentário poderá ficar longo"
                 android:textColor="@color/colorText"
-                android:textSize="14sp"
+                android:textSize="15sp"
         />
     </LinearLayout>
 

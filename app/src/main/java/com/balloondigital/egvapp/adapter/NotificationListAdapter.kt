@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
+import io.github.mthli.knife.KnifeParser
 
 class NotificationListAdapter(notificationList: List<Notification>): RecyclerView.Adapter<NotificationListAdapter.NotificationViewHolder>() {
 
@@ -52,6 +54,7 @@ class NotificationListAdapter(notificationList: List<Notification>): RecyclerVie
         val mImgNotificationProfile: ImageView = itemView.findViewById(R.id.imgAdNotificationProfile)
         val mTxtNotificationTitle: TextView = itemView.findViewById(R.id.txtAdNotificationTitle)
         val mTxtNotificationDate: TextView = itemView.findViewById(R.id.txtAdNotificationDate)
+        val mLayoutAdNotificationItem: LinearLayout = itemView.findViewById(R.id.layoutAdNotificationItem)
 
         init {
             itemView.setOnClickListener {
@@ -61,8 +64,12 @@ class NotificationListAdapter(notificationList: List<Notification>): RecyclerVie
 
         fun bindData(notification: Notification) {
 
-            mTxtNotificationTitle.text = notification.title
+            mTxtNotificationTitle.text = KnifeParser.fromHtml(notification.title)
             mTxtNotificationDate.text = "01/10/2019"
+
+            if(!notification.read) {
+                mLayoutAdNotificationItem.setBackgroundColor(itemView.resources.getColor(R.color.colorActiveNotification))
+            }
 
             val requestOptions: RequestOptions = RequestOptions()
             val options = requestOptions.transforms(CenterCrop(), RoundedCorners(120))

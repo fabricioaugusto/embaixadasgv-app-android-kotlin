@@ -25,9 +25,11 @@ import com.balloondigital.egvapp.model.Notification
 import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import kotlinx.android.synthetic.main.fragment_list_notifications.*
 import java.util.*
 
@@ -75,9 +77,6 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         mListNotifications = mutableListOf()
         mRecyclerView = view.findViewById(R.id.recyclerNotificationList)
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
-            .document(mUser.id)
-            .update("last_read_notification", FieldValue.serverTimestamp())
 
         return view
     }
@@ -87,8 +86,18 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
 
         setListeners()
         setRecyclerView()
-        getListNotifications()
 
+        mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+            .document(mUser.id)
+            .get().addOnSuccessListener {
+                documentSnapshot ->
+
+                val lastNotificationRead: Timestamp? = documentSnapshot.get("last_read_notification") as Timestamp?
+                if(lastNotificationRead != null) {
+                    getListNotifications(lastNotificationRead)
+                }
+                documentSnapshot.reference.update("last_read_notification", FieldValue.serverTimestamp())
+            }
     }
 
     override fun onClick(view: View) {
@@ -133,15 +142,12 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         notificationsNestedSV.setOnScrollChangeListener(nestedSVListener)
     }
 
-    private fun getListNotifications() {
+    private fun getListNotifications(timestamp: Timestamp) {
 
         isPostsOver = false
 
-        val today = Date()
-        val timestamp = com.google.firebase.Timestamp(today)
-
         mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
-            .whereGreaterThan("last_read_notification", FieldValue.serverTimestamp())
+            .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(30)
             .get()
             .addOnSuccessListener {querySnapshot ->
@@ -151,6 +157,10 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
                     for (document in querySnapshot) {
                         val notification: Notification? = document.toObject(Notification::class.java)
                         if(notification != null) {
+                            //a data da criação do post > a data da última leitura
+                            if(notification.created_at!! > timestamp) {
+                                notification.read = false
+                            }
                             mListNotifications.add(notification)
                         }
                     }
@@ -166,6 +176,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         mPbLoadingMore.isGone = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .orderBy("created_at", Query.Direction.DESCENDING)
             .startAfter(mLastDocument)
             .limit(30)
             .get()
