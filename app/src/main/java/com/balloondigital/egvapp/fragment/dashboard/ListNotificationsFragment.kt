@@ -174,6 +174,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
                 mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
                     .whereEqualTo("receiver_id", mUser.id)
                     .orderBy("created_at", Query.Direction.DESCENDING)
+                    .limit(30)
                     .get()
                     .addOnSuccessListener {
                             othersNotifications ->
