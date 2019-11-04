@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.net.toUri
+import androidx.core.view.isGone
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
@@ -96,6 +97,8 @@ class SingleNotificationFragment : Fragment(), View.OnClickListener {
         txtNotificationTitle.text = mNotification.title
         txtNotificationDescription.text = mNotification.description
         txtNotificationText.text = KnifeParser.fromHtml(mNotification.text)
+        imgNotificationPicture.isGone = false
+
     }
 
 }

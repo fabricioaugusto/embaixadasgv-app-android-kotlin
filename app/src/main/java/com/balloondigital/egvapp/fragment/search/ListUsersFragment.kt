@@ -3,6 +3,7 @@ package com.balloondigital.egvapp.fragment.search
 
 import android.content.Context
 import android.os.Bundle
+import android.renderscript.ScriptGroup
 import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -30,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 import kotlinx.android.synthetic.main.fragment_list_users.*
 import org.json.JSONArray
+import java.text.Normalizer
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -230,6 +232,11 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         val user: User? = document.toObject(User::class.java)
                         if(user != null) {
                             mListUsers.add(user)
+                            val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+                            val temp = Normalizer.normalize(user.name, Normalizer.Form.NFD)
+                            val strs = REGEX_UNACCENT.replace(temp, "").split(" ").toTypedArray()
+                            Log.d("EGVAPPLOGUSERNAME", strs[0])
+                            Log.d("EGVAPPLOGUSERNAME", REGEX_UNACCENT.replace(temp, "").replace(" ", "_").toLowerCase())
                         }
                     }
                 }

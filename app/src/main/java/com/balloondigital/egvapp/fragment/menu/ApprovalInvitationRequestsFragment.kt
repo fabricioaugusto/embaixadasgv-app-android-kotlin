@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
@@ -207,15 +208,19 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
             .setTitle("Remover padrinho")
             .setMessage("Tem certeza que deseja remover a solicitação de ${mCurrentRequestor.name}?")
             .setPositiveButton("Sim") { dialog, which ->
-                mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
-                    .document(mCurrentRequestor.id)
-                    .delete()
-                    .addOnCompleteListener {
-                        getRequestorsList()
-                    }
+                deleteRequest()
             }
             .setNegativeButton("Não", null)
             .show()
+    }
+
+    private fun deleteRequest() {
+        mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
+            .document(mCurrentRequestor.id)
+            .delete()
+            .addOnCompleteListener {
+                getRequestorsList()
+            }
     }
 
     private fun inviteUser() {
@@ -238,6 +243,10 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
             invite_code = code
         )
 
+        val alert = SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE)
+            .setTitleText("Enviando...")
+            alert.show()
+
         mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
             .whereEqualTo("email_receiver", email).get()
             .addOnSuccessListener { querySnapshot ->
@@ -248,7 +257,9 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
                         .document(code.toString())
                         .set(mInvite.toMap())
                         .addOnSuccessListener {
-
+                            alert.dismiss()
+                            makeToast("Convite enviado com sucesso!")
+                            deleteRequest()
                         }
                 }
             }

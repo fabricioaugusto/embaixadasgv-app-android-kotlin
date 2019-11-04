@@ -45,7 +45,8 @@ android:background="@color/backgroundGreyStrong">
         <ImageView
                 android:src="@drawable/bg_upload_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/imgNotificationPicture" android:adjustViewBounds="true"/>
+                android:layout_height="wrap_content" android:id="@+id/imgNotificationPicture"
+                android:adjustViewBounds="true" android:visibility="gone" tools:visibility="visible"/>
         <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/txtNotificationTitle" android:textStyle="bold"

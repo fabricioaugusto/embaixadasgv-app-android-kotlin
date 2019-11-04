@@ -17,6 +17,7 @@ import com.balloondigital.egvapp.utils.MyApplication
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
+import java.text.Normalizer
 
 
 class RegisterActivity : AppCompatActivity(), View.OnClickListener {
@@ -134,21 +135,68 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         collection.document(id).set(user)
             .addOnSuccessListener {
+
                 if(mAuth.currentUser != null) {
+
+                    mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
+                        .document(mInvite.id)
+                        .delete()
+
+                    val currentUser = User()
+                    currentUser.name = name
+                    currentUser.id = id
+                    currentUser.email = email
+
                     if(mInvite.isLeader) {
-                        val currentUser = User()
-                        currentUser.name = name
-                        currentUser.id = id
-                        currentUser.email = email
-
                         setEmbassy(currentUser)
-
                     } else {
-                        startCheckAuthActivity()
+                        setUsername(currentUser)
                     }
                 }
         }
 
+    }
+
+    private fun setUsername(currentUser: User) {
+        val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
+
+        val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+        val temp = Normalizer.normalize(currentUser.name, Normalizer.Form.NFD)
+        val formatted_name = REGEX_UNACCENT.replace(temp, "").toLowerCase()
+
+
+        val name_array = formatted_name.split(" ").toTypedArray()
+        val name_size = name_array.size
+
+        val fist_name = name_array[0]
+        var last_name = ""
+
+        if(name_size > 1) {
+            last_name = name_array[name_size-1]
+        }
+
+        var username = "${fist_name}_${last_name}"
+
+        if(name_size == 1) {
+            username = fist_name
+        }
+
+        collection.whereEqualTo("username", username)
+            .get()
+            .addOnSuccessListener {
+                querySnapshot ->
+                if(querySnapshot.isEmpty) {
+                    collection.document(currentUser.id).update("username", username)
+                        .addOnSuccessListener {
+                            startCheckAuthActivity()
+                        }
+                } else {
+                    collection.document(currentUser.id).update("username", "${username}_${(100..999).random()}")
+                        .addOnSuccessListener {
+                            startCheckAuthActivity()
+                        }
+                }
+            }
     }
 
     private fun setEmbassy(currentUser: User) {
@@ -159,7 +207,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
             .document(embassy?.id.toString())
             .update("leader", currentUser.toBasicMap(), "leader_id", currentUser.id)
             .addOnSuccessListener {
-                startCheckAuthActivity()
+                setUsername(currentUser)
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
             }
