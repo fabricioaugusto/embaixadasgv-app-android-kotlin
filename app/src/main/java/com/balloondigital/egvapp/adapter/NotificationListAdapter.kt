@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.model.Notification
+import com.balloondigital.egvapp.utils.Converters
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -64,7 +65,9 @@ class NotificationListAdapter(notificationList: List<Notification>): RecyclerVie
         fun bindData(notification: Notification) {
 
             mTxtNotificationTitle.text = KnifeParser.fromHtml(notification.title)
-            mTxtNotificationDate.text = "01/10/2019"
+
+            val notificationDate = Converters.dateToString(notification.created_at!!)
+            mTxtNotificationDate.text = "${notificationDate.date} ${notificationDate.monthAbr} ${notificationDate.fullyear} às ${notificationDate.hours}:${notificationDate.minutes}"
 
             if(!notification.read) {
                 mLayoutAdNotificationItem.setBackgroundColor(itemView.resources.getColor(R.color.colorActiveNotification))

@@ -113,7 +113,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
 
         btBackPress.setOnClickListener(this)
 
-        val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
+        /*val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
             override fun onScrollChange(
                 v: NestedScrollView,
                 scrollX: Int,
@@ -140,7 +140,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
 
         }
 
-        notificationsNestedSV.setOnScrollChangeListener(nestedSVListener)
+        notificationsNestedSV.setOnScrollChangeListener(nestedSVListener)*/
     }
 
     private fun getListNotifications(timestamp: Timestamp) {
