@@ -61,8 +61,6 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     private lateinit var mContext: Context
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mToolbar: Toolbar
-    private lateinit var mTag: String
-    private lateinit var mFragName: String
     private lateinit var mNavBar: BottomNavigationView
     private lateinit var mPostCommentList: MutableList<PostComment>
     private lateinit var mAdapter: CommentListAdapter
@@ -72,8 +70,8 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
     private lateinit var mPostID: String
     private lateinit var mPost: Post
     private lateinit var mUser: User
+    private var mRootView: Int = 0
     private var isCommented: Boolean = false
-    private var mTextCheck: Boolean = true
     private var mCurrentUser: FirebaseUser? = null
 
     override fun onCreateView(
@@ -97,10 +95,9 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         mPostCommentList = mutableListOf()
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mFragName = bundle.getString("frag_name").toString()
-            mTag = bundle.getString("frag_tag").toString()
             mPostID = bundle.getString("post_id").toString()
             mUser = bundle.getSerializable("user") as User
+            mRootView = bundle.getInt("rootViewer")
         }
 
         // Inflate the layout for this fragment
@@ -377,13 +374,13 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putString("type", "post_likes")
         bundle.putString("obj_id", mPostID)
-        bundle.putInt("rootViewer", R.id.feedViewPager)
+        bundle.putInt("rootViewer", mRootView)
 
         val nextFrag = UsersListFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:likeUsers")
+            .add(mRootView, nextFrag, "$mRootView:likeUsers")
             .addToBackStack(null)
             .commit()
     }
@@ -396,7 +393,7 @@ class SinglePostFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.feedViewPager, nextFrag, "${R.id.feedViewPager}:singleUser")
+            .add(mRootView, nextFrag, "$mRootView:singleUser")
             .addToBackStack(null)
             .commit()
     }

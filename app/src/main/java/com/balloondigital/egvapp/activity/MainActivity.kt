@@ -99,6 +99,9 @@ class MainActivity : AppCompatActivity() {
 
             val singleDashboardUser: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleUser")
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleBulletin")
+            val singleNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleNotification")
+            val singlePostNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singlePost")
+            val likeUsers: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:likeUsers")
 
             if (singleDashboardUser != null && singleDashboardUser.isVisible) {
                 transaction.remove(singleDashboardUser).commit()
@@ -107,6 +110,21 @@ class MainActivity : AppCompatActivity() {
 
             if (singleEmbassyUser != null && singleEmbassyUser.isVisible) {
                 transaction.remove(singleEmbassyUser).commit()
+                return
+            }
+
+            if (likeUsers != null && likeUsers.isVisible) {
+                transaction.remove(likeUsers).commit()
+                return
+            }
+
+            if (singlePostNotification != null && singlePostNotification.isVisible) {
+                transaction.remove(singlePostNotification).commit()
+                return
+            }
+
+            if (singleNotification != null && singleNotification.isVisible) {
+                transaction.remove(singleNotification).commit()
                 return
             }
 

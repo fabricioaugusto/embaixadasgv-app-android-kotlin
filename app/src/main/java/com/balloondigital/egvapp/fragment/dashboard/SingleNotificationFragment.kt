@@ -6,14 +6,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.net.toUri
 
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.Bulletin
+import com.balloondigital.egvapp.model.Notification
 import com.balloondigital.egvapp.utils.Converters
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.mthli.knife.KnifeParser
-import kotlinx.android.synthetic.main.fragment_single_bulletin.*
+import kotlinx.android.synthetic.main.fragment_single_notification.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -27,8 +31,8 @@ private const val ARG_PARAM2 = "param2"
 class SingleNotificationFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mDatabase: FirebaseFirestore
-    private lateinit var mBulletin: Bulletin
-    private lateinit var mBulletinID: String
+    private lateinit var mNotification: Notification
+    private lateinit var mNotificationID: String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +43,7 @@ class SingleNotificationFragment : Fragment(), View.OnClickListener {
         mDatabase = MyFirebase.database()
         val bundle: Bundle? = arguments
         if(bundle != null ) {
-            mBulletinID = bundle.getString("bulletinID", "")
+            mNotificationID = bundle.getString("notificationID", "")
         }
 
         return view
@@ -64,14 +68,14 @@ class SingleNotificationFragment : Fragment(), View.OnClickListener {
     }
 
     private fun getSingleBulletin() {
-        mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
-            .document(mBulletinID)
+        mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .document(mNotificationID)
             .get()
             .addOnSuccessListener {
                     documentSnapshot ->
-                val bulletin = documentSnapshot.toObject(Bulletin::class.java)
-                if(bulletin != null) {
-                    mBulletin = bulletin
+                val notification = documentSnapshot.toObject(Notification::class.java)
+                if(notification != null) {
+                    mNotification = notification
                     bindData()
                 }
             }
@@ -79,12 +83,19 @@ class SingleNotificationFragment : Fragment(), View.OnClickListener {
 
     private fun bindData() {
 
-        val postDate = Converters.dateToString(mBulletin.date!!)
-        txtBulletinDate.text = "${postDate.date}/${postDate.month}/${postDate.fullyear}"
+        val postDate = Converters.dateToString(mNotification.created_at!!)
+        txtNotificationDate.text = "${postDate.date}/${postDate.month}/${postDate.fullyear}"
 
-        txtBulletinTitle.text = mBulletin.title
-        txtBulletinDescription.text = mBulletin.resume
-        txtBulletinText.text = KnifeParser.fromHtml(mBulletin.text)
+        if(mNotification.picture.isNotEmpty()) {
+            Glide.with(this)
+                .load(mNotification.picture.toUri())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imgNotificationPicture)
+        }
+
+        txtNotificationTitle.text = mNotification.title
+        txtNotificationDescription.text = mNotification.description
+        txtNotificationText.text = KnifeParser.fromHtml(mNotification.text)
     }
 
 }

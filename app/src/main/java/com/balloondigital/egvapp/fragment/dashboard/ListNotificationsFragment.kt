@@ -19,6 +19,7 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.adapter.NotificationListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.feed.SinglePostFragment
 import com.balloondigital.egvapp.fragment.menu.MyEmbassyFragment
 import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.Notification
@@ -147,27 +148,58 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .whereEqualTo("type", "manager_notification")
             .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(30)
             .get()
-            .addOnSuccessListener {querySnapshot ->
+            .addOnSuccessListener {
+                    managerNotifications ->
 
-                if(querySnapshot.size() > 0) {
-                    mLastDocument = querySnapshot.documents[querySnapshot.size() - 1]
-                    for (document in querySnapshot) {
-                        val notification: Notification? = document.toObject(Notification::class.java)
-                        if(notification != null) {
-                            //a data da criação do post > a data da última leitura
-                            if(notification.created_at!! > timestamp) {
-                                notification.read = false
-                            }
-                            mListNotifications.add(notification)
+                if(managerNotifications.size() > 0) {
+                    mLastDocument = managerNotifications.documents[managerNotifications.size() - 1]
+                }
+
+                for (document in managerNotifications.documents) {
+                    val notification: Notification? = document.toObject(Notification::class.java)
+                    if(notification != null) {
+                        //a data da criação do post > a data da última leitura
+                        if(notification.created_at!! > timestamp) {
+                            notification.read = false
                         }
+                        mListNotifications.add(notification)
+
                     }
                 }
 
-                mAdapter.notifyDataSetChanged()
-                mSkeletonScreen.hide()
+                mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+                    .whereEqualTo("receiver_id", mUser.id)
+                    .orderBy("created_at", Query.Direction.DESCENDING)
+                    .get()
+                    .addOnSuccessListener {
+                            othersNotifications ->
+
+                        for (document in othersNotifications.documents) {
+                            val notification: Notification? = document.toObject(Notification::class.java)
+                            if(notification != null) {
+                                //a data da criação do post > a data da última leitura
+                                if(notification.created_at!! > timestamp) {
+                                    notification.read = false
+                                }
+                                mListNotifications.add(notification)
+
+                            }
+                        }
+                        mListNotifications.sortByDescending { notification -> notification.created_at}
+                        mAdapter.notifyDataSetChanged()
+                        mSkeletonScreen.hide()
+
+                    }.addOnFailureListener {
+                        Log.d("EGVAPPLOG", it.message.toString())
+                    }
+
+
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
             }
     }
 
@@ -190,6 +222,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
                     for (document in querySnapshot) {
                         val notification: Notification? = document.toObject(Notification::class.java)
                         if(notification != null) {
+                            notification.id = document.id
                             mListNotifications.add(notification)
                         }
                     }
@@ -205,6 +238,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
 
     private fun setRecyclerView() {
 
+
         mAdapter = NotificationListAdapter(mListNotifications)
         mAdapter.setHasStableIds(true)
         mRecyclerView.layoutManager = LinearLayoutManager(mContext)
@@ -214,23 +248,50 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
             .load(R.layout.item_skeleton_user)
             .shimmer(true).show()
 
-        mAdapter.onItemClick = {notification -> startSingleEmbassyActivity(notification)}
+        mAdapter.onItemClick = {notification ->
+
+            if(notification.type == "manager_notification") {
+                startSingleNotificationFragment(notification)
+            }
+
+            if(notification.type == "post_comment" || notification.type == "post_like") {
+                val postID = notification.post_id
+                if(postID != null) {
+                    startSinglePostFragment(postID)
+                }
+            }
+        }
     }
 
-
-    private fun startSingleEmbassyActivity(singleNotification: Notification) {
+    private fun startSinglePostFragment(postID: String) {
 
         val bundle = Bundle()
-        bundle.putSerializable("embassyID", singleNotification.id)
 
-        val nextFrag = MyEmbassyFragment()
+        bundle.putInt("rootViewer", R.id.dashboardViewPager)
+        bundle.putString("post_id", postID)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = SinglePostFragment()
         nextFrag.arguments = bundle
 
+
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEmbassy")
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singlePost")
             .addToBackStack(null)
             .commit()
     }
 
+    private fun startSingleNotificationFragment(singleNotification: Notification) {
 
+        val bundle = Bundle()
+        bundle.putSerializable("notificationID", singleNotification.id)
+
+        val nextFrag = SingleNotificationFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleNotification")
+            .addToBackStack(null)
+            .commit()
+    }
 }

@@ -252,8 +252,7 @@ class EmbassyPostsFragment : Fragment(), OnItemClickListener, View.OnClickListen
         val bundle = Bundle()
 
         bundle.putString("post_id", post.id)
-        bundle.putString("frag_tag", this.tag)
-        bundle.putString("frag_name", "EmbassyPostsFragment")
+        bundle.putInt("rootViewer", R.id.feedViewPager)
         bundle.putSerializable("user", mUser)
 
         val nextFrag = SinglePostFragment()
