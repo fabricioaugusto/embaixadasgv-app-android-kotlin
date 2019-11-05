@@ -49,7 +49,6 @@ class HomeFragment : Fragment() {
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLogFeed", mUser.toString())
         }
 
         mHighlightsFragment = HighlightsFragment()

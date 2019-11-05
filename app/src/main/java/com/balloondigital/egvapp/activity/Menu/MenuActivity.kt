@@ -130,6 +130,7 @@ class MenuActivity : AppCompatActivity() {
     private fun startCheckAuthActivity() {
         val intent: Intent = Intent(this, CheckAuthActivity::class.java)
         startActivity(intent)
+        finish()
     }
 
     private fun startUserProfileActivity() {
@@ -233,7 +234,6 @@ class MenuActivity : AppCompatActivity() {
     private fun logout() {
         mAuth.signOut()
         startCheckAuthActivity()
-        finish()
     }
 
 

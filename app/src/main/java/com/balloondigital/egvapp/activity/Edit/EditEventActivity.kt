@@ -214,7 +214,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocu
             }
 
             override fun onQueryTextChange(text: String?): Boolean {
-                Log.d("searchView", "Listening..$text")
                 if(!text.isNullOrEmpty()) {
                     searchUser(text)
                 }
@@ -258,9 +257,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocu
         val addressComponents = place.addressComponents
         val ltdlng = place.latLng
 
-        Log.d("EGVAPPLOGCREATEEVENT0", place.toString())
-        Log.d("EGVAPPLOGCREATEEVENT3", place.name.toString())
-        Log.d("EGVAPPLOGCREATEEVENT4", place.latLng.toString())
         mEvent.place = place.name
         mEvent.address = place.address
 
@@ -288,9 +284,6 @@ class EditEventActivity : AppCompatActivity(), View.OnClickListener, View.OnFocu
                     "postal_code" -> mEvent.postal_code = component.name
                 }
             }
-
-            Log.d("EGVAPPLOGCREATEEVENT1", stateObj.toString())
-            Log.d("EGVAPPLOGCREATEEVENT2", mEvent.toString())
 
         }
 

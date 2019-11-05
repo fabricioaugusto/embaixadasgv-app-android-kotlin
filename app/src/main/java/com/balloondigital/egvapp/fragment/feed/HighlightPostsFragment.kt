@@ -78,7 +78,6 @@ class HighlightPostsFragment : Fragment() {
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLogFeed", mUser.toString())
         }
 
         mDatabase = MyFirebase.database()
@@ -285,7 +284,6 @@ class HighlightPostsFragment : Fragment() {
             .startAfter(mLastDocument)
             .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
-                Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {
                     if(querySnapshot.size() > 0) {
                         mLastDocumentRequested = mLastDocument

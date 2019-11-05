@@ -81,7 +81,6 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
     }
 
     override fun onQueryTextChange(str: String): Boolean {
-        Log.d("searchView", "Listening..$str")
         if(str.isNotEmpty()) {
             searchUser(str)
         } else {

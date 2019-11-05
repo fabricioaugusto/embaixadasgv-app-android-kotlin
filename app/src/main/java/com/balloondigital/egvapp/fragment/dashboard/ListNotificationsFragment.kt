@@ -2,6 +2,7 @@ package com.balloondigital.egvapp.fragment.dashboard
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -16,9 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Dashboard.SingleNotificationActivity
 import com.balloondigital.egvapp.adapter.EmbassyListAdapter
 import com.balloondigital.egvapp.adapter.NotificationListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
+import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
 import com.balloondigital.egvapp.fragment.feed.SinglePostFragment
 import com.balloondigital.egvapp.fragment.menu.MyEmbassyFragment
 import com.balloondigital.egvapp.model.Embassy
@@ -98,6 +101,9 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
                     getListNotifications(lastNotificationRead)
                 }
                 documentSnapshot.reference.update("last_read_notification", FieldValue.serverTimestamp())
+                    .addOnSuccessListener {
+                        updateNotificationsBadge()
+                    }
             }
     }
 
@@ -148,17 +154,48 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         isPostsOver = false
 
         mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
-            .whereEqualTo("type", "manager_notification")
-            .whereEqualTo("only_leaders", false)
+            .whereEqualTo("receiver_id", mUser.id)
             .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(30)
             .get()
             .addOnSuccessListener {
-                    managerNotifications ->
+                    othersNotifications ->
 
-                if(managerNotifications.size() > 0) {
-                    mLastDocument = managerNotifications.documents[managerNotifications.size() - 1]
+                if(othersNotifications.size() > 0) {
+                    mLastDocument = othersNotifications.documents[othersNotifications.size() - 1]
                 }
+
+                for (document in othersNotifications.documents) {
+                    val notification: Notification? = document.toObject(Notification::class.java)
+                    if(notification != null) {
+                        //a data da criação do post > a data da última leitura
+                        if(notification.created_at!! > timestamp) {
+                            notification.read = false
+                        }
+                        mListNotifications.add(notification)
+
+                    }
+                }
+
+                getManagerNotifications(timestamp)
+
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
+
+    }
+
+    private fun getManagerNotifications(timestamp: Timestamp) {
+
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .whereEqualTo("type", "manager_notification")
+            .whereEqualTo("only_leaders", false)
+            .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(20)
+            .get()
+            .addOnSuccessListener {
+                    managerNotifications ->
 
                 for (document in managerNotifications.documents) {
                     val notification: Notification? = document.toObject(Notification::class.java)
@@ -172,37 +209,52 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
                     }
                 }
 
-                mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
-                    .whereEqualTo("receiver_id", mUser.id)
-                    .orderBy("created_at", Query.Direction.DESCENDING)
-                    .limit(30)
-                    .get()
-                    .addOnSuccessListener {
-                            othersNotifications ->
+                if(mUser.leader) {
+                    getLeaderNotifications(timestamp)
+                } else {
+                    mListNotifications.sortByDescending { notification -> notification.created_at}
+                    mAdapter.notifyDataSetChanged()
+                    mSkeletonScreen.hide()
+                }
 
-                        for (document in othersNotifications.documents) {
-                            val notification: Notification? = document.toObject(Notification::class.java)
-                            if(notification != null) {
-                                //a data da criação do post > a data da última leitura
-                                if(notification.created_at!! > timestamp) {
-                                    notification.read = false
-                                }
-                                mListNotifications.add(notification)
+            }.addOnFailureListener {
+                Log.d("EGVAPPLOG", it.message.toString())
+            }
 
-                            }
+    }
+
+    private fun getLeaderNotifications(timestamp: Timestamp) {
+
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
+            .whereEqualTo("type", "manager_notification")
+            .whereEqualTo("only_leaders", true)
+            .orderBy("created_at", Query.Direction.DESCENDING)
+            .limit(20)
+            .get()
+            .addOnSuccessListener {
+                    managerNotifications ->
+
+                for (document in managerNotifications.documents) {
+                    val notification: Notification? = document.toObject(Notification::class.java)
+                    if(notification != null) {
+                        //a data da criação do post > a data da última leitura
+                        if(notification.created_at!! > timestamp) {
+                            notification.read = false
                         }
-                        mListNotifications.sortByDescending { notification -> notification.created_at}
-                        mAdapter.notifyDataSetChanged()
-                        mSkeletonScreen.hide()
-
-                    }.addOnFailureListener {
-                        Log.d("EGVAPPLOG", it.message.toString())
+                        mListNotifications.add(notification)
                     }
+                }
+
+                mListNotifications.sortByDescending { notification -> notification.created_at}
+                mAdapter.notifyDataSetChanged()
+                mSkeletonScreen.hide()
 
 
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
             }
+
     }
 
     private fun loadMore() {
@@ -253,7 +305,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
         mAdapter.onItemClick = {notification ->
 
             if(notification.type == "manager_notification") {
-                startSingleNotificationFragment(notification)
+                startSingleNotificationActivity(notification)
             }
 
             if(notification.type == "post_comment" || notification.type == "post_like") {
@@ -295,5 +347,25 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
             .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleNotification")
             .addToBackStack(null)
             .commit()
+    }
+
+
+    private fun startSingleNotificationActivity(singleNotification: Notification) {
+
+        val intent: Intent = Intent(mContext, SingleNotificationActivity::class.java)
+        intent.putExtra("notificationTitle", singleNotification.title)
+        intent.putExtra("notificationID", singleNotification.id)
+        startActivity(intent)
+    }
+
+    private fun updateNotificationsBadge() {
+
+        val manager = activity!!.supportFragmentManager
+        val dashboardPanelfragment: Fragment? = manager.findFragmentByTag("rootDashboardFragment")
+
+        if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
+            val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment
+            dashboardPanel.refreshNotifications()
+        }
     }
 }

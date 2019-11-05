@@ -87,7 +87,6 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLogFeed", mUser.toString())
         }
 
         mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
@@ -295,7 +294,6 @@ class AllPostsFragment : Fragment(), OnItemClickListener {
             .startAfter(mLastDocument)
             .limit(10)
             .get().addOnSuccessListener { querySnapshot ->
-                Log.d("EGVAPPLOGLOADINGMORE", "chamou o loading more")
                 if(querySnapshot != null) {
                     if(querySnapshot.size() > 0) {
                         mLastDocumentRequested = mLastDocument

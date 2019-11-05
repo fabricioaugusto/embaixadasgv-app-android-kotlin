@@ -27,6 +27,7 @@ import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
 import kotlinx.android.synthetic.main.fragment_list_users.*
@@ -144,7 +145,6 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
     }
 
     override fun onQueryTextChange(str: String): Boolean {
-        Log.d("searchView", "Listening..$str")
         if(str.isNotEmpty()) {
             searchUser(str)
         } else {
@@ -232,11 +232,6 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                         val user: User? = document.toObject(User::class.java)
                         if(user != null) {
                             mListUsers.add(user)
-                            val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
-                            val temp = Normalizer.normalize(user.name, Normalizer.Form.NFD)
-                            val strs = REGEX_UNACCENT.replace(temp, "").split(" ").toTypedArray()
-                            Log.d("EGVAPPLOGUSERNAME", strs[0])
-                            Log.d("EGVAPPLOGUSERNAME", REGEX_UNACCENT.replace(temp, "").replace(" ", "_").toLowerCase())
                         }
                     }
                 }

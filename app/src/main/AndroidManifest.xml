@@ -21,8 +21,12 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:replace="android:icon">
-        <activity android:name=".activity.Menu.SendNotificationActivity"
+        <activity android:name=".activity.Dashboard.SingleNotificationActivity"
                   android:theme="@style/AppThemeToolbar">
+        </activity>
+        <activity
+                android:name=".activity.Menu.SendNotificationActivity"
+                android:theme="@style/AppThemeToolbar">
         </activity>
         <activity android:name=".activity.Auth.RequestCodeActivity">
         </activity>

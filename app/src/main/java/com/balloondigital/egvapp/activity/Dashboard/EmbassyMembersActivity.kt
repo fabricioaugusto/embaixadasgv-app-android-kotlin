@@ -61,7 +61,6 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
     }
 
     override fun onQueryTextChange(str: String): Boolean {
-        Log.d("searchView", "Listening..$str")
         if(str.isNotEmpty()) {
             searchUser(str)
         } else {
@@ -94,8 +93,6 @@ class EmbassyMembersActivity : AppCompatActivity(), SearchView.OnQueryTextListen
     }
 
     private fun getListUsers() {
-
-        Log.d("EGVAPPLOGUSERS", mUser.embassy_id.toString())
 
         mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
             .whereEqualTo("embassy_id", mUser.embassy.id)

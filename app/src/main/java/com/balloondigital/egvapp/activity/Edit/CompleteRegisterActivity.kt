@@ -48,7 +48,6 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         val bundle: Bundle? = intent.extras
         if(bundle != null) {
             mUser = bundle.getSerializable("user") as User
-            Log.d("FirebaseLog", mUser.toString())
         }
 
         mDatabase = MyFirebase.database()

@@ -179,11 +179,6 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        if(!mCoverIsSet) {
-            makeToast("Você deve escolher uma imagem de capa")
-            return
-        }
-
         mNotification.title = title
         mNotification.description = description
         mNotification.text = text
@@ -204,6 +199,20 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 mTextCheck = false
             }
+        }
+
+
+        if(!mCoverIsSet) {
+            mDatabase.collection(mCollections.NOTIFICATIONS)
+                .add(mNotification.toMap())
+                .addOnSuccessListener { document ->
+                    mNotification.id = document.id
+                    document.update("id", document.id).addOnSuccessListener {
+                        mNotification.picture = "https://firebasestorage.googleapis.com/v0/b/egv-app-f851e.appspot.com/o/assets%2Fimages%2Fbg_egv_logo.png?alt=media&token=90971d90-b517-47c5-a3c8-cede129cba3e"
+                        buildNotification()
+                    }
+                }
+            return
         }
 
         val imageName = UUID.randomUUID().toString()
@@ -240,8 +249,6 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
                     })
                 }
             }
-
-            Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -253,8 +260,6 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
 
         try {
 
-            var topic = ""
-
             if(radioBtSendToLeaders.isChecked) {
                 notificacao.put("to", "/topics/egv_topic_leaders")
             }
@@ -262,6 +267,8 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
             if(radioBtSendToAll.isChecked) {
                 notificacao.put("to", "/topics/egv_topic_members")
             }
+
+            //notificacao.put("to", "/topics/egv_topic_tests")
 
             dados.put("description", mNotification.description)
             dados.put("title", mNotification.title)

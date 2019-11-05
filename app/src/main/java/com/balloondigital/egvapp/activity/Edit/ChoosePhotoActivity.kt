@@ -127,6 +127,7 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         val intent: Intent = Intent(this, MainActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
+        finish()
     }
 
     private fun setListeners() {

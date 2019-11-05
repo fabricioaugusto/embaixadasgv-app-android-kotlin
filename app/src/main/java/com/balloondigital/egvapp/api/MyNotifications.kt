@@ -12,6 +12,8 @@ import android.os.Build
 import androidx.annotation.Nullable
 import androidx.core.app.NotificationCompat
 import com.balloondigital.egvapp.R
+import com.balloondigital.egvapp.activity.Auth.CheckAuthActivity
+import com.balloondigital.egvapp.activity.Dashboard.SingleNotificationActivity
 import com.balloondigital.egvapp.activity.MainActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -33,8 +35,9 @@ class MyNotifications: FirebaseMessagingService() {
             val title = msg.getData().get("title")
             val description = msg.getData().get("description")
             val picture = msg.getData().get("picture")
+            val id = msg.getData().get("id")
 
-            sendCustomNotification(title.toString(), description.toString(), picture.toString())
+            sendCustomNotification(title.toString(), description.toString(), picture.toString(), id.toString())
 
         }
         else if(notification != null) {
@@ -49,6 +52,7 @@ class MyNotifications: FirebaseMessagingService() {
     }
 
     private fun sendNotification(title: String, body: String) {
+
         val intent: Intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
@@ -75,7 +79,7 @@ class MyNotifications: FirebaseMessagingService() {
     }
 
 
-    private fun sendCustomNotification(title: String, description: String, picture: String) {
+    private fun sendCustomNotification(title: String, description: String, picture: String, notification_id: String) {
 
 
         val id = (System.currentTimeMillis() / 1000).toInt()
@@ -101,7 +105,9 @@ class MyNotifications: FirebaseMessagingService() {
 
                 //ação de abrir
 
-                val intent: Intent = Intent(baseContext, MainActivity::class.java)
+                val intent: Intent = Intent(baseContext, SingleNotificationActivity::class.java)
+                intent.putExtra("notificationTitle", title)
+                intent.putExtra("notificationID", notification_id)
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
                 val pendingIntent: PendingIntent = PendingIntent.getActivity(baseContext, 300, intent, PendingIntent.FLAG_ONE_SHOT)
@@ -118,8 +124,8 @@ class MyNotifications: FirebaseMessagingService() {
                     .setSound(som)
                     .setAutoCancel(true)
                     .setLargeIcon(bitmap)
-                    .setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
-                    //.setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+                    //.setStyle(NotificationCompat.BigPictureStyle().bigPicture(bitmap))
+                    .setStyle(NotificationCompat.BigTextStyle().bigText(description))
                     .setContentIntent(pendingIntent)
 
 

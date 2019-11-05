@@ -97,7 +97,6 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
 
         mEmbassiesCollection.get().addOnSuccessListener { documents ->
             for(document in documents) {
-                Log.d("FirebaseLog", document.data.toString())
                 mListOptions.add(document.data["name"].toString())
                 mListOptionsID.add(document.data["id"].toString())
 
@@ -206,7 +205,6 @@ class ChooseEmbassyActivity : AppCompatActivity(), View.OnClickListener {
         val collection = mDatabase.collection(MyFirebase.COLLECTIONS.USERS)
         collection.document(mUser.id).set(mUser.toMap())
             .addOnSuccessListener {
-                Log.d("FirebaseLog", "Embaixada Adicionada com Sucesso!")
                 startCheckAuthActivity()
                 finish()
             }

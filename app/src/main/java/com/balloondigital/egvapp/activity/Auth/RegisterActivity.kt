@@ -14,6 +14,7 @@ import com.balloondigital.egvapp.model.EmbassySponsor
 import com.balloondigital.egvapp.model.Invite
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.MyApplication
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import io.github.mthli.knife.KnifeParser
 import kotlinx.android.synthetic.main.activity_submit_invite_code.*
@@ -101,7 +102,6 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                     } else {
                         // If sign in fails, display a message to the user.
                         btRegister.revertAnimation()
-                        Log.d("createUserWithEmail", task.exception.toString())
                         Toast.makeText(
                             this, "Authentication failed.",
                             Toast.LENGTH_SHORT
@@ -123,6 +123,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
         user["name"] = name
         user["email"] = email
         user["status"] = "registered"
+        user["last_read_notification"] = FieldValue.serverTimestamp()
+
 
         if(mInvite.isLeader) {
             user["leader"] = true

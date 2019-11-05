@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activity.Dashboard.SingleNotificationActivity"
+        android:background="@color/backgroundGreyStrong">
+
+    <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toTopOf="parent"
+    >
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                      android:orientation="vertical">
+            <ImageView
+                    android:src="@drawable/bg_upload_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/imgNotificationPicture"
+                    android:adjustViewBounds="true" android:visibility="gone" tools:visibility="visible"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtNotificationTitle" android:textStyle="bold"
+                    android:textColor="@color/colorText" android:textSize="22sp" tools:text="Título do Informativo"
+                    android:paddingTop="16dp" android:paddingRight="16dp" android:paddingLeft="16dp"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtNotificationDescription"
+                    android:textColor="@color/colorSubText" tools:text="Algum resumo do informativo"
+                    android:paddingLeft="16dp" android:paddingRight="16dp"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtNotificationDate"
+                    android:textColor="@color/colorRed" android:layout_marginTop="4dp" tools:text="17/09/2019"
+                    android:paddingLeft="16dp" android:paddingRight="16dp"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/txtNotificationText"
+                    android:textColor="@color/colorText"
+                    tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vestibulum mollis nunc ac laoreet. Suspendisse non tristique tellus, egestas euismod lectus. Fusce et enim nec nisi mattis pharetra vel ac justo. Nulla mi quam, sagittis congue imperdiet ut, auctor quis orci. Phasellus sed turpis vitae elit pharetra tristique. Mauris et consectetur augue. Nullam eros felis, porttitor in maximus eu, porta tempor massa. Etiam iaculis arcu at nisi congue molestie. Vivamus lacus enim, egestas vitae vehicula sit amet, congue scelerisque justo. Morbi eu suscipit lorem.  Vivamus cursus nisl in ornare eleifend. Nam eleifend interdum posuere. Integer lorem dolor, congue id mi nec, auctor consequat lacus. Duis at ipsum vitae purus tempus cursus vel sed purus. Maecenas suscipit nulla sit amet turpis porttitor tempus. Fusce non volutpat nunc, ac laoreet lacus. Praesent tristique mauris nulla, eget varius erat consectetur eu. Nam vitae augue sed risus tempus fermentum. Nunc fermentum cursus nulla ac fermentum."
+                    android:layout_marginTop="16dp" android:textSize="17sp" android:paddingLeft="16dp"
+                    android:paddingRight="16dp" android:paddingBottom="32dp" android:lineSpacingMultiplier="1.1"/>
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

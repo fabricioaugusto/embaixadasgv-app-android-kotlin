@@ -55,7 +55,6 @@ class ListEventsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
 
-        Log.d("EGVAPPLOGAGENDA", tag.toString())
         val view: View = inflater.inflate(R.layout.fragment_list_events, container, false)
 
         mDatabase = MyFirebase.database()
@@ -213,7 +212,6 @@ class ListEventsFragment : Fragment() {
     }
 
     fun refreshEvenList() {
-        Log.d("EGVAPPLOGAGENDA", "atualizou agenda")
         getEventList()
     }
 }

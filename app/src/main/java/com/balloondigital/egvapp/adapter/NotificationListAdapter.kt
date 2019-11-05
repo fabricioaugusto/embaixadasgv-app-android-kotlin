@@ -83,7 +83,12 @@ class NotificationListAdapter(notificationList: List<Notification>): RecyclerVie
                     .apply(options)
                     .into(mImgNotificationProfile)
             } else {
-                mImgNotificationProfile.setImageResource(R.drawable.bg_default_cover)
+
+                Glide.with(context)
+                    .load("https://firebasestorage.googleapis.com/v0/b/egv-app-f851e.appspot.com/o/assets%2Fimages%2Fbg_egv_logo.png?alt=media&token=90971d90-b517-47c5-a3c8-cede129cba3e")
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .apply(options)
+                    .into(mImgNotificationProfile)
             }
             
         }

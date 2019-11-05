@@ -1,6 +1,7 @@
 package com.balloondigital.egvapp.activity.Auth
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -66,7 +67,6 @@ class CheckAuthActivity : AppCompatActivity() {
                 .show()
             return
         }
-
     }
 
     fun getCurrentUser(uid: String) {
@@ -78,11 +78,22 @@ class CheckAuthActivity : AppCompatActivity() {
                     val user = documentSnapshot.toObject(User::class.java)
                     if(user != null) {
 
+                        if(user.last_device_os != "android") {
+                            documentSnapshot.reference.update("last_device_os", "android")
+                        }
+
+                        if(user.last_device_version != Build.VERSION.SDK_INT.toString()) {
+                            documentSnapshot.reference.update("last_device_version", Build.VERSION.SDK_INT.toString())
+                        }
+
+                        if(user.last_app_update != "14") {
+                            documentSnapshot.reference.update("last_app_update", "14")
+                        }
+
                         val leader = documentSnapshot.data?.get("leader")
                         if(leader != null) {
                             user.leader = documentSnapshot.data?.get("leader") as Boolean
                         }
-
                         if(user.leader) {
                             mMessaging.subscribeToTopic("egv_topic_leaders")
                         }

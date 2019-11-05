@@ -61,8 +61,8 @@
                 android:paddingBottom="5dp"
                 android:text="Algum comentário poderá ficar longo"
                 android:textColor="@color/colorText"
-                android:textSize="15sp"
-        />
+                android:textSize="16sp"
+                android:layout_marginLeft="33dp" android:lineSpacingMultiplier="1.1"/>
     </LinearLayout>
 
 </LinearLayout>

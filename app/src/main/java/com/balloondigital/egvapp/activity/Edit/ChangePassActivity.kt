@@ -89,7 +89,6 @@ class ChangePassActivity : AppCompatActivity(), View.OnClickListener {
                     // ...
                 }
 
-            Log.d("FirebaseLog", "mCurrentUser is not null")
         }
     }
 

@@ -192,34 +192,68 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
     private fun getNotifications(timestamp: Timestamp) {
 
+
         mDatabase.collection(mColletions.NOTIFICATIONS)
             .whereGreaterThan("created_at", timestamp)
-            .whereEqualTo("type", "manager_notification")
+            .whereEqualTo("receiver_id", mUser.id)
             .get()
             .addOnSuccessListener {
-                    managerNotifications ->
+                    othersNotifications ->
 
                 mDatabase.collection(mColletions.NOTIFICATIONS)
                     .whereGreaterThan("created_at", timestamp)
-                    .whereEqualTo("receiver_id", mUser.id)
+                    .whereEqualTo("type", "manager_notification")
+                    .whereEqualTo("only_leaders", false)
                     .get()
                     .addOnSuccessListener {
-                        othersNotifications ->
+                            managerNotifications ->
 
-                        val qtd_notifications = managerNotifications.documents.size + othersNotifications.documents.size
+                        if(mUser.leader) {
 
-                        if(qtd_notifications > 0) {
-                            mNotificationBadge.text = qtd_notifications.toString()
-                            mNotificationBadge.isGone = false
+                            mDatabase.collection(mColletions.NOTIFICATIONS)
+                                .whereGreaterThan("created_at", timestamp)
+                                .whereEqualTo("type", "manager_notification")
+                                .whereEqualTo("only_leaders", true)
+                                .get()
+                                .addOnSuccessListener {
+                                        leaderNotifications ->
+
+                                    val qtd_notifications = managerNotifications.documents.size + othersNotifications.documents.size + leaderNotifications.documents.size
+
+                                    if(qtd_notifications > 0) {
+                                        mNotificationBadge.text = qtd_notifications.toString()
+                                        mNotificationBadge.isGone = false
+                                    } else {
+                                        mNotificationBadge.isGone = true
+                                        mNotificationBadge.text = "0"
+                                    }
+                                }
+
+                        } else {
+
+                            val qtd_notifications = managerNotifications.documents.size + othersNotifications.documents.size
+
+                            if(qtd_notifications > 0) {
+                                mNotificationBadge.text = qtd_notifications.toString()
+                                mNotificationBadge.isGone = false
+                            } else {
+                                mNotificationBadge.isGone = true
+                                mNotificationBadge.text = "0"
+
+                            }
                         }
+
+
                     }.addOnFailureListener {
                         Log.d("EGVAPPLOG", it.message.toString())
                     }
 
-
             }.addOnFailureListener {
                 Log.d("EGVAPPLOG", it.message.toString())
             }
+
+
+
     }
 
     private fun getUserDetails(userId: String) {
@@ -339,7 +373,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "listNotifications")
+            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:listNotifications")
             .addToBackStack(null)
             .commit()
     }
@@ -422,6 +456,12 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
             .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleBulletin")
             .addToBackStack(null)
             .commit()
+    }
+
+    fun refreshNotifications() {
+        val today = Date()
+        val timestamp = Timestamp(today)
+        getNotifications(timestamp)
     }
 
     fun refreshEvent() {

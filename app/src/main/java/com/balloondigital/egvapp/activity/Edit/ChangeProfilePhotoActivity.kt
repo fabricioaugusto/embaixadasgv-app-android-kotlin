@@ -101,7 +101,6 @@ class ChangeProfilePhotoActivity : AppCompatActivity(), View.OnClickListener {
                     GALLERY_CODE -> {
                         if (data != null) {
                             val uri = data.data
-                            Log.d("GalleryActivity", "Chegou aqui")
                             CropImages.profilePicture(this, uri)
                         }
                     }

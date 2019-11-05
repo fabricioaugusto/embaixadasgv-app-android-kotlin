@@ -42,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Log.d("EGVAPPLIFECYCLE", "onCreate")
 
         mHomeFragment = HomeFragment()
         mMenuFragment = MenuFragment()
@@ -101,6 +100,7 @@ class MainActivity : AppCompatActivity() {
             val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleBulletin")
             val singleNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleNotification")
             val singlePostNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singlePost")
+            val listNotifications: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:listNotifications")
             val likeUsers: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:likeUsers")
 
             if (singleDashboardUser != null && singleDashboardUser.isVisible) {
@@ -140,6 +140,11 @@ class MainActivity : AppCompatActivity() {
 
             if (singleEmbassyEvent != null && singleEmbassyEvent.isVisible) {
                 transaction.remove(singleEmbassyEvent).commit()
+                return
+            }
+
+            if (listNotifications != null && listNotifications.isVisible) {
+                transaction.remove(listNotifications).commit()
                 return
             }
 
@@ -387,10 +392,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         val currentFragment = manager.findFragmentByTag(tag)
-        Log.d("EGVAPPMANAGEFRAGMENT", "$tag ${currentFragment.toString()}")
 
         if (currentFragment == null) {
-            Log.d("EGVAPPMANAGEFRAGMENT", "adicionou")
             transaction.add(R.id.mainViewPager, fragment, tag)
         } else {
             transaction.show(currentFragment)

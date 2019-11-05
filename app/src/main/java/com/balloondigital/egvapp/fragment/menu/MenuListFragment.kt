@@ -211,13 +211,11 @@ class MenuListFragment : Fragment() {
         val dashboardPanelfragment: Fragment? = manager.findFragmentByTag("rootDashboardFragment")
 
         if(eventListfragment != null && eventListfragment.isVisible) {
-            Log.d("EGVAPPLOGAGENDA", "eventListfragment ativo")
             val eventList: ListEventsFragment = eventListfragment as ListEventsFragment
             eventList.refreshEvenList()
         }
 
         if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
-            Log.d("EGVAPPLOGAGENDA", "dashboardPanelfragment ativo")
             val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment
             dashboardPanel.refreshEvent()
         }
