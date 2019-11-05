@@ -189,6 +189,10 @@ class SendNotificationActivity : AppCompatActivity(), View.OnClickListener {
         mNotification.text = text
         mNotification.type = "manager_notification"
 
+        if(radioBtSendToLeaders.isChecked) {
+            mNotification.only_leaders = true
+        }
+
         btNotificationPublish.startAnimation()
 
         while (mTextCheck) {

@@ -19,6 +19,7 @@ data class Notification (
     var comment_id: String? = null,
     var like_id: String? = null,
     var relationship_id: String? = null,
+    var only_leaders: Boolean = false,
     var post_id: String? = null,
     var company_id: String? = null,
     var event_id: String? = null,
@@ -42,6 +43,7 @@ data class Notification (
             "comment_id" to comment_id,
             "like_id" to like_id,
             "relationship_id" to relationship_id,
+            "only_leaders" to only_leaders,
             "post_id" to post_id,
             "company_id" to company_id,
             "event_id" to event_id

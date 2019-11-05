@@ -149,6 +149,7 @@ class ListNotificationsFragment : Fragment(), View.OnClickListener {
 
         mDatabase.collection(MyFirebase.COLLECTIONS.NOTIFICATIONS)
             .whereEqualTo("type", "manager_notification")
+            .whereEqualTo("only_leaders", false)
             .orderBy("created_at", Query.Direction.DESCENDING)
             .limit(30)
             .get()
