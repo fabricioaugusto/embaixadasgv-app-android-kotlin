@@ -58,6 +58,7 @@ class MenuItens private constructor() {
             list.add(MenuItem("Gestores", "section"))
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
             list.add(MenuItem(manageSponsors, "item", R.drawable.ic_menu_manage_sponsors))
+            list.add(MenuItem(manageInteresteds, "item", R.drawable.ic_menu_manage_sponsors))
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
             list.add(MenuItem(sendNotifications, "item", R.drawable.ic_menu_add_notification))
             list.add(MenuItem(report, "item", R.drawable.ic_report_black))
@@ -150,6 +151,7 @@ class MenuItens private constructor() {
             list.add(MenuItem("Gestores", "section"))
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
             list.add(MenuItem(manageSponsors, "item", R.drawable.ic_menu_manage_sponsors))
+            list.add(MenuItem(manageInteresteds, "item", R.drawable.ic_menu_manage_sponsors))
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
             list.add(MenuItem("Privacidade", "section"))
             list.add(MenuItem(setPrivacy, "item", R.drawable.ic_menu_policy_privacy))
@@ -183,6 +185,7 @@ class MenuItens private constructor() {
         const val createBulletin = "Gerenciar Informativos"
         const val sendNotifications = "Enviar Notificações"
         const val manageSponsors = "Gerenciar Padrinhos"
+        const val manageInteresteds = "Lista de Interessados"
         const val report = "Informações"
         const val setPrivacy = "Configurações de Privacidade"
         const val policyPrivacy = "Políticas de Privacidade"

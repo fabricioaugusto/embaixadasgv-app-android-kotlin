@@ -186,6 +186,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.invitationRequests -> startApprovalInvitationRequestsActivity()
                 MenuItens.affiliatedEmbassies -> startAffiliatedEmbassiesFragment()
                 MenuItens.manageSponsors -> startManageSponsorsActivity()
+                MenuItens.manageInteresteds -> startManageInterestedsActivity()
                 MenuItens.report -> startReportFragment()
                 MenuItens.createBulletin -> startManageBulletinsActivity()
                 MenuItens.sendNotifications -> startSendNotificationsActivity()
@@ -406,6 +407,20 @@ class MenuListFragment : Fragment() {
 
         activity!!.supportFragmentManager.beginTransaction()
             .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageSponsors")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startManageInterestedsActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = InterestedListFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:interestedList")
             .addToBackStack(null)
             .commit()
     }

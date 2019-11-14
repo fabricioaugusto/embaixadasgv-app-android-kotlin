@@ -52,6 +52,7 @@ class MyFirebase private constructor(){
         val EMBASSY = "embassy"
         val BULLETIN = "bulletins"
         val COMMITTEES = "committees"
+        val INTERESTED = "interested"
         val NOTIFICATIONS = "notifications"
         val EMBASSY_PHOTOS = "embassy_photos"
         val LOCATIONS = "locations"

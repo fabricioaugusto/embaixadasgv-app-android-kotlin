@@ -1,17 +1,15 @@
 package com.balloondigital.egvapp.fragment.menu
 
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
-import android.view.*
+import android.view.Gravity
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,16 +20,17 @@ import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
 import com.balloondigital.egvapp.adapter.UserListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
-import com.balloondigital.egvapp.model.*
+import com.balloondigital.egvapp.model.InvitationRequest
 import com.balloondigital.egvapp.model.MenuItem
-import com.balloondigital.egvapp.utils.MyApplication.util.openExternalLink
+import com.balloondigital.egvapp.model.User
+import com.balloondigital.egvapp.utils.MyApplication
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
-import kotlinx.android.synthetic.main.fragment_approval_invitation_requests.*
+import kotlinx.android.synthetic.main.fragment_interested_list.*
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -42,13 +41,12 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View.OnClickListener {
+class InterestedListFragment : Fragment(), OnItemClickListener, View.OnClickListener {
 
     private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
     private lateinit var mContext: Context
-    private lateinit var mCurrentRequestor: User
-    private lateinit var mInvite: Invite
+    private lateinit var mCurrentInterested: User
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
     private lateinit var mUsersList: MutableList<User>
@@ -63,30 +61,28 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view: View =  inflater.inflate(R.layout.fragment_approval_invitation_requests, container, false)
-
+        val view: View =  inflater.inflate(R.layout.fragment_interested_list, container, false)
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
         }
 
-        mToolbar = view.findViewById(R.id.invRequestsToolbar)
+        mToolbar = view.findViewById(R.id.interestedListToolbar)
         mToolbar.title = ""
 
         mDatabase = MyFirebase.database()
         mUsersList = mutableListOf()
         mContext = view.context
-        mRecyclerView = view.findViewById(R.id.rvInvRequests)
-        mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutInvRequests)
+        mRecyclerView = view.findViewById(R.id.rvInterestedList)
+        mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutInterestedList)
 
         val menuList: List<MenuItem> = listOf(
-            MenuItem("Aprovar", "item", R.drawable.ic_thumb_up_black),
             MenuItem("Chamar no Whatsapp", "item", R.drawable.ic_whatsapp_black),
             MenuItem("Enviar e-mail", "item", R.drawable.ic_email_black),
             MenuItem("Excluir", "item", R.drawable.ic_delete_black)
         )
 
-        mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 4, menuList)
+        mAdapterDialog = ManageItemsDialogAdapter(mContext, false, 3, menuList)
 
         mSwipeLayoutFeed.setOnRefreshListener(SwipeRefreshLayout.OnRefreshListener { getRequestorsList() })
 
@@ -107,18 +103,14 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         mCPDialog.dismiss()
 
         if(position == 0) {
-            inviteUser()
+            MyApplication.util.openExternalLink(mContext, "https://wa.me/+55${mCurrentInterested.whatsapp}")
         }
 
         if(position == 1) {
-            openExternalLink(mContext, "https://wa.me/+55${mCurrentRequestor.whatsapp}")
+            MyApplication.util.openExternalLink(mContext, "mailto:${mCurrentInterested.email}")
         }
 
         if(position == 2) {
-            openExternalLink(mContext, "mailto:${mCurrentRequestor.email}")
-        }
-
-        if(position == 3) {
             confirmDeleteDialog()
         }
     }
@@ -137,8 +129,7 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
 
     private fun getRequestorsList() {
 
-        mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
-            .whereEqualTo("leaderId", mUser.id)
+        mDatabase.collection(MyFirebase.COLLECTIONS.INTERESTED)
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mUsersList.clear()
@@ -146,14 +137,8 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
                 if(documentSnapshot != null) {
                     if(documentSnapshot.size() > 0) {
                         for(document in documentSnapshot) {
-                            val invitationRequest : InvitationRequest? = document.toObject(InvitationRequest::class.java)
-                            if(invitationRequest != null) {
-                                invitationRequest.id = document.id
-                                val user = User()
-                                user.id = document.id
-                                user.name = invitationRequest.requestorName
-                                user.email = invitationRequest.requestorEmail
-                                user.whatsapp = invitationRequest.requestorWhatsapp
+                            val user : User? = document.toObject(User::class.java)
+                            if(user != null) {
                                 mUsersList.add(user)
                             }
                         }
@@ -179,7 +164,7 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
 
         mAdapter.onItemClick = {
                 user ->
-            mCurrentRequestor = user
+            mCurrentInterested = user
             setManageItemsDialog()
         }
     }
@@ -202,7 +187,7 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
         AlertDialog.Builder(mContext)
             .setIcon(R.drawable.ic_warning_yellow)
             .setTitle("Remover padrinho")
-            .setMessage("Tem certeza que deseja remover a solicitação de ${mCurrentRequestor.name}?")
+            .setMessage("Tem certeza que deseja remover a solicitação de ${mCurrentInterested.name}?")
             .setPositiveButton("Sim") { dialog, which ->
                 deleteRequest()
             }
@@ -211,56 +196,13 @@ class ApprovalInvitationRequestsFragment : Fragment(), OnItemClickListener, View
     }
 
     private fun deleteRequest() {
-        mDatabase.collection(MyFirebase.COLLECTIONS.INVITATION_REQUEST)
-            .document(mCurrentRequestor.id)
+        mDatabase.collection(MyFirebase.COLLECTIONS.INTERESTED)
+            .document(mCurrentInterested.id)
             .delete()
             .addOnCompleteListener {
                 getRequestorsList()
             }
     }
-
-    private fun inviteUser() {
-        val name: String = mCurrentRequestor.name
-        val email: String = mCurrentRequestor.email
-
-        if(name.isEmpty() || email.isEmpty()) {
-            makeToast("Você deve preencher todos os campos")
-            return
-        }
-
-        val code: Int = (100000..999999).random()
-
-        mInvite = Invite(
-            name_sender = mUser.name,
-            email_sender = mUser.email,
-            name_receiver = name,
-            email_receiver = email,
-            embassy_receiver = mUser.embassy,
-            invite_code = code
-        )
-
-        val alert = SweetAlertDialog(mContext, SweetAlertDialog.PROGRESS_TYPE)
-            .setTitleText("Enviando...")
-            alert.show()
-
-        mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
-            .whereEqualTo("email_receiver", email).get()
-            .addOnSuccessListener { querySnapshot ->
-                if(querySnapshot.documents.size > 0) {
-                    makeToast("Um convite já foi enviado para este e-mail")
-                } else {
-                    mDatabase.collection(MyFirebase.COLLECTIONS.APP_INVITATIONS)
-                        .document(code.toString())
-                        .set(mInvite.toMap())
-                        .addOnSuccessListener {
-                            alert.dismiss()
-                            makeToast("Convite enviado com sucesso!")
-                            deleteRequest()
-                        }
-                }
-            }
-    }
-
 
 
     private fun makeToast(text: String) {
