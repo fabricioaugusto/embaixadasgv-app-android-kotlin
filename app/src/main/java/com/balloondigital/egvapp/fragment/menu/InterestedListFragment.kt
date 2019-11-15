@@ -103,7 +103,13 @@ class InterestedListFragment : Fragment(), OnItemClickListener, View.OnClickList
         mCPDialog.dismiss()
 
         if(position == 0) {
-            MyApplication.util.openExternalLink(mContext, "https://wa.me/+55${mCurrentInterested.whatsapp}")
+            val whatsapp = mCurrentInterested.whatsapp
+            when {
+                whatsapp?.take(2) == "55" -> MyApplication.util.openExternalLink(mContext, "https://wa.me/+${mCurrentInterested.whatsapp}")
+                whatsapp?.take(1) == "+" -> MyApplication.util.openExternalLink(mContext, "https://wa.me/${mCurrentInterested.whatsapp}")
+                else -> MyApplication.util.openExternalLink(mContext, "https://wa.me/+55${mCurrentInterested.whatsapp}")
+            }
+
         }
 
         if(position == 1) {
@@ -139,6 +145,8 @@ class InterestedListFragment : Fragment(), OnItemClickListener, View.OnClickList
                         for(document in documentSnapshot) {
                             val user : User? = document.toObject(User::class.java)
                             if(user != null) {
+                                user.id = document.id
+                                user.whatsapp = document.data["phone"] as String
                                 mUsersList.add(user)
                             }
                         }
@@ -186,8 +194,8 @@ class InterestedListFragment : Fragment(), OnItemClickListener, View.OnClickList
     private fun confirmDeleteDialog() {
         AlertDialog.Builder(mContext)
             .setIcon(R.drawable.ic_warning_yellow)
-            .setTitle("Remover padrinho")
-            .setMessage("Tem certeza que deseja remover a solicitação de ${mCurrentInterested.name}?")
+            .setTitle("Remover da lista")
+            .setMessage("Tem certeza que deseja remover ${mCurrentInterested.name}?")
             .setPositiveButton("Sim") { dialog, which ->
                 deleteRequest()
             }

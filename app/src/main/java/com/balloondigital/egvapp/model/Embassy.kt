@@ -1,5 +1,6 @@
 package com.balloondigital.egvapp.model
-import com.google.firebase.firestore.DocumentReference
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.firebase.firestore.Exclude
 import java.io.Serializable
 
@@ -57,5 +58,43 @@ data class Embassy (
             "leader_username" to leader_username,
             "leader" to leader?.toBasicMap()
         )
+    }
+}
+
+data class BasicEmbassy(
+    var id: String? = "",
+    var name: String? = "",
+    var city: String? = "",
+    var neighborhood: String? = "",
+    var state: String? = "",
+    var state_short: String? = "",
+    var leader: User? = null
+): Parcelable {
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.run { readString() },
+        parcel.readString(),
+        parcel.readString()
+    )
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    override fun writeToParcel(dest: Parcel, flags: Int) {
+        dest.writeString(name)
+    }
+
+    companion object CREATOR : Parcelable.Creator<BasicEmbassy> {
+        override fun createFromParcel(parcel: Parcel): BasicEmbassy {
+            return BasicEmbassy(parcel)
+        }
+
+        override fun newArray(size: Int): Array<BasicEmbassy?> {
+            return arrayOfNulls(size)
+        }
     }
 }

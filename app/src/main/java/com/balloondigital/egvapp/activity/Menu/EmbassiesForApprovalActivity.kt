@@ -102,10 +102,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         if(id == R.id.btEmbassyApprove) {
             approveEmbassy()
         }
-
-        if(id == R.id.btEmbassyRelease) {
-            releaseEmbassy()
-        }
     }
 
     override fun onQueryTextSubmit(p0: String?): Boolean {
@@ -119,7 +115,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
     private fun setListeners() {
         layoutToughtModal.setOnClickListener(this)
         btEmbassyApprove.setOnClickListener(this)
-        btEmbassyRelease.setOnClickListener(this)
     }
 
     private fun searchEmbassy(str: String) {
@@ -203,8 +198,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
         mEmbassy = embassy
         val sponsor = mEmbassy.embassySponsor
 
-        btEmbassyRelease.isGone = mEmbassy.status == "released"
-
         txtApprEmbassyName.text = mEmbassy.name
         txtApprEmbassyCity.text = "${mEmbassy.city} - ${mEmbassy.state_short}"
         txtApprEmbassyLeader.text = mEmbassy.leader?.name
@@ -236,7 +229,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
             txtApprEmbassyLeader.text = ""
             txtApprEmbassyEmail.text = ""
             txtApprEmbassyPhone.text = ""
-            btEmbassyRelease.revertAnimation()
         }
     }
 
@@ -264,28 +256,6 @@ class EmbassiesForApprovalActivity : AppCompatActivity(), SearchView.OnQueryText
                 mAdapter.notifyDataSetChanged()
 
                 inviteLeader()
-            }
-    }
-
-    private fun releaseEmbassy() {
-
-        mEmbassy.status = "released"
-
-        btEmbassyRelease.startAnimation()
-
-        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
-            .document(mEmbassy.id)
-            .set(mEmbassy.toMap())
-            .addOnSuccessListener {
-                makeToast("Embaixada liberada!")
-
-                mListEmbassy[mPosition].status = "released"
-                mAdapter.notifyDataSetChanged()
-
-                btEmbassyRelease.doneLoadingAnimation(
-                    resources.getColor(R.color.colorGreen),
-                    Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
-                )
             }
     }
 

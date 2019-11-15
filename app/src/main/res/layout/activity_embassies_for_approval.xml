@@ -128,17 +128,6 @@
                     android:background="@drawable/bg_circular_progressbar"
                     android:textColor="@color/backgroundGrey"
                     android:layout_marginTop="16dp"/>
-            <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-                    android:text="Liberar para a lista"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" android:id="@+id/btEmbassyRelease"
-                    app:finalCornerAngle="50dp"
-                    app:initialCornerAngle="0dp"
-                    app:spinning_bar_color="#FFF"
-                    app:spinning_bar_padding="6dp"
-                    android:background="@drawable/bg_circular_progressbar_blue"
-                    android:textColor="@color/backgroundGrey"
-                    android:layout_marginTop="16dp"/>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

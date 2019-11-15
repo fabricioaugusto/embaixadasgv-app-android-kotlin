@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,15 +23,14 @@ import com.balloondigital.egvapp.activity.Edit.EditEventActivity
 import com.balloondigital.egvapp.activity.Menu.SelectSponsorActivity
 import com.balloondigital.egvapp.adapter.EventManagerListAdapter
 import com.balloondigital.egvapp.adapter.ManageItemsDialogAdapter
+import com.balloondigital.egvapp.adapter.SponsorListAdapter
 import com.balloondigital.egvapp.adapter.SponsorManagerListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.agenda.ListEventsFragment
 import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
 import com.balloondigital.egvapp.fragment.dashboard.DashboardPanelFragment
-import com.balloondigital.egvapp.model.EmbassySponsor
-import com.balloondigital.egvapp.model.Event
+import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.model.MenuItem
-import com.balloondigital.egvapp.model.User
 import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
 import com.ethanhua.skeleton.Skeleton
 import com.google.android.libraries.places.widget.Autocomplete
@@ -40,7 +40,8 @@ import com.google.firebase.firestore.Query
 import com.orhanobut.dialogplus.DialogPlus
 import com.orhanobut.dialogplus.DialogPlusBuilder
 import com.orhanobut.dialogplus.OnItemClickListener
-import kotlinx.android.synthetic.main.fragment_manage_events.*
+import kotlinx.android.synthetic.main.fragment_manage_sponsors.*
+import kotlin.math.roundToInt
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -60,13 +61,16 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mEmbassyID: String
     private lateinit var mSwipeLayoutFeed: SwipeRefreshLayout
-    private lateinit var mSponsorList: MutableList<EmbassySponsor>
-    private lateinit var mAdapter: SponsorManagerListAdapter
+    private lateinit var mEmbassySponsorList: MutableList<EmbassySponsor>
+    private lateinit var mSponsorList: MutableList<Sponsor>
+    private lateinit var mListEmbassy: MutableList<BasicEmbassy>
+    private lateinit var mAdapter: SponsorListAdapter
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mCPDialog: DialogPlus
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private val SPONSOR_REQUEST_CODE: Int = 200
+    private var mIndex = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -93,6 +97,8 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
 
         mDatabase = MyFirebase.database()
         mSponsorList = mutableListOf()
+        mListEmbassy = mutableListOf()
+        mEmbassySponsorList = mutableListOf()
         mContext = view.context
         mRecyclerView = view.findViewById(R.id.rvManageSponsors)
         mSwipeLayoutFeed = view.findViewById(R.id.swipeLayoutFeed)
@@ -110,12 +116,16 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         return view
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        mAdapter.onSaveInstanceState(outState)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setListeners()
         getSponsorList()
-        setRecyclerView(mSponsorList)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -139,11 +149,10 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         mCPDialog.dismiss()
 
         if(position == 0) {
-            startSingleEventActivity()
+
         }
 
         if(position == 1) {
-            startEditEventActivity()
         }
 
         if(position == 2) {
@@ -190,55 +199,128 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
             .get().addOnSuccessListener { documentSnapshot ->
 
                 mSponsorList.clear()
+                mEmbassySponsorList.clear()
 
                 if(documentSnapshot != null) {
                     if(documentSnapshot.size() > 0) {
                         for(document in documentSnapshot) {
-                            val sponsor: EmbassySponsor? = document.toObject(EmbassySponsor::class.java)
-                            if(sponsor != null) {
-                                mSponsorList.add(sponsor)
+                            val embassySponsor: EmbassySponsor? = document.toObject(EmbassySponsor::class.java)
+                            if(embassySponsor != null) {
+                                embassySponsor.id = document.id
+                                mEmbassySponsorList.add(embassySponsor)
                             }
                         }
+                        makeToast(mEmbassySponsorList.size.toString())
+                        setSponsorList()
                     }
                 }
 
-                mAdapter.notifyDataSetChanged()
-                mSkeletonScreen.hide()
-                mSwipeLayoutFeed.isRefreshing = false
+
             }
     }
 
+    private fun getEmbassyList(embassySponsor: EmbassySponsor) {
 
-    private fun setRecyclerView(sponsors: MutableList<EmbassySponsor>) {
+        mListEmbassy.clear()
 
-        mAdapter = SponsorManagerListAdapter(sponsors)
-        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .whereEqualTo("embassySponsor.id", embassySponsor.id)
+            .get()
+            .addOnSuccessListener {querySnapshot ->
+                if(querySnapshot.size() > 0) {
 
-        mSkeletonScreen = Skeleton.bind(mRecyclerView)
-            .adapter(mAdapter)
-            .load(R.layout.item_skeleton_user)
-            .shimmer(true).show()
+                    for (document in querySnapshot) {
+                        val embassy: BasicEmbassy? = document.toObject(BasicEmbassy::class.java)
+                        if(embassy != null) {
 
-        mAdapter.onItemClick = {
-                sponsor ->
-            mCurrentSponsor = sponsor
-            setManageItemsDialog()
+                            embassy.id = document.id
+                            mListEmbassy.add(embassy)
+                        }
+                    }
+
+                }
+                val sponsor: Sponsor = Sponsor(embassySponsor.name, mListEmbassy.toList())
+                mSponsorList.add(sponsor)
+                mIndex += 1
+                setSponsorList()
+
+                //mSkeletonScreen.hide()
+            }
+    }
+
+    private fun getEmbassyWithoutSponsorList() {
+
+        mListEmbassy.clear()
+
+        mDatabase.collection(MyFirebase.COLLECTIONS.EMBASSY)
+            .whereEqualTo("embassySponsor", null)
+            .get()
+            .addOnSuccessListener {querySnapshot ->
+                if(querySnapshot.size() > 0) {
+
+                    for (document in querySnapshot) {
+                        val embassy: BasicEmbassy? = document.toObject(BasicEmbassy::class.java)
+                        if(embassy != null) {
+
+                            embassy.id = document.id
+                            mListEmbassy.add(embassy)
+                        }
+                    }
+
+                }
+                val sponsor: Sponsor = Sponsor("Embaixadas sem padrinhos", mListEmbassy.toList())
+                mSponsorList.add(sponsor)
+
+                layoutMSponsorsLoading.isGone = true
+                setRecyclerView(mSponsorList)
+                //mSkeletonScreen.hide()
+                mSwipeLayoutFeed.isRefreshing = false
+
+
+                //mSkeletonScreen.hide()
+            }
+    }
+
+    private fun setSponsorList() {
+        val count: Double = (mIndex/(mEmbassySponsorList.size+1).toDouble())*100
+        txtMSponsorPercent.text = "${count.roundToInt()}%"
+        if(mIndex < mEmbassySponsorList.size) {
+            getEmbassyList(mEmbassySponsorList[mIndex])
+        } else {
+            getEmbassyWithoutSponsorList()
         }
     }
 
-    private fun startSingleEventActivity() {
 
+    private fun setRecyclerView(sponsors: MutableList<Sponsor>) {
 
+        mAdapter = SponsorListAdapter(sponsors)
+        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
+        mRecyclerView.adapter = mAdapter
+
+        /*mSkeletonScreen = Skeleton.bind(mRecyclerView)
+            .adapter(mAdapter)
+            .load(R.layout.item_skeleton_user)
+            .shimmer(true).show()*/
+
+        mAdapter.onItemClick = {
+                embassy -> startSingleEmbassyFragment(embassy)
+        }
+    }
+
+    private fun startSingleEmbassyFragment(embassy: BasicEmbassy) {
         val bundle = Bundle()
+        bundle.putSerializable("embassyID", embassy.id)
 
-        val nextFrag = SingleEventFragment()
+        val nextFrag = MyEmbassyFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEvent")
+            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEmbassy")
             .addToBackStack(null)
             .commit()
     }
+
 
     private fun startSelectSponsorActivity() {
         val intent: Intent = Intent(mContext, SelectSponsorActivity::class.java)
@@ -246,11 +328,6 @@ class ManageSponsorsFragment : Fragment(), OnItemClickListener, View.OnClickList
         startActivityForResult(intent, SPONSOR_REQUEST_CODE)
     }
 
-    private fun startEditEventActivity() {
-        val intent: Intent = Intent(mContext, EditEventActivity::class.java)
-        intent.putExtra("eventID", mCurrentSponsor.id)
-        startActivityForResult(intent, SPONSOR_REQUEST_CODE)
-    }
 
     private fun setManageItemsDialog() {
 

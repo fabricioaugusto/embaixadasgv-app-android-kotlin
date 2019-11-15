@@ -58,7 +58,7 @@ class MenuItens private constructor() {
             list.add(MenuItem("Gestores", "section"))
             list.add(MenuItem(embassyForApproval, "item", R.drawable.ic_menu_list_approvation))
             list.add(MenuItem(manageSponsors, "item", R.drawable.ic_menu_manage_sponsors))
-            list.add(MenuItem(manageInteresteds, "item", R.drawable.ic_menu_manage_sponsors))
+            list.add(MenuItem(manageInteresteds, "item", R.drawable.ic_menu_interested))
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
             list.add(MenuItem(sendNotifications, "item", R.drawable.ic_menu_add_notification))
             list.add(MenuItem(report, "item", R.drawable.ic_report_black))
