@@ -36,7 +36,8 @@ private const val ARG_PARAM2 = "param2"
  * A simple [Fragment] subclass.
  *
  */
-class ListPostFragment : Fragment(), OnItemClickListener {
+class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemClickListener {
+
 
     private lateinit var mUser: User
     private lateinit var mToolbar: Toolbar
@@ -122,17 +123,26 @@ class ListPostFragment : Fragment(), OnItemClickListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         menu.clear()
         inflater.inflate(R.menu.menu_feed_toolbar, menu)
+        val menuItem = menu.findItem(R.id.bar_create_post)
+
+        menuItem.setOnMenuItemClickListener(this)
+
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.bar_create_post -> {
-                setCreatePostDialog()
+
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
+        setCreatePostDialog()
+        return true
     }
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
