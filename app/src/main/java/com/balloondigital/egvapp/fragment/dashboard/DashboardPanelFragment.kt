@@ -1,8 +1,11 @@
 package com.balloondigital.egvapp.fragment.dashboard
 
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -24,12 +27,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import android.widget.TextView
+import androidx.core.net.toUri
 import com.balloondigital.egvapp.activity.Menu.AboutEmbassiesActivity
 import com.balloondigital.egvapp.fragment.menu.ApprovalInvitationRequestsFragment
 import com.balloondigital.egvapp.fragment.menu.ListEmbassyFragment
 import com.balloondigital.egvapp.fragment.menu.ManageEventsFragment
 import com.balloondigital.egvapp.fragment.menu.ManagePhotosFragment
 import com.balloondigital.egvapp.utils.MyApplication
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.firebase.Timestamp
 import kotlinx.android.synthetic.main.fragment_dashboard_panel.*
 
@@ -48,6 +54,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var mUser: User
     private lateinit var mEvent: Event
+    private lateinit var mPost: Post
     private lateinit var mContext: Context
     private lateinit var mToolbar: Toolbar
     private lateinit var mDatabase: FirebaseFirestore
@@ -66,6 +73,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mBtDashboardEvents: Button
     private lateinit var mBtDashboardCloud: Button
     private lateinit var mNotificationBadge: TextView
+    private lateinit var mLinkPostButtonAction: String
     private val mRootViewPager = R.id.dashboardViewPager
 
     override fun onCreateView(
@@ -109,7 +117,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListeners()
-
+        getDashboardPost()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -184,16 +192,30 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
             startAppRateActivity()
         }
 
-        if(id == R.id.btDashboardManageEvents) {
-            startManageEventsActivity()
+        if(id == R.id.btDashboardPostAction) {
+            openExternalLink(mLinkPostButtonAction)
         }
 
-        if(id == R.id.btDashboardAddPicture) {
-            startSendEmbassyPhotosActivity()
-        }
+        if(mUser.leader) {
+            if(id == R.id.btDashboardManageEvents) {
+                startManageEventsActivity()
+            }
 
-        if(id == R.id.btDashboardApproveRequests) {
-            startApprovalInvitationRequestsActivity()
+            if(id == R.id.btDashboardAddPicture) {
+                startSendEmbassyPhotosActivity()
+            }
+
+            if(id == R.id.btDashboardApproveRequests) {
+                startApprovalInvitationRequestsActivity()
+            }
+
+            if(id == R.id.txtDashboardInvitationLink) {
+
+                val clipboard = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("label","https://embaixadasgv.app/convite/${mUser.username}")
+                clipboard.setPrimaryClip(clip)
+                makeToast("Link copiado!")
+            }
         }
     }
 
@@ -210,6 +232,8 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         btDashboardManageEvents.setOnClickListener(this)
         btDashboardAddPicture.setOnClickListener(this)
         btDashboardApproveRequests.setOnClickListener(this)
+        btDashboardPostAction.setOnClickListener(this)
+        txtDashboardInvitationLink.setOnClickListener(this)
 
     }
 
@@ -288,9 +312,25 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
                 val user = documentSnapshot.toObject(User::class.java)
                 if(user != null) {
                     mUser = user
+
+                    val leader = documentSnapshot.data?.get("leader")
+                    if(leader != null) {
+                        mUser.leader = documentSnapshot.data?.get("leader") as Boolean
+                    }
+
                     val lastNotificationRead: Timestamp? = documentSnapshot.get("last_read_notification") as Timestamp?
                     if(lastNotificationRead != null) {
                         getNotifications(lastNotificationRead)
+                    }
+
+                    if(mUser.leader) {
+                        txtDashboardInvitationLink.text = "https://embaixadasgv.app/convite/${mUser.username}"
+                        layoutInvitationLink.isGone = false
+                        btDashboardManageEvents.isGone = false
+                        btDashboardAddPicture.isGone = false
+                        btDashboardApproveRequests.isGone = false
+                    } else {
+                        btDashboardAboutEmbassy.isGone = false
                     }
 
                     getNextEvent()
@@ -330,6 +370,24 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
             }
     }
 
+    private fun getDashboardPost() {
+        mDatabase
+            .collection("app_private_content")
+            .document("post_dashboard")
+            .get()
+            .addOnSuccessListener {
+                    documentSnapshot ->
+                    if(documentSnapshot != null) {
+                        val post = documentSnapshot.toObject(Post::class.java)
+                        if(post != null) {
+                            mPost = post
+                            bindDashboardPost(post)
+                        }
+                    }
+            }
+
+    }
+
     private fun bindEventData() {
 
         val dateStr =  Converters.dateToString(mEvent.date!!)
@@ -339,10 +397,38 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mTxtDashboardTime.text = "${dateStr.weekday} às ${dateStr.hours}:${dateStr.minutes}"
         mTxtDashboardLocation.text = "${mEvent.city}, ${mEvent.state_short}"
 
-
-
         mProgressBarDashboard.isGone = true
         mRootView.isGone = false
+    }
+
+    private fun bindDashboardPost(post: Post) {
+        txtDashboardPostTitle.text = post.title
+        txtDashboardPostDescription.text = post.text
+
+        val postLink: String? = post.link
+        if (postLink != null) {
+            mLinkPostButtonAction = postLink
+        }
+
+        val actionButtonText: String? = post.action_button_text
+
+        if (actionButtonText != null) {
+            if(!actionButtonText.isEmpty()) {
+                btDashboardPostAction.text = actionButtonText
+                btDashboardPostAction.isGone = false
+                dividerDashboardPost.isGone = false
+            }
+        }
+
+        if(!post.picture.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(post.picture!!.toUri())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(imgDashboardPost)
+        }
+
+
+
     }
 
 
@@ -501,5 +587,15 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
     fun refreshEvent() {
         getNextEvent()
+    }
+
+    private fun openExternalLink(url: String) {
+        val uri = Uri.parse(url)
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
+    }
+
+    fun makeToast(text: String) {
+        Toast.makeText(mContext, text, Toast.LENGTH_LONG).show()
     }
 }

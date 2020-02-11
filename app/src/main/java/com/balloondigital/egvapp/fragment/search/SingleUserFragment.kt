@@ -1,6 +1,7 @@
 package com.balloondigital.egvapp.fragment.search
 
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -31,6 +32,7 @@ private const val ARG_PARAM2 = "param2"
 class SingleUserFragment : Fragment(), View.OnClickListener {
 
     private lateinit var mUser: User
+    private lateinit var mContext: Context
     private lateinit var mEmbassy: Embassy
     private lateinit var mDatabase: FirebaseFirestore
 
@@ -40,6 +42,7 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
     ): View? {
         // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_single_user, container, false)
+        mContext = view.context
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
@@ -118,6 +121,30 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
                     txtUserProfileBiography.text = mUser.description
                     txtUserProfileEmbassy.text = mUser.embassy.name
                     txtSingleUserToolbar.text = mUser.name
+
+                    txtSingleUserIdentifier.text = "Membro"
+                    txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_member_identifier)
+
+                    if(user.leader) {
+                        txtSingleUserIdentifier.text = "Líder"
+                        txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_leader_identifier)
+                    }
+
+                    if(user.sponsor) {
+                        if(user.gender == "female") {
+                            txtSingleUserIdentifier.text = "Madrinha"
+                        } else {
+                            txtSingleUserIdentifier.text = "Padrinho"
+                        }
+                        txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_sponsor_identifier)
+                    }
+
+                    if(user.committee_leader) {
+                        val committee = user.committee
+                        txtSingleUserIdentifier.text = "Líder de Comitê"
+                        txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_committee_leader_identifier)
+                    }
+
 
                     getSocialData()
                 }

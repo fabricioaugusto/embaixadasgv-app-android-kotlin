@@ -270,6 +270,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_marginRight="16dp"
                     android:layout_marginBottom="32dp"
+                    android:background="@drawable/bg_card_event"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -277,42 +278,56 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView15">
 
                 <ImageView
-                        android:id="@+id/imageView19"
+                        android:id="@+id/imgDashboardPost"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:src="@drawable/bg_upload_image" />
 
                 <TextView
-                        android:id="@+id/textView34"
+                        android:id="@+id/txtDashboardPostTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
                         android:layout_marginTop="8dp"
+                        android:layout_marginRight="16dp"
                         android:text="Título da publicação"
                         android:textColor="@color/colorText"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                 <TextView
-                        android:id="@+id/textView42"
+                        android:id="@+id/txtDashboardPostDescription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginBottom="12dp"
                         android:text="Algum texto da publicação"
                         android:textColor="@color/colorSubText" />
 
                 <View
-                        android:id="@+id/divider4"
+                        android:id="@+id/dividerDashboardPost"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="?android:attr/listDivider" />
+                        android:background="?android:attr/listDivider"
+                        android:visibility="gone" />
 
                 <Button
-                        android:id="@+id/button4"
+                        android:id="@+id/btDashboardPostAction"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Button" />
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="12dp"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginBottom="4dp"
+                        android:background="@android:color/transparent"
+                        android:drawableRight="@drawable/ic_arrow_right_blue"
+                        android:gravity="left|center_vertical"
+                        android:text="Saiba mais"
+                        android:textAllCaps="false"
+                        android:textColor="@color/colorLink"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -329,30 +344,39 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout8">
 
-                <TextView
-                        android:id="@+id/textView40"
+                <LinearLayout
+                        android:id="@+id/layoutInvitationLink"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Código do Líder"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_height="match_parent"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                <TextView
-                        android:id="@+id/txtDashboardInvitationLink"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="16dp"
-                        android:background="@drawable/bg_grey_round_retangle"
-                        android:clickable="true"
-                        android:drawableRight="@drawable/ic_content_copy_black"
-                        android:paddingLeft="14dp"
-                        android:paddingTop="10dp"
-                        android:paddingRight="14dp"
-                        android:paddingBottom="10dp"
-                        android:text="https://embaixadasgv.app"
-                        android:textColor="@color/colorText" />
+                    <TextView
+                            android:id="@+id/textView40"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Código do Líder"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                    <TextView
+                            android:id="@+id/txtDashboardInvitationLink"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="16dp"
+                            android:background="@drawable/bg_grey_round_retangle"
+                            android:clickable="true"
+                            android:drawableRight="@drawable/ic_content_copy_black"
+                            android:paddingLeft="14dp"
+                            android:paddingTop="10dp"
+                            android:paddingRight="14dp"
+                            android:paddingBottom="10dp"
+                            android:text="https://embaixadasgv.app"
+                            android:textColor="@color/colorText" />
+
+                </LinearLayout>
 
                 <TextView
                         android:id="@+id/textView41"
@@ -385,7 +409,9 @@
                         android:gravity="left|center_vertical"
                         android:text="Sobre a Embaixada GV"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorLink" android:textSize="16sp"/>
+                        android:textColor="@color/colorLink"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                 <Button
                         android:id="@+id/btDashboardRateApp"
@@ -409,7 +435,9 @@
                         android:gravity="left|center_vertical|fill_vertical"
                         android:text="Gerenciar Eventos"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorLink" android:textSize="16sp"/>
+                        android:textColor="@color/colorLink"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                 <Button
                         android:id="@+id/btDashboardAddPicture"
@@ -421,7 +449,9 @@
                         android:gravity="left|center_vertical"
                         android:text="Adicionar Foto da Embaixada"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorLink" android:textSize="16sp"/>
+                        android:textColor="@color/colorLink"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
 
                 <Button
                         android:id="@+id/btDashboardApproveRequests"
@@ -433,7 +463,9 @@
                         android:gravity="left|center_vertical"
                         android:text="Aprovar Solicitações de Membros"
                         android:textAllCaps="false"
-                        android:textColor="@color/colorLink" android:textSize="16sp"/>
+                        android:textColor="@color/colorLink"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
             </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
