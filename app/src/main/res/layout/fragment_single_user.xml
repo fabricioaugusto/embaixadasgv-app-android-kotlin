@@ -62,7 +62,7 @@
                         android:paddingBottom="4dp"
                         android:text="Padrinho"
                         android:textColor="@color/backgroundGrey"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="@+id/txtUserProfileName"
                         app:layout_constraintStart_toStartOf="@+id/txtUserProfileName"
                         app:layout_constraintTop_toBottomOf="@+id/txtUserProfileName"
