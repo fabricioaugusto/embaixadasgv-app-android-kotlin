@@ -277,7 +277,7 @@ class ManageBulletinFragment : Fragment(), OnItemClickListener, View.OnClickList
 
         if(dashboardPanelfragment != null && dashboardPanelfragment.isVisible) {
             val dashboardPanel: DashboardPanelFragment = dashboardPanelfragment as DashboardPanelFragment
-            dashboardPanel.refreshBulletin()
+
         }
     }
 

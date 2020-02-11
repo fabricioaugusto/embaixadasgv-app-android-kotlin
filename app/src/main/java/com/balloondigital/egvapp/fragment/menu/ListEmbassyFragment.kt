@@ -53,6 +53,7 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
     private lateinit var mListFiltered: MutableList<Embassy>
     private lateinit var mPbLoadingMore: ProgressBar
     private var isPostsOver: Boolean = false
+    private var mRootViewPager: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +70,11 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
             (activity as AppCompatActivity).setSupportActionBar(mToolbar)
         }
 
+        val bundle: Bundle? = arguments
+        if (bundle != null) {
+            mRootViewPager = bundle.getInt("rootViewPager")
+        }
+        
         setHasOptionsMenu(true)
 
         mPbLoadingMore = view.findViewById(R.id.pbLoadingMore)
@@ -314,12 +320,13 @@ class ListEmbassyFragment : Fragment(), SearchView.OnQueryTextListener, View.OnC
 
         val bundle = Bundle()
         bundle.putSerializable("embassyID", singleEmbassy.id)
+        bundle.putSerializable("rootViewPager", mRootViewPager)
 
         val nextFrag = MyEmbassyFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEmbassy")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleEmbassy")
             .addToBackStack(null)
             .commit()
     }

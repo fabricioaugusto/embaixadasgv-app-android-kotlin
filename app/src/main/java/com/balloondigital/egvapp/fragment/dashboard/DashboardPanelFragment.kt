@@ -2,6 +2,7 @@ package com.balloondigital.egvapp.fragment.dashboard
 
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -12,28 +13,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.isGone
 import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cn.pedant.SweetAlert.SweetAlertDialog
 
 import com.balloondigital.egvapp.R
-import com.balloondigital.egvapp.adapter.BulletinManagerListAdapter
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.fragment.agenda.SingleEventFragment
 import com.balloondigital.egvapp.model.*
 import com.balloondigital.egvapp.utils.Converters
-import com.ethanhua.skeleton.RecyclerViewSkeletonScreen
-import com.ethanhua.skeleton.Skeleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.WriteBatch
 import java.util.*
 import android.widget.TextView
-import androidx.core.view.MenuItemCompat
+import com.balloondigital.egvapp.activity.Menu.AboutEmbassiesActivity
+import com.balloondigital.egvapp.fragment.menu.ApprovalInvitationRequestsFragment
+import com.balloondigital.egvapp.fragment.menu.ListEmbassyFragment
+import com.balloondigital.egvapp.fragment.menu.ManageEventsFragment
+import com.balloondigital.egvapp.fragment.menu.ManagePhotosFragment
+import com.balloondigital.egvapp.utils.MyApplication
 import com.google.firebase.Timestamp
-import com.google.firebase.firestore.FieldValue
-import kotlinx.android.synthetic.main.activity_submit_invite_code.*
+import kotlinx.android.synthetic.main.fragment_dashboard_panel.*
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -54,10 +52,6 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mToolbar: Toolbar
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mColletions: MyFirebase.COLLECTIONS
-    private lateinit var mAdapter: BulletinManagerListAdapter
-    private lateinit var mRecyclerView: RecyclerView
-    private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
-    private lateinit var mBulletinList: MutableList<Bulletin>
     private lateinit var mLayoutNextEvent: LinearLayout
     private lateinit var mTxtMonthAbrDashboard: TextView
     private lateinit var mTxtDashboardDate: TextView
@@ -72,6 +66,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
     private lateinit var mBtDashboardEvents: Button
     private lateinit var mBtDashboardCloud: Button
     private lateinit var mNotificationBadge: TextView
+    private val mRootViewPager = R.id.dashboardViewPager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -92,8 +87,6 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mContext = view.context
         mDatabase = MyFirebase.database()
         mColletions = MyFirebase.COLLECTIONS
-        mBulletinList = mutableListOf()
-        mRecyclerView = view.findViewById(R.id.rvBulletinList)
         mBtDashboardCloud = view.findViewById(R.id.btDashboardCloud)
         mBtDashboardMembers = view.findViewById(R.id.btDashboardMembers)
         mBtDashboardPhotos = view.findViewById(R.id.btDashboardPhotos)
@@ -115,9 +108,8 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setRecyclerView()
         setListeners()
-        getBulletinList()
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -179,6 +171,30 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
                 .setContentText("Este recurso será disponibilizado nas próximas atualizações, aguarde! :)")
                 .show()
         }
+
+        if(id == R.id.btDashboardListEmbassy) {
+            startEmbassyListActivity()
+        }
+
+        if(id == R.id.btDashboardAboutEmbassy) {
+            startAboutEmbassiesActivity()
+        }
+
+        if(id == R.id.btDashboardRateApp) {
+            startAppRateActivity()
+        }
+
+        if(id == R.id.btDashboardManageEvents) {
+            startManageEventsActivity()
+        }
+
+        if(id == R.id.btDashboardAddPicture) {
+            startSendEmbassyPhotosActivity()
+        }
+
+        if(id == R.id.btDashboardApproveRequests) {
+            startApprovalInvitationRequestsActivity()
+        }
     }
 
 
@@ -188,6 +204,13 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mBtDashboardEvents.setOnClickListener(this)
         mBtDashboardCloud.setOnClickListener(this)
         mLayoutNextEvent.setOnClickListener(this)
+        btDashboardListEmbassy.setOnClickListener(this)
+        btDashboardAboutEmbassy.setOnClickListener(this)
+        btDashboardRateApp.setOnClickListener(this)
+        btDashboardManageEvents.setOnClickListener(this)
+        btDashboardAddPicture.setOnClickListener(this)
+        btDashboardApproveRequests.setOnClickListener(this)
+
     }
 
     private fun getNotifications(timestamp: Timestamp) {
@@ -322,47 +345,6 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         mRootView.isGone = false
     }
 
-    private fun getBulletinList() {
-
-        mDatabase.collection(MyFirebase.COLLECTIONS.BULLETIN)
-            .orderBy("date", Query.Direction.DESCENDING)
-            .limit(3)
-            .get().addOnSuccessListener { documentSnapshot ->
-
-                mBulletinList.clear()
-
-                if(documentSnapshot != null) {
-                    if(documentSnapshot.size() > 0) {
-                        for(document in documentSnapshot) {
-                            val bulletin: Bulletin? = document.toObject(Bulletin::class.java)
-                            if(bulletin != null) {
-                                mBulletinList.add(bulletin)
-                            }
-                        }
-                    }
-                }
-
-                mAdapter.notifyDataSetChanged()
-                mSkeletonScreen.hide()
-            }
-    }
-
-
-    private fun setRecyclerView() {
-
-        mAdapter = BulletinManagerListAdapter(mBulletinList)
-        mRecyclerView.layoutManager = LinearLayoutManager(mContext)
-
-        mSkeletonScreen = Skeleton.bind(mRecyclerView)
-            .adapter(mAdapter)
-            .load(R.layout.item_skeleton_event)
-            .shimmer(true).show()
-
-        mAdapter.onItemClick = {
-                bulletin -> startSingleBulletinActivity(bulletin)
-
-        }
-    }
 
     private fun startNotificationsFragment() {
 
@@ -373,7 +355,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:listNotifications")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:listNotifications")
             .addToBackStack(null)
             .commit()
     }
@@ -388,7 +370,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "embassyPhotos")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyPhotos")
             .addToBackStack(null)
             .commit()
     }
@@ -402,7 +384,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "embassyMembers")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyMembers")
             .addToBackStack(null)
             .commit()
     }
@@ -416,7 +398,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "embassyAgenda")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyAgenda")
             .addToBackStack(null)
             .commit()
     }
@@ -428,7 +410,7 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         val bundle = Bundle()
         bundle.putString("eventId", event.id)
         bundle.putString("placeName", event.place)
-        bundle.putInt("rootViewer", R.id.dashboardViewPager)
+        bundle.putInt("rootViewer", mRootViewPager)
 
         if(lat != null && long != null) {
             bundle.putDouble("placeLat", lat)
@@ -439,21 +421,74 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleEvent")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
     }
 
-    private fun startSingleBulletinActivity(bulletin: Bulletin) {
+    private fun startEmbassyListActivity() {
 
         val bundle = Bundle()
-        bundle.putString("bulletinID", bulletin.id)
+        bundle.putInt("rootViewPager", mRootViewPager)
 
-        val nextFrag = SingleBulletinFragment()
+        val nextFrag = ListEmbassyFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "${R.id.dashboardViewPager}:singleBulletin")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:listEmbassy")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startAboutEmbassiesActivity() {
+        val intent: Intent = Intent(mContext, AboutEmbassiesActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun startAppRateActivity() {
+        MyApplication.util.openExternalLink(mContext, MyApplication.const.urls.googlePlayUrl)
+    }
+
+    private fun startManageEventsActivity() {
+
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+        bundle.putInt("rootViewPager", mRootViewPager)
+
+        val nextFrag = ManageEventsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:manageEvents")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startSendEmbassyPhotosActivity() {
+        val bundle = Bundle()
+        bundle.putString("embassyID", mUser.embassy_id)
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ManagePhotosFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:managePhotos")
+            .addToBackStack(null)
+            .commit()
+    }
+
+    private fun startApprovalInvitationRequestsActivity() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+
+        val nextFrag = ApprovalInvitationRequestsFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:approvalInvitationRequests")
             .addToBackStack(null)
             .commit()
     }
@@ -466,9 +501,5 @@ class DashboardPanelFragment : Fragment(), View.OnClickListener {
 
     fun refreshEvent() {
         getNextEvent()
-    }
-
-    fun refreshBulletin() {
-        getBulletinList()
     }
 }

@@ -254,7 +254,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="24dp"
-                    android:text="Informativos"
+                    android:text="Publicação"
                     android:textColor="@color/colorPrimary"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -264,11 +264,11 @@
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginLeft="16dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginBottom="32dp"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -276,10 +276,43 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView15">
 
-                <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvBulletinList"
+                <ImageView
+                        android:id="@+id/imageView19"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/bg_upload_image" />
+
+                <TextView
+                        android:id="@+id/textView34"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Título da publicação"
+                        android:textColor="@color/colorText"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/textView42"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:text="Algum texto da publicação"
+                        android:textColor="@color/colorSubText" />
+
+                <View
+                        android:id="@+id/divider4"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="?android:attr/listDivider" />
+
+                <Button
+                        android:id="@+id/button4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Button" />
             </LinearLayout>
 
             <LinearLayout
@@ -306,7 +339,7 @@
                         android:textStyle="bold" />
 
                 <TextView
-                        android:id="@+id/txtInvitationLink2"
+                        android:id="@+id/txtDashboardInvitationLink"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
@@ -331,7 +364,7 @@
                         android:textStyle="bold"/>
 
                 <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/btDashboardListEmbassy"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"
@@ -343,7 +376,7 @@
                         android:textColor="@color/colorLink" android:textSize="16sp"/>
 
                 <Button
-                        android:id="@+id/btDashboardEmbassyList"
+                        android:id="@+id/btDashboardAboutEmbassy"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"
@@ -355,7 +388,7 @@
                         android:textColor="@color/colorLink" android:textSize="16sp"/>
 
                 <Button
-                        android:id="@+id/button5"
+                        android:id="@+id/btDashboardRateApp"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"
@@ -367,7 +400,7 @@
                         android:textColor="@color/colorLink" android:textSize="16sp"/>
 
                 <Button
-                        android:id="@+id/button6"
+                        android:id="@+id/btDashboardManageEvents"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"
@@ -379,7 +412,7 @@
                         android:textColor="@color/colorLink" android:textSize="16sp"/>
 
                 <Button
-                        android:id="@+id/button7"
+                        android:id="@+id/btDashboardAddPicture"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"
@@ -391,7 +424,7 @@
                         android:textColor="@color/colorLink" android:textSize="16sp"/>
 
                 <Button
-                        android:id="@+id/button8"
+                        android:id="@+id/btDashboardApproveRequests"
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
                         android:background="@android:color/transparent"

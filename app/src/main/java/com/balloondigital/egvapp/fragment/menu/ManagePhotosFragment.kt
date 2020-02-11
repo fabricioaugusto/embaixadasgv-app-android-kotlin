@@ -59,6 +59,7 @@ class ManagePhotosFragment : Fragment(), OnItemClickListener, View.OnClickListen
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mEmbassyPhoto: EmbassyPhoto
     private lateinit var mEmbassyPhotoList: MutableList<EmbassyPhoto>
+    private var mRootViewPager: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,6 +72,7 @@ class ManagePhotosFragment : Fragment(), OnItemClickListener, View.OnClickListen
         if (bundle != null) {
             mUser = bundle.getSerializable("user") as User
             mEmbassyID = bundle.getString("embassyID", "")
+            mRootViewPager = bundle.getInt("rootViewPager")
         }
 
         mToolbar = view.findViewById(R.id.embassyPhotosToolbar)

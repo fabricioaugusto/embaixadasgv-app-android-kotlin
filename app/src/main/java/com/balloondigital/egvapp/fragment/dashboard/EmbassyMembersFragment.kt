@@ -47,6 +47,7 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
     private lateinit var mRecyclerView: RecyclerView
     private lateinit var mListUsers: MutableList<User>
     private lateinit var mListFiltered: MutableList<User>
+    private var mRootViewPager: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -57,7 +58,8 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
 
         val bundle: Bundle? = arguments
         if (bundle != null) {
-            mEmbassyID = bundle.getString("embassyID", "id")
+            mEmbassyID = bundle.getString("embassyID", "")
+            mRootViewPager = bundle.getInt("rootViewPager")
         }
 
         mContext = view.context
@@ -168,7 +170,7 @@ class EmbassyMembersFragment : Fragment(), SearchView.OnQueryTextListener, View.
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.dashboardViewPager, nextFrag, "singleEmbassyUser")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleUser")
             .addToBackStack(null)
             .commit()
     }

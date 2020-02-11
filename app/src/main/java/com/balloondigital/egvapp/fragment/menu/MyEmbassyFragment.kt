@@ -42,6 +42,7 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
     private lateinit var mEmbassyID: String
     private lateinit var mAdapter: GridPhotosAdapter
     private lateinit var mPhotoList: MutableList<String>
+    private var mRootViewPager: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,6 +54,7 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         val bundle: Bundle? = arguments
         if (bundle != null) {
             mEmbassyID = bundle.getString("embassyID", "")
+            mRootViewPager = bundle.getInt("rootViewPager")
         }
 
         mContext = view.context
@@ -181,7 +183,7 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:embassyPhotos")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyPhotos")
             .addToBackStack(null)
             .commit()
     }
@@ -195,7 +197,7 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:embassyAgenda")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyAgenda")
             .addToBackStack(null)
             .commit()
     }
@@ -204,12 +206,13 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
 
         val bundle = Bundle()
         bundle.putSerializable("embassyID", mEmbassyID)
+        bundle.putInt("rootViewPager", mRootViewPager)
 
         val nextFrag = EmbassyMembersFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:embassyMembers")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:embassyMembers")
             .addToBackStack(null)
             .commit()
     }
@@ -223,7 +226,7 @@ class MyEmbassyFragment : Fragment(), View.OnClickListener  {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleUser")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleUser")
             .addToBackStack(null)
             .commit()
     }

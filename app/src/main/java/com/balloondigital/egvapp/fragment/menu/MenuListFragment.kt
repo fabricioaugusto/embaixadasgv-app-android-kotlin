@@ -55,6 +55,7 @@ class MenuListFragment : Fragment() {
     private lateinit var mMenuSectionList: List<MenuItem>
     private val MENU_REQUEST_CODE: Int = 100
     private val CREATE_EVENT_REQUEST_CODE: Int = 200
+    private val mRootViewPager = R.id.menuViewPager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -235,7 +236,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleUser")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleUser")
             .addToBackStack(null)
             .commit()
     }
@@ -248,13 +249,13 @@ class MenuListFragment : Fragment() {
         bundle.putString("placeName", placeName)
         bundle.putDouble("placeLat", placeLat)
         bundle.putDouble("placeLng", placeLng)
-        bundle.putInt("rootViewer", R.id.menuViewPager)
+        bundle.putInt("rootViewer", mRootViewPager)
 
         val nextFrag = SingleEventFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEvent")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
     }
@@ -293,7 +294,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEmbassy")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleEmbassy")
             .addToBackStack(null)
             .commit()
     }
@@ -324,12 +325,13 @@ class MenuListFragment : Fragment() {
         val bundle = Bundle()
         bundle.putString("embassyID", mUser.embassy_id)
         bundle.putSerializable("user", mUser)
+        bundle.putInt("rootViewPager", mRootViewPager)
 
         val nextFrag = ManageEventsFragment()
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageEvents")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:manageEvents")
             .addToBackStack(null)
             .commit()
     }
@@ -349,7 +351,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:approvalInvitationRequests")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:approvalInvitationRequests")
             .addToBackStack(null)
             .commit()
     }
@@ -363,7 +365,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:managePhotos")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:managePhotos")
             .addToBackStack(null)
             .commit()
     }
@@ -385,7 +387,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:affiliatedEmbassies")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:affiliatedEmbassies")
             .addToBackStack(null)
             .commit()
     }
@@ -406,7 +408,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageSponsors")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:manageSponsors")
             .addToBackStack(null)
             .commit()
     }
@@ -420,7 +422,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:interestedList")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:interestedList")
             .addToBackStack(null)
             .commit()
     }
@@ -435,7 +437,7 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:manageBulletins")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:manageBulletins")
             .addToBackStack(null)
             .commit()
     }
@@ -455,17 +457,21 @@ class MenuListFragment : Fragment() {
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:report")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:report")
             .addToBackStack(null)
             .commit()
     }
 
     private fun startEmbassyListActivity() {
 
+        val bundle = Bundle()
+        bundle.putInt("rootViewPager", mRootViewPager)
+
         val nextFrag = ListEmbassyFragment()
+        nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:listEmbassy")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:listEmbassy")
             .addToBackStack(null)
             .commit()
     }

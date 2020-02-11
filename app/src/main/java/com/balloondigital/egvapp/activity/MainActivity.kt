@@ -78,38 +78,38 @@ class MainActivity : AppCompatActivity() {
 
         val manager = supportFragmentManager
         val transaction: FragmentTransaction = manager.beginTransaction()
+
         val singlePost: Fragment? = manager.findFragmentByTag("singlePost")
         val singleUserPost: Fragment? = manager.findFragmentByTag("singlePostUser")
         val singleEvent: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:singleEvent")
         val singleEmbassyEvent: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleEvent")
-        val embassyMembers: Fragment? = manager.findFragmentByTag("embassyMembers")
-        val embassyAgenda: Fragment? = manager.findFragmentByTag("embassyAgenda")
-        val embassyPhotos: Fragment? = manager.findFragmentByTag("embassyPhotos")
         val usersEnrollments: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:enrollmentUsers")
         val usersEmbassyEnrollments: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:enrollmentUsers")
         val usersLikes: Fragment? = manager.findFragmentByTag("${R.id.feedViewPager}:likeUsers")
         val singleUser: Fragment? = manager.findFragmentByTag("singleUser")
-        val singleEmbassyUser: Fragment? = manager.findFragmentByTag("singleEmbassyUser")
         val singleLikeUser: Fragment? = manager.findFragmentByTag("${R.id.feedViewPager}:singleUser")
         val singleEnrollmentUser: Fragment? = manager.findFragmentByTag("${R.id.agendaViewPager}:singleUser")
-        val singleMenuUser: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleUser")
 
         if(mTabSelected == 0) {
 
-            val singleDashboardUser: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleUser")
-            val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleBulletin")
-            val singleNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singleNotification")
-            val singlePostNotification: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:singlePost")
-            val listNotifications: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:listNotifications")
-            val likeUsers: Fragment? = manager.findFragmentByTag("${R.id.dashboardViewPager}:likeUsers")
+            val dashboardViewPager = R.id.dashboardViewPager
+
+            val singleDashboardUser: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:singleUser")
+            val singleBulletin: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:singleBulletin")
+            val singleNotification: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:singleNotification")
+            val singlePostNotification: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:singlePost")
+            val listNotifications: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:listNotifications")
+            val likeUsers: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:likeUsers")
+            val listEmbassy: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:listEmbassy")
+            val manageEvents: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:manageEvents")
+            val approvalInvitationRequests: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:approvalInvitationRequests")
+            val embassyMembers: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:embassyMembers")
+            val embassyAgenda: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:embassyAgenda")
+            val embassyPhotos: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:embassyPhotos")
+            val singleEmbassy: Fragment? = manager.findFragmentByTag("${dashboardViewPager}:singleEmbassy")
 
             if (singleDashboardUser != null && singleDashboardUser.isVisible) {
                 transaction.remove(singleDashboardUser).commit()
-                return
-            }
-
-            if (singleEmbassyUser != null && singleEmbassyUser.isVisible) {
-                transaction.remove(singleEmbassyUser).commit()
                 return
             }
 
@@ -148,6 +148,16 @@ class MainActivity : AppCompatActivity() {
                 return
             }
 
+            if (manageEvents != null && manageEvents.isVisible) {
+                transaction.remove(manageEvents).commit()
+                return
+            }
+
+            if (approvalInvitationRequests != null && approvalInvitationRequests.isVisible) {
+                transaction.remove(approvalInvitationRequests).commit()
+                return
+            }
+
             if (embassyMembers != null && embassyMembers.isVisible) {
                 transaction.remove(embassyMembers).commit()
                 return
@@ -159,6 +169,16 @@ class MainActivity : AppCompatActivity() {
             }
             if (embassyPhotos != null && embassyPhotos.isVisible) {
                 transaction.remove(embassyPhotos).commit()
+                return
+            }
+
+            if (singleEmbassy != null && singleEmbassy.isVisible) {
+                transaction.remove(singleEmbassy).commit()
+                return
+            }
+
+            if (listEmbassy != null && listEmbassy.isVisible) {
+                transaction.remove(listEmbassy).commit()
                 return
             }
         }
@@ -213,22 +233,25 @@ class MainActivity : AppCompatActivity() {
 
         if(mTabSelected == 4) {
 
-            val usersEventEnrollments: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:enrollmentUsers")
-            val singleMenuEvent: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEvent")
-            val singleEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleEmbassy")
-            val singleBulletin: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:singleBulletin")
-            val embassyAgendaMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyAgenda")
-            val embassyPhotosMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyPhotos")
-            val embassyMembersMenu: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:embassyMembers")
-            val listEmbassy: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:listEmbassy")
-            val manageEvents: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageEvents")
-            val manageBulletins: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageBulletins")
-            val report: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:report")
-            val manageSponsors: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:manageSponsors")
-            val affiliatedEmbassies: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:affiliatedEmbassies")
-            val managePhotos: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:managePhotos")
-            val approvalInvitationRequests: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:approvalInvitationRequests")
-            val interestedList: Fragment? = manager.findFragmentByTag("${R.id.menuViewPager}:interestedList")
+            val menuViewPager = R.id.menuViewPager
+
+            val singleMenuUser: Fragment? = manager.findFragmentByTag("${menuViewPager}:singleUser")
+            val usersEventEnrollments: Fragment? = manager.findFragmentByTag("${menuViewPager}:enrollmentUsers")
+            val singleMenuEvent: Fragment? = manager.findFragmentByTag("${menuViewPager}:singleEvent")
+            val singleEmbassy: Fragment? = manager.findFragmentByTag("${menuViewPager}:singleEmbassy")
+            val singleBulletin: Fragment? = manager.findFragmentByTag("${menuViewPager}:singleBulletin")
+            val embassyAgendaMenu: Fragment? = manager.findFragmentByTag("${menuViewPager}:embassyAgenda")
+            val embassyPhotosMenu: Fragment? = manager.findFragmentByTag("${menuViewPager}:embassyPhotos")
+            val embassyMembersMenu: Fragment? = manager.findFragmentByTag("${menuViewPager}:embassyMembers")
+            val listEmbassy: Fragment? = manager.findFragmentByTag("${menuViewPager}:listEmbassy")
+            val manageEvents: Fragment? = manager.findFragmentByTag("${menuViewPager}:manageEvents")
+            val manageBulletins: Fragment? = manager.findFragmentByTag("${menuViewPager}:manageBulletins")
+            val report: Fragment? = manager.findFragmentByTag("${menuViewPager}:report")
+            val manageSponsors: Fragment? = manager.findFragmentByTag("${menuViewPager}:manageSponsors")
+            val affiliatedEmbassies: Fragment? = manager.findFragmentByTag("${menuViewPager}:affiliatedEmbassies")
+            val managePhotos: Fragment? = manager.findFragmentByTag("${menuViewPager}:managePhotos")
+            val approvalInvitationRequests: Fragment? = manager.findFragmentByTag("${menuViewPager}:approvalInvitationRequests")
+            val interestedList: Fragment? = manager.findFragmentByTag("${menuViewPager}:interestedList")
 
             if (singleMenuUser != null && singleMenuUser.isVisible) {
                 transaction.remove(singleMenuUser).commit()

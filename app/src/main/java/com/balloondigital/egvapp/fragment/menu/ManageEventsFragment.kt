@@ -62,6 +62,7 @@ class ManageEventsFragment : Fragment(), OnItemClickListener, View.OnClickListen
     private lateinit var mAdapterDialog: ManageItemsDialogAdapter
     private lateinit var mSkeletonScreen: RecyclerViewSkeletonScreen
     private val EVENT_REQUEST_CODE: Int = 200
+    private var mRootViewPager: Int = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -74,6 +75,7 @@ class ManageEventsFragment : Fragment(), OnItemClickListener, View.OnClickListen
         if (bundle != null) {
             mEmbassyID = bundle.getString("embassyID", "")
             mUser = bundle.getSerializable("user") as User
+            mRootViewPager = bundle.getInt("rootViewPager")
         }
 
         mToolbar = view.findViewById(R.id.managerEventToolbar)
@@ -239,7 +241,7 @@ class ManageEventsFragment : Fragment(), OnItemClickListener, View.OnClickListen
         nextFrag.arguments = bundle
 
         activity!!.supportFragmentManager.beginTransaction()
-            .add(R.id.menuViewPager, nextFrag, "${R.id.menuViewPager}:singleEvent")
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:singleEvent")
             .addToBackStack(null)
             .commit()
     }
