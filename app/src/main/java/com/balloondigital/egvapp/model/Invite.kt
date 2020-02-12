@@ -16,6 +16,8 @@ data class Invite(
     var embassy_receiver: Embassy? = null,
     var isLeader: Boolean = false,
     var isManager: Boolean = false,
+    var influencer: Boolean = false,
+    var counselor: Boolean = false,
     var invite_code: Int = 0
 ): Serializable {
     @Exclude

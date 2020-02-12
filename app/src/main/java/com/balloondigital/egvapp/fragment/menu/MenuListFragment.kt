@@ -150,6 +150,14 @@ class MenuListFragment : Fragment() {
             menulist = menulist + MenuItens.getManagerSection()
         }
 
+        if(mUser.influencerManager) {
+            menulist = menulist + MenuItens.getInfluencerSection()
+        }
+
+        if(mUser.counselor_manager) {
+            menulist = menulist + MenuItens.getCounselorSection()
+        }
+
         menulist = menulist + MenuItens.getPrivacySection()
         menulist = menulist + MenuItens.getMoreOptionsSection()
 
@@ -185,6 +193,7 @@ class MenuListFragment : Fragment() {
                 MenuItens.editEmbassy -> startEditEmbassyActivity()
                 MenuItens.embassyForApproval -> startEmbassyForApprovalActivity()
                 MenuItens.invitationRequests -> startApprovalInvitationRequestsActivity()
+                MenuItens.membersCodes -> startListMembersCodesFragment()
                 MenuItens.affiliatedEmbassies -> startAffiliatedEmbassiesFragment()
                 MenuItens.manageSponsors -> startManageSponsorsActivity()
                 MenuItens.manageInteresteds -> startManageInterestedsActivity()
@@ -340,6 +349,22 @@ class MenuListFragment : Fragment() {
         val intent: Intent = Intent(mContext, InvitesActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
+    }
+
+    private fun startListMembersCodesFragment() {
+
+        val bundle = Bundle()
+        bundle.putSerializable("user", mUser)
+        bundle.putInt("rootViewPager", mRootViewPager)
+
+        val nextFrag = ListMembersCodeFragment()
+        nextFrag.arguments = bundle
+
+        activity!!.supportFragmentManager.beginTransaction()
+            .add(mRootViewPager, nextFrag, "${mRootViewPager}:membersCodes")
+            .addToBackStack(null)
+            .commit()
+
     }
 
     private fun startApprovalInvitationRequestsActivity() {

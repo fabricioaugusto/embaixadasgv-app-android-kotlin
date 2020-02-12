@@ -37,6 +37,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
             list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
+            list.add(MenuItem(membersCodes, "item", R.drawable.ic_menu_invite_user))
             list.add(MenuItem(invitationRequests, "item", R.drawable.ic_approve_members))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
 
@@ -62,6 +63,28 @@ class MenuItens private constructor() {
             list.add(MenuItem(createBulletin, "item", R.drawable.ic_menu_manage_bulletins))
             list.add(MenuItem(sendNotifications, "item", R.drawable.ic_menu_add_notification))
             list.add(MenuItem(report, "item", R.drawable.ic_report_black))
+
+            return list
+        }
+
+        fun getInfluencerSection(): MutableList<MenuItem> {
+
+            val list: MutableList<MenuItem> = mutableListOf()
+            list.add(MenuItem("Gerenciar Influenciadores", "section"))
+            list.add(MenuItem(registeredInfluencers, "item", R.drawable.ic_menu_list_approvation))
+            list.add(MenuItem(sendInviteToInfluencers, "item", R.drawable.ic_menu_manage_sponsors))
+            list.add(MenuItem(influencersCodes, "item", R.drawable.ic_menu_interested))
+
+            return list
+        }
+
+        fun getCounselorSection(): MutableList<MenuItem> {
+
+            val list: MutableList<MenuItem> = mutableListOf()
+            list.add(MenuItem("Gerenciar Conselheiros", "section"))
+            list.add(MenuItem(registeredCounselors, "item", R.drawable.ic_menu_list_approvation))
+            list.add(MenuItem(sendInviteToCounselors, "item", R.drawable.ic_menu_manage_sponsors))
+            list.add(MenuItem(counselorsCodes, "item", R.drawable.ic_menu_interested))
 
             return list
         }
@@ -177,6 +200,7 @@ class MenuItens private constructor() {
         const val myFavoriteEvents = "Meus Eventos Favoritos"
         const val newEvent = "Gerenciar Eventos"
         const val sendInvites = "Convidar Membros"
+        const val membersCodes = "Lista de Códigos de Acesso"
         const val invitationRequests = "Aprovar Solicitações de Membros"
         const val sentEmbassyPhotos = "Gerenciar Fotos"
         const val editEmbassy = "Editar Dados da Embaixada"
@@ -185,6 +209,13 @@ class MenuItens private constructor() {
         const val createBulletin = "Gerenciar Informativos"
         const val sendNotifications = "Enviar Notificações"
         const val manageSponsors = "Gerenciar Padrinhos"
+        const val editDashboardPost = "Editar Post de Dashboard"
+        const val registeredInfluencers = "Lista de Influenciadores"
+        const val sendInviteToInfluencers = "Convidar Influenciadores"
+        const val influencersCodes = "Lista de Códigos para Influenciadores"
+        const val registeredCounselors = "Lista de Conselheiros"
+        const val sendInviteToCounselors = "Convidar Conselheiros"
+        const val counselorsCodes= "Lista de Códigos para Conselheiros"
         const val manageInteresteds = "Lista de Interessados"
         const val report = "Informações"
         const val setPrivacy = "Configurações de Privacidade"
