@@ -68,7 +68,7 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
             if (user.occupation.isNullOrEmpty()){
                 mTextViewEmail.text = "Eu sou GV!"
             } else {
-                mTextViewEmail.text = user.occupation
+                mTextViewEmail.text = "${user.occupation} - ${user.city}, ${user.state_short}"
             }
 
             val requestOptions: RequestOptions = RequestOptions()

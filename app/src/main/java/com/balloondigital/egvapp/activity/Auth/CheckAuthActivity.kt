@@ -16,6 +16,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog
 import com.balloondigital.egvapp.activity.Edit.ChoosePhotoActivity
 import com.balloondigital.egvapp.activity.Edit.CompleteRegisterActivity
 import com.balloondigital.egvapp.activity.MainActivity
+import com.balloondigital.egvapp.activity.MainInfluencersActivity
 import com.balloondigital.egvapp.api.GoogleAPI
 import com.balloondigital.egvapp.model.Embassy
 import com.balloondigital.egvapp.model.EmbassySponsor
@@ -127,6 +128,10 @@ class CheckAuthActivity : AppCompatActivity() {
             startChooseProfileImg()
             return
         } else {
+            if(mUser.influencer || mUser.counselor) {
+                startInfluencerMainActivity()
+                return
+            }
             startMainActivity()
             return
         }
@@ -152,6 +157,13 @@ class CheckAuthActivity : AppCompatActivity() {
 
     fun startMainActivity() {
         val intent: Intent = Intent(this, MainActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+        finish()
+    }
+
+    fun startInfluencerMainActivity() {
+        val intent: Intent = Intent(this, MainInfluencersActivity::class.java)
         intent.putExtra("user", mUser)
         startActivity(intent)
         finish()

@@ -83,13 +83,23 @@ class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemCli
 
         mAdapterDialog = CreatePostDialogAdapter(mContext, false, 3)
 
-        mFragmentAdapter = FragmentPagerItemAdapter(
-            activity!!.supportFragmentManager,
-            FragmentPagerItems.with(mContext)
-                .add("Destaques", HighlightPostsFragment::class.java, mBundle)
-                .add("Minha Embaixada", EmbassyPostsFragment::class.java, mBundle)
-                .add("Geral", AllPostsFragment::class.java, mBundle)
-                .create())
+        if (mUser.influencer || mUser.counselor) {
+            mFragmentAdapter = FragmentPagerItemAdapter(
+                activity!!.supportFragmentManager,
+                FragmentPagerItems.with(mContext)
+                    .add("Destaques", HighlightPostsFragment::class.java, mBundle)
+                    .add("Geral", AllPostsFragment::class.java, mBundle)
+                    .create())
+        } else {
+            mFragmentAdapter = FragmentPagerItemAdapter(
+                activity!!.supportFragmentManager,
+                FragmentPagerItems.with(mContext)
+                    .add("Destaques", HighlightPostsFragment::class.java, mBundle)
+                    .add("Minha Embaixada", EmbassyPostsFragment::class.java, mBundle)
+                    .add("Geral", AllPostsFragment::class.java, mBundle)
+                    .create())
+        }
+
 
         mPager.adapter = mFragmentAdapter
         mPagerTab.setViewPager(mPager)
@@ -105,8 +115,13 @@ class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemCli
 
             when(requestCode){
                 CREATE_POST_ACTIVITY_CODE -> {
-                    mPager.currentItem = 1
-                    updateListPost()
+                    if(mUser.influencer || mUser.counselor) {
+                        mPager.currentItem = 0
+                        updateListPost()
+                    } else {
+                        mPager.currentItem = 1
+                        updateListPost()
+                    }
                 }
             }
 
@@ -188,17 +203,26 @@ class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemCli
     fun updateListPost() {
 
         val manager = activity!!.supportFragmentManager
+        val highlightPostsFragment: Fragment? = manager.findFragmentByTag(mHighlightPostsTag)
         val embassyPostsfragment: Fragment? = manager.findFragmentByTag(mEmbassyPostsTag)
         val allPostsfragment: Fragment? = manager.findFragmentByTag(mAllPostsTag)
 
-        if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
-            val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment
-            rootEmbassyListPost.updateList()
+
+        if(highlightPostsFragment != null && highlightPostsFragment.isVisible) {
+            val rootHighlightListPost: HighlightPostsFragment = highlightPostsFragment as HighlightPostsFragment
+            rootHighlightListPost.updateList()
         }
 
         if(allPostsfragment != null && allPostsfragment.isVisible) {
             val rootAllListPost: AllPostsFragment = allPostsfragment as AllPostsFragment
             rootAllListPost.updateList()
+        }
+
+        if(!mUser.counselor && !mUser.influencer) {
+            if(embassyPostsfragment != null && embassyPostsfragment.isVisible) {
+                val rootEmbassyListPost: EmbassyPostsFragment = embassyPostsfragment as EmbassyPostsFragment
+                rootEmbassyListPost.updateList()
+            }
         }
     }
 
