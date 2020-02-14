@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.net.toUri
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.api.MyFirebase
@@ -21,6 +22,11 @@ import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.Converters
 import com.balloondigital.egvapp.utils.CropImages
 import com.balloondigital.egvapp.utils.PermissionConfig
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.internal.NavigationMenu
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,6 +49,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
     private val GALLERY_CODE: Int = 200
     private var mImgPostIsSet = false
     private var mPublishPostIsHide = true
+    private var mTextCheck = true
     private val permissions: List<String> = listOf(
         Manifest.permission.READ_EXTERNAL_STORAGE,
         Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -68,41 +75,34 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         mCollections = MyFirebase.COLLECTIONS
 
         mPost = Post()
-        mPost.type = "post"
         mPost.user_id = mUser.id
         mPost.user = mUser
 
         setListeners()
+        bindData()
     }
 
     private fun setListeners() {
 
-        layoutAlertInfo.setOnClickListener(this)
         imgPostInsertPic.setOnClickListener(this)
-        btPostInsertPic.setOnClickListener(this)
         btPostPublish.setOnClickListener(this)
+        btPostAddPicture.setOnClickListener(this)
     }
 
     override fun onClick(view: View) {
 
         val id = view.id
 
+        if(id == R.id.btPostAddPicture) {
+            startGalleryActivity()
+        }
+
         if(id == R.id.imgPostInsertPic) {
             startGalleryActivity()
         }
 
-        if(id == R.id.btPostInsertPic) {
-            startGalleryActivity()
-        }
-
         if(id == R.id.btPostPublish) {
-            saveUserData()
-        }
-
-        if(id == R.id.layoutAlertInfo) {
-            layoutAlertInfo.animate().alpha(0F).withEndAction {
-                layoutAlertInfo.isGone = true
-            }
+            prepareData()
         }
     }
 
@@ -142,6 +142,7 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                                 imgPostInsertPic.setImageURI(resultUri)
                             }
                             mImgPostIsSet = true
+                            imgPostInsertPic.isGone = false
                         }
                     }
                 }
@@ -152,7 +153,27 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
-    private fun saveUserData() {
+    private fun bindData() {
+
+        txtPostUserName.text = mUser.name
+
+        val requestOptions: RequestOptions = RequestOptions()
+        val options = requestOptions.transforms(CenterCrop(), RoundedCorners(120))
+
+        if(!mUser.profile_img.isNullOrEmpty()) {
+            Glide.with(this)
+                .load(mUser.profile_img!!.toUri())
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply(options)
+                .into(imgPostUserProfile)
+        }
+
+        if(mUser.committee_leader) {
+            switchPostHighlight.isGone = false
+        }
+    }
+
+    private fun prepareData() {
 
         val description = etPostDescription.text.toString()
 
@@ -161,15 +182,25 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
             return
         }
 
-        if(!mImgPostIsSet) {
-            makeToast("Você deve escolher uma imagem de capa")
-            return
-        }
-
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault())
-
         mPost.text = description
         mPost.embassy_id = mUser.embassy_id
+
+        if(mUser.influencer || mUser.counselor || switchPostHighlight.isChecked) {
+            mPost.user_verified = true
+        }
+
+        if(mImgPostIsSet) {
+            publishPostPicture()
+        } else {
+            publishPostThought()
+        }
+
+    }
+
+
+    private fun publishPostPicture() {
+
+        mPost.type = "post"
 
         btPostPublish.startAnimation()
 
@@ -206,7 +237,9 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
                                             resources.getColor(R.color.colorGreen),
                                             Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                         ).apply {
-                                            setResult(Activity.RESULT_OK)
+                                            val returnIntent = Intent()
+                                            returnIntent.putExtra("post_verified", mPost.user_verified)
+                                            setResult(Activity.RESULT_OK, returnIntent)
                                             finish()
                                         }
 
@@ -219,6 +252,40 @@ class CreatePostActivity : AppCompatActivity(), View.OnClickListener {
 
             Toast.makeText(this, "Imagem carregada com sucesso!", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun publishPostThought() {
+        mPost.type = "thought"
+
+        btPostPublish.startAnimation()
+
+        while (mTextCheck) {
+
+            val lastStr = mPost.text.toString().takeLast(4)
+
+            if(lastStr == "<br>") {
+                mPost.text = mPost.text.toString().dropLast(4)
+            } else {
+                mTextCheck = false
+            }
+        }
+
+        mDatabase.collection(mCollections.POSTS)
+            .add(mPost.toMapTought())
+            .addOnSuccessListener { document ->
+
+                document.update("id", document.id).addOnSuccessListener {
+                    btPostPublish.doneLoadingAnimation(
+                        resources.getColor(R.color.colorGreen),
+                        Converters.drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
+                    ).apply {
+                        val returnIntent = Intent()
+                        returnIntent.putExtra("post_verified", mPost.user_verified)
+                        setResult(Activity.RESULT_OK, returnIntent)
+                        finish()
+                    }
+                }
+            }
     }
 
     fun makeToast(text: String) {

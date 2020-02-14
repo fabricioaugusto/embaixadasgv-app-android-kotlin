@@ -115,12 +115,18 @@ class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemCli
 
             when(requestCode){
                 CREATE_POST_ACTIVITY_CODE -> {
-                    if(mUser.influencer || mUser.counselor) {
-                        mPager.currentItem = 0
-                        updateListPost()
-                    } else {
-                        mPager.currentItem = 1
-                        updateListPost()
+
+                    if(data != null) {
+
+                        val postVerified: Boolean = data.getBooleanExtra("post_verified", false)
+
+                        if(mUser.influencer || mUser.counselor || postVerified) {
+                            mPager.currentItem = 0
+                            updateListPost()
+                        } else {
+                            mPager.currentItem = 1
+                            updateListPost()
+                        }
                     }
                 }
             }
@@ -156,7 +162,9 @@ class ListPostFragment : Fragment(), OnItemClickListener, MenuItem.OnMenuItemCli
     }
 
     override fun onMenuItemClick(menuItem: MenuItem?): Boolean {
-        setCreatePostDialog()
+        val intent: Intent = Intent(mContext, CreatePostActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivityForResult(intent, CREATE_POST_ACTIVITY_CODE)
         return true
     }
 

@@ -45,7 +45,7 @@ data class Post(
             "post_likes" to post_likes,
             "post_comments" to post_comments,
             "user_id" to user.id,
-            "user_verified" to user.verified,
+            "user_verified" to user_verified,
             "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
@@ -62,7 +62,7 @@ data class Post(
             "post_likes" to post_likes,
             "post_comments" to post_comments,
             "user_id" to user.id,
-            "user_verified" to user.verified,
+            "user_verified" to user_verified,
             "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
@@ -81,7 +81,7 @@ data class Post(
             "post_likes" to post_likes,
             "post_comments" to post_comments,
             "user_id" to user.id,
-            "user_verified" to user.verified,
+            "user_verified" to user_verified,
             "embassy_id" to embassy_id,
             "user" to user.toBasicMap()
         )
