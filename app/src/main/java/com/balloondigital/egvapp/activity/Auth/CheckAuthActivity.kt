@@ -98,13 +98,8 @@ class CheckAuthActivity : AppCompatActivity() {
                         if(user.leader) {
                             mMessaging.subscribeToTopic("egv_topic_leaders")
                         }
-                        mMessaging.subscribeToTopic("egv_topic_members").addOnCompleteListener {
-                                task ->
-                            if(task.isSuccessful) {
-                                documentSnapshot.reference.update("topic_subscribed", true)
-                            }
-                        }
-
+                        mMessaging.subscribeToTopic("egv_topic_members")
+                        mMessaging.subscribeToTopic("egv_topic_ebx_${user.embassy_id}")
                         if(user.fcm_token.isNullOrEmpty()) {
                             obterToken(documentSnapshot.reference)
                         }

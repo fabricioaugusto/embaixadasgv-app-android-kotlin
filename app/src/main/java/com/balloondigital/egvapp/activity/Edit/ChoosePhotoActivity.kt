@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.view.isGone
 import com.balloondigital.egvapp.R
 import com.balloondigital.egvapp.activity.MainActivity
+import com.balloondigital.egvapp.activity.MainInfluencersActivity
 import com.balloondigital.egvapp.api.MyFirebase
 import com.balloondigital.egvapp.model.User
 import com.balloondigital.egvapp.utils.CropImages
@@ -130,6 +131,13 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
         finish()
     }
 
+    fun startInfluencerMainActivity() {
+        val intent: Intent = Intent(this, MainInfluencersActivity::class.java)
+        intent.putExtra("user", mUser)
+        startActivity(intent)
+        finish()
+    }
+
     private fun setListeners() {
         layoutAlertInfo.setOnClickListener(this)
         btCPSavePhoto.setOnClickListener(this)
@@ -193,7 +201,12 @@ class ChoosePhotoActivity : AppCompatActivity(), View.OnClickListener {
                                             resources.getColor(R.color.colorGreen),
                                             drawableToBitmap(resources.getDrawable(R.drawable.ic_check_grey_light))
                                         )
-                                        startMainActivity()
+
+                                        if(mUser.influencer || mUser.counselor) {
+                                            startInfluencerMainActivity()
+                                        } else {
+                                            startMainActivity()
+                                        }
                                     }
                                 }
                         }

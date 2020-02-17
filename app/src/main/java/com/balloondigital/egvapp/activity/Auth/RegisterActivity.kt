@@ -108,10 +108,8 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
                             this, "Authentication failed.",
                             Toast.LENGTH_SHORT
                         ).show()
-
                     }
                 }
-
         }
     }
 
