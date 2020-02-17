@@ -83,9 +83,11 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         if(validateRegister(name, email, pass, passConfirm)) {
 
-            if(email != mInvite.email_receiver) {
-                makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
-                return
+            if(!mInvite.influencer && !mInvite.counselor) {
+                if(email != mInvite.email_receiver) {
+                    makeToast("Você deve cadastrar o mesmo e-mail em que o convite foi enviado")
+                    return
+                }
             }
 
             btRegister.startAnimation()
@@ -128,6 +130,14 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
         if(mInvite.isLeader) {
             user["leader"] = true
+        }
+
+        if(mInvite.influencer) {
+            user["influencer"] = true
+        }
+
+        if(mInvite.counselor) {
+            user["counselor"] = true
         }
 
         if(embassy != null) {

@@ -6,132 +6,199 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".activity.Menu.InvitesActivity">
-    <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="32dp"
-            android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp" android:layout_marginTop="64dp" android:gravity="center_horizontal">
-        <TextView
-                android:text="Copiar Link"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/textView14" android:textColor="@color/colorText"
-                android:textSize="18sp" android:textAllCaps="true" android:textStyle="bold" android:gravity="center"/>
-        <TextView
-                android:text="https://embaixadasgv.app"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/txtInvitationLink"
-                android:background="@drawable/bg_grey_round_retangle" android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:paddingLeft="14dp" android:paddingRight="14dp" android:layout_marginTop="8dp"
-                android:layout_marginBottom="32dp" android:textColor="@color/colorText"
-                android:drawableRight="@drawable/ic_content_copy_black" android:clickable="true"/>
-        <TextView
-                android:text="Enviar convite"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/textView2" android:gravity="center"
-                android:textColor="@color/colorText" android:textAllCaps="true" android:textStyle="bold"
-                android:textSize="18sp"/>
-        <TextView
-                android:text="Preencha com o e-mail e o nome da pessoa que deseja convidar para utilizar o aplicativo das embaixadas Geração de Valor!"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/textView4" android:gravity="center"
-                android:textColor="@color/colorText" android:layout_marginTop="8dp"/>
 
-        <TextView
-                android:id="@+id/txtInvitationCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:gravity="center"
-                android:text="262382"
-                android:textColor="@color/colorText"
-                android:textSize="32sp"
-                android:textStyle="bold" />
-
-        <TextView
-                android:id="@+id/txtInvitationSuccefulMessage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_horizontal"
-                android:text="Um e-mail com o convite e o código de acesso foi enviado para fulano, mas você também pode escolher uma das opções abaixo para compartilhar o código:"
-                android:textColor="@color/colorText" />
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal"
-                android:orientation="horizontal">
-
-            <Button
-                    android:id="@+id/btInvitationWhatsapp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/keyline_1_minus_8dp"
-                    android:background="@android:color/transparent"
-                    android:drawableTop="@drawable/ic_whatsapp"
-                    android:text="Whatsapp" />
-
-            <Button
-                    android:id="@+id/button4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@android:color/transparent"
-                    android:drawableTop="@drawable/ic_content_copy_black"
-                    android:text="Copiar" />
-        </LinearLayout>
-
-        <Button
-                android:id="@+id/btInvitationNewCode"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
                 android:layout_marginTop="32dp"
-                android:background="@android:color/transparent"
-                android:text="Novo Código"
-                android:textColor="@color/colorLink" />
+                android:layout_marginRight="32dp"
+                android:layout_marginBottom="64dp"
+                android:orientation="vertical">
 
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
+                    android:id="@+id/textView14"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Copiar Link"
+                    android:textAllCaps="true"
                     android:textColor="@color/colorText"
-                    android:hint="Nome" android:drawableLeft="@drawable/ic_person_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp" android:id="@+id/etSendNameInvite" android:inputType="textPersonName"/>
-        </com.google.android.material.textfield.TextInputLayout>
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-
-        <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
+                    android:id="@+id/txtInvitationLink"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorText"
-                    android:hint="E-mail" android:drawableLeft="@drawable/ic_email_grey" android:drawablePadding="8dp"
-                    android:paddingBottom="16dp" android:id="@+id/etSendEmailInvite"
-                    android:inputType="textEmailAddress"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
-                android:text="ENVIAR"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btSendInvite"
-                app:finalCornerAngle="50dp"
-                app:initialCornerAngle="0dp"
-                app:spinning_bar_color="#FFF"
-                app:spinning_bar_padding="6dp"
-                android:background="@drawable/bg_circular_progressbar"
-                android:textColor="@color/colorGrey" app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintBottom_toTopOf="@+id/tvForgotPassword" android:layout_marginTop="32dp"/>
-    </LinearLayout>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/bg_grey_round_retangle"
+                    android:clickable="true"
+                    android:drawableRight="@drawable/ic_content_copy_black"
+                    android:paddingLeft="14dp"
+                    android:paddingTop="10dp"
+                    android:paddingRight="14dp"
+                    android:paddingBottom="10dp"
+                    android:text="https://embaixadasgv.app"
+                    android:textColor="@color/colorText" />
+
+            <LinearLayout
+                    android:id="@+id/layoutInvitationForm"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    tools:visibility="visible">
+
+                <TextView
+                        android:id="@+id/textView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Enviar convite"
+                        android:textAllCaps="true"
+                        android:textColor="@color/colorText"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Preencha com o e-mail e o nome da pessoa que deseja convidar para utilizar o aplicativo das embaixadas Geração de Valor!"
+                        android:textColor="@color/colorText" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSendNameInvite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_person_grey"
+                            android:drawablePadding="8dp"
+                            android:hint="Nome"
+                            android:inputType="textPersonName"
+                            android:paddingBottom="16dp"
+                            android:textColor="@color/colorText" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etSendEmailInvite"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_email_grey"
+                            android:drawablePadding="8dp"
+                            android:hint="E-mail"
+                            android:inputType="textEmailAddress"
+                            android:paddingBottom="16dp"
+                            android:textColor="@color/colorText" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <br.com.simplepass.loadingbutton.customViews.CircularProgressButton
+                        android:id="@+id/btSendInvite"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:background="@drawable/bg_circular_progressbar"
+                        android:text="ENVIAR"
+                        android:textColor="@color/colorGrey"
+                        app:finalCornerAngle="50dp"
+                        app:initialCornerAngle="0dp"
+                        app:layout_constraintBottom_toTopOf="@+id/tvForgotPassword"
+                        app:layout_constraintHorizontal_bias="0.5"
+                        app:spinning_bar_color="#FFF"
+                        app:spinning_bar_padding="6dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:id="@+id/layoutInvitationCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                <TextView
+                        android:id="@+id/txtInvitationCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:text="262382"
+                        android:textColor="@color/colorText"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+
+                <TextView
+                        android:id="@+id/txtInvitationSuccefulMessage"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center_horizontal"
+                        android:text="Um e-mail com o convite e o código de acesso foi enviado para fulano, mas você também pode escolher uma das opções abaixo para compartilhar o código:"
+                        android:textColor="@color/colorText" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
+
+                    <Button
+                            android:id="@+id/btInvitationWhatsapp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/keyline_1_minus_8dp"
+                            android:background="@android:color/transparent"
+                            android:drawableTop="@drawable/ic_whatsapp"
+                            android:drawablePadding="@dimen/keyline_1_minus_8dp"
+                            android:text="Whatsapp"
+                            android:textColor="@color/colorText"
+                            android:textSize="12sp" />
+
+                    <Button
+                            android:id="@+id/btInvitationCopy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:background="@android:color/transparent"
+                            android:drawableTop="@drawable/ic_copy_white"
+                            android:drawablePadding="8dp"
+                            android:text="Copiar"
+                            android:textColor="@color/colorText"
+                            android:textSize="12sp" />
+                </LinearLayout>
+
+                <Button
+                        android:id="@+id/btInvitationNewCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="32dp"
+                        android:background="@android:color/transparent"
+                        android:text="Novo Código"
+                        android:textColor="@color/colorLink" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

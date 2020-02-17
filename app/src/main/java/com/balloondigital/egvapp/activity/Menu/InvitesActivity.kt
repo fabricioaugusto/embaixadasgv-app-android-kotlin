@@ -16,7 +16,9 @@ import kotlinx.android.synthetic.main.activity_invites.*
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-
+import androidx.core.view.isGone
+import com.balloondigital.egvapp.utils.MyApplication
+import java.net.URLEncoder
 
 
 class InvitesActivity : AppCompatActivity(), View.OnClickListener {
@@ -48,9 +50,11 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(view: View) {
+
         val id = view.id
         if(id == R.id.btSendInvite) {
             saveData()
+            return
         }
 
         if(id == R.id.txtInvitationLink) {
@@ -58,6 +62,32 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
             val clip = ClipData.newPlainText("label","https://embaixadasgv.app/convite/${mUser.username}")
             clipboard.setPrimaryClip(clip)
             makeToast("Link copiado!")
+            return
+        }
+
+        val name = mInvite.name_receiver
+        val whatsapp_text = "Olá *${name}*, este é um convite para você ter acesso ao aplicativo das Embaixadas GV. Bastar baixar o *EGV App* na Google Play (para Android) ou na AppStore (para iOS), clicar em *CADASTRE-SE* e utilizar o seguinte código de acesso: *${mInvite.invite_code}*. Vamos lá? https://embaixadasgv.app"
+        val default_text = "Olá ${name}, este é um convite para você ter acesso ao aplicativo das Embaixadas GV. Bastar baixar o EGV App na Google Play (para Android) ou na AppStore (para iOS), clicar em CADASTRE-SE e utilizar o seguinte código de acesso: ${mInvite.invite_code}. Vamos lá? https://embaixadasgv.app"
+        val urlText = URLEncoder.encode(whatsapp_text, "UTF-8")
+
+
+        if(id == R.id.btInvitationCopy) {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("label",default_text)
+            clipboard.setPrimaryClip(clip)
+            makeToast("Link copiado!")
+            return
+        }
+
+        if(id == R.id.btInvitationWhatsapp) {
+            MyApplication.util.openExternalLink(this, "https://wa.me/?text=${urlText}")
+            return
+        }
+
+        if(id == R.id.btInvitationNewCode) {
+            layoutInvitationCode.isGone = true
+            layoutInvitationForm.isGone = false
+            return
         }
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -73,6 +103,9 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
     private fun setListeners() {
         txtInvitationLink.setOnClickListener(this)
         btSendInvite.setOnClickListener(this)
+        btInvitationNewCode.setOnClickListener(this)
+        btInvitationWhatsapp.setOnClickListener(this)
+        btInvitationCopy.setOnClickListener(this)
     }
 
     private fun saveData() {
@@ -111,6 +144,12 @@ class InvitesActivity : AppCompatActivity(), View.OnClickListener {
 
                             etSendNameInvite.setText("")
                             etSendEmailInvite.setText("")
+
+                            layoutInvitationForm.isGone = true
+
+                            txtInvitationCode.text = code.toString()
+
+                            layoutInvitationCode.isGone = false
 
                             makeToast("Convite enviado!")
                             btSendInvite.doneLoadingAnimation(
