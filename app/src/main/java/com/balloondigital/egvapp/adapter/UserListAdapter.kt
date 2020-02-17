@@ -105,6 +105,24 @@ class UserListAdapter(userList: List<User>): RecyclerView.Adapter<UserListAdapte
                 mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_sponsor_identifier)
             }
 
+            if(user.influencer) {
+                if(user.gender == "female") {
+                    mUserIdentifer.text = "Influenciadora"
+                } else {
+                    mUserIdentifer.text = "Influenciador"
+                }
+                mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_influencer_identifier)
+            }
+
+            if(user.counselor) {
+                if(user.gender == "female") {
+                    mUserIdentifer.text = "Conselheira"
+                } else {
+                    mUserIdentifer.text = "Conselheiro"
+                }
+                mUserIdentifer.background = itemView.resources.getDrawable(R.drawable.bg_counselor_identifier)
+            }
+
             if(user.committee_leader) {
                 val committee = user.committee
                 mUserIdentifer.text = "Líder de Comitê"

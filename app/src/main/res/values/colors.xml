@@ -14,6 +14,8 @@
     <color name="backgroundGrey">#FAFAFA</color>
     <color name="backgroundGreyStrong">#F3F4F6</color>
     <color name="backgroundModal">#B3000000</color>
+    <color name="colorCounselor">#BD7B4D</color>
+    <color name="colorInfluencer">#016FB9</color>
     <color name="colorSponsor">#2A9D8F</color>
     <color name="colorLeader">#CBF85A3E</color>
     <color name="colorMember">#8789C0</color>

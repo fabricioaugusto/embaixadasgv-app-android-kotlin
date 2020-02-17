@@ -145,6 +145,24 @@ class SingleUserFragment : Fragment(), View.OnClickListener {
                         txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_committee_leader_identifier)
                     }
 
+                    if(user.influencer) {
+                        if(user.gender == "female") {
+                            txtSingleUserIdentifier.text = "Influenciadora"
+                        } else {
+                            txtSingleUserIdentifier.text = "Influenciador"
+                        }
+                        txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_influencer_identifier)
+                    }
+
+                    if(user.counselor) {
+                        if(user.gender == "female") {
+                            txtSingleUserIdentifier.text = "Conselheira"
+                        } else {
+                            txtSingleUserIdentifier.text = "Conselheiro"
+                        }
+                        txtSingleUserIdentifier.background = mContext.resources.getDrawable(R.drawable.bg_counselor_identifier)
+                    }
+
 
                     getSocialData()
                 }
