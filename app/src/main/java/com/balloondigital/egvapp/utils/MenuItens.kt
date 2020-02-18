@@ -37,7 +37,7 @@ class MenuItens private constructor() {
             list.add(MenuItem(newEvent, "item", R.drawable.ic_menu_manage_event))
             list.add(MenuItem(sentEmbassyPhotos, "item", R.drawable.ic_menu_add_picture))
             list.add(MenuItem(sendInvites, "item", R.drawable.ic_menu_invite_user))
-            list.add(MenuItem(membersCodes, "item", R.drawable.ic_menu_invite_user))
+            list.add(MenuItem(membersCodes, "item", R.drawable.ic_menu_keys))
             list.add(MenuItem(invitationRequests, "item", R.drawable.ic_approve_members))
             list.add(MenuItem(editEmbassy, "item", R.drawable.ic_menu_edit_embassy))
 
