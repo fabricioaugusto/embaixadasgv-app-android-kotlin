@@ -43,7 +43,7 @@ class CompleteRegisterActivity : AppCompatActivity(), View.OnClickListener, View
         setSupportActionBar(toolbar)
 
         Places.initialize(applicationContext, "AIzaSyDu9n938_SYxGcdZQx5hLC91vFa-wf-JoY")
-        mPlacesClient = Places.createClient(applicationContext)
+        Places.createClient(applicationContext)
 
         val bundle: Bundle? = intent.extras
         if(bundle != null) {
