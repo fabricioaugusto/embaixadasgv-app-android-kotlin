@@ -132,19 +132,6 @@ class ManageEventsFragment : Fragment(), OnItemClickListener, View.OnClickListen
 
     override fun onItemClick(dialog: DialogPlus?, item: Any?, view: View?, position: Int) {
 
-        mCPDialog.dismiss()
-
-        if(position == 0) {
-            startSingleEventActivity()
-        }
-
-        if(position == 1) {
-            startEditEventActivity()
-        }
-
-        if(position == 2) {
-            confirmDeleteDialog()
-        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

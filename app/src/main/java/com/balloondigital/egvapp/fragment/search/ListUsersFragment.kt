@@ -94,16 +94,9 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
         getListUsers()
         setRecyclerView()
 
-        val nestedSVListener = object: NestedScrollView.OnScrollChangeListener {
-            override fun onScrollChange(
-                v: NestedScrollView,
-                scrollX: Int,
-                scrollY: Int,
-                oldScrollX: Int,
-                oldScrollY: Int
-            ) {
-
-                if (scrollY == -( v.getMeasuredHeight() - v.getChildAt(0).getMeasuredHeight() )) {
+        val nestedSVListener =
+            NestedScrollView.OnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
+                if (scrollY == -( v.measuredHeight - v.getChildAt(0).measuredHeight)) {
 
                     if(!isPostsOver) {
                         if(!::mLastDocumentRequested.isInitialized) {
@@ -118,8 +111,6 @@ class ListUsersFragment : Fragment(), SearchView.OnQueryTextListener, SearchView
                     }
                 }
             }
-
-        }
 
         usersNestedSV.setOnScrollChangeListener(nestedSVListener)
     }
